@@ -50,4 +50,11 @@ public class MatchdayController: ControllerBase
         _service.DeleteMatchday(id);
         return NoContent();
     }
+
+    [HttpGet("player/{id}")]
+    public IActionResult GetPlayerById(int id)
+    {
+        var player = _service.GetPlayerById(id);
+        return Ok(player);
+    }
 }

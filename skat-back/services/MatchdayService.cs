@@ -17,7 +17,7 @@ public class MatchdayService
         return _context.Matchdays.Include(m => m.Matches).ToList();
     }
 
-    public Matchday GetMatchById(int id)
+    public Matchday? GetMatchById(int id)
     {
         return _context.Matchdays.Include(m => m.Matches).FirstOrDefault(m => m.Id == id);
     }
@@ -47,5 +47,10 @@ public class MatchdayService
             _context.Matchdays.Remove(matchday);
             _context.SaveChanges();
         }
+    }
+
+    public Player? GetPlayerById(int id)
+    {
+        return _context.Players.Find(id);
     }
 }
