@@ -1,0 +1,6 @@
+@skat_back_HostAddress = http://localhost:5299
+
+GET {{skat_back_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
