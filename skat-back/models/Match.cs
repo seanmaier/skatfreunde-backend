@@ -2,9 +2,18 @@
 
 public class Match
 {
-    public int MatchId { get; set; }
+    
+    public int Id { get; set; } 
+    public int MatchdayId { get; set; } 
+    public Matchday Matchday { get; set; }
+    
+    public int PlayerId { get; set; }
+    public Player Player { get; set; }
+    
     public int Points { get; set; }
     public int Won { get; set; }
     public int Lost { get; set; }
     public int Table { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }
