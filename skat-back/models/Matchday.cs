@@ -3,11 +3,7 @@
 public class Matchday
 {
     public int Id { get; set; }
-    public string Date { get; set; }
-    public List<Match> Matches { get; set; }
+    public DateTime Date { get; set; }
 
-    public Matchday()
-    {
-        Matches = new List<Match>();
-    }
+    public List<Match> Matches { get; set; } = new List<Match>();
 }
