@@ -9,9 +9,9 @@ namespace skat_back.controllers;
 [Route("api/[controller]")]
 public class MatchdayController: ControllerBase
 {
-    private readonly MatchdayService _service;
+    private readonly MatchDayService _service;
 
-    public MatchdayController(MatchdayService service)
+    public MatchdayController(MatchDayService service)
     {
         _service = service;
     }
@@ -38,14 +38,14 @@ public class MatchdayController: ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult UpdateMatchday(int id, [FromBody] Matchday matchday)
+    public IActionResult UpdateMatchday(int id, [FromBody] Matchday matchDay)
     {
-        _service.UpdateMatchday(id, matchday);
+        _service.UpdateMatchday(id, matchDay);
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteMatchday(int id)
+    public IActionResult DeleteMatchDay(int id)
     {
         _service.DeleteMatchday(id);
         return NoContent();
