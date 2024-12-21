@@ -28,6 +28,11 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Match>()
             .HasIndex(m => m.PlayerId);
         
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasIndex(u => u.Email).IsUnique();
+        });
+        
         base.OnModelCreating(modelBuilder);
     }
 
