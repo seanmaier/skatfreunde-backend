@@ -8,7 +8,7 @@ public class Match
     public int Id { get; set; } 
     
     public int MatchDayId { get; set; }
-    public Matchday MatchDay { get; set; }
+    public MatchDay MatchDay { get; set; }
     
     public int PlayerId { get; set; }
     public Player Player { get; set; }

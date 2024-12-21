@@ -2,7 +2,7 @@
 
 namespace skat_back.data;
 
-public class Matchday
+public class MatchDay
 {
     [Key]
     public int Id { get; set; }

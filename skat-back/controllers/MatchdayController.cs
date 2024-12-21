@@ -19,7 +19,7 @@ public class MatchdayController: ControllerBase
     [HttpGet]
     public IActionResult GetAllMatchDays()
     {
-        var matchdays = _service.GetAllMatchdays();
+        var matchdays = _service.GetAllMatchDays();
         return Ok(matchdays);
     }
 
@@ -31,23 +31,23 @@ public class MatchdayController: ControllerBase
     }
 
     [HttpPost]
-    public IActionResult CreateMatchday([FromBody] Matchday matchday)
+    public IActionResult CreateMatchday([FromBody] MatchDay matchDay)
     {
-        _service.AddMatchday(matchday);
-        return CreatedAtAction(nameof(GetMatchById), new { id = matchday.Id }, matchday);
+        _service.AddMatchDay(matchDay);
+        return CreatedAtAction(nameof(GetMatchById), new { id = matchDay.Id }, matchDay);
     }
 
     [HttpPut("{id}")]
-    public IActionResult UpdateMatchday(int id, [FromBody] Matchday matchDay)
+    public IActionResult UpdateMatchday(int id, [FromBody] MatchDay matchDay)
     {
-        _service.UpdateMatchday(id, matchDay);
+        _service.UpdateMatchDay(id, matchDay);
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public IActionResult DeleteMatchDay(int id)
     {
-        _service.DeleteMatchday(id);
+        _service.DeleteMatchDay(id);
         return NoContent();
     }
 

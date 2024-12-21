@@ -12,23 +12,23 @@ public class MatchDayService
         _context = context;
     }
 
-    public List<Matchday> GetAllMatchdays()
+    public List<MatchDay> GetAllMatchDays()
     {
         return _context.MatchDays.Include(m => m.Matches).ToList();
     }
 
-    public Matchday? GetMatchById(int id)
+    public MatchDay? GetMatchById(int id)
     {
         return _context.MatchDays.Include(m => m.Matches).FirstOrDefault(m => m.Id == id);
     }
 
-    public void AddMatchday(Matchday matchDay)
+    public void AddMatchDay(MatchDay matchDay)
     {
         _context.MatchDays.Add(matchDay);
         _context.SaveChanges();
     }
 
-    public void UpdateMatchday(int id, Matchday updated)
+    public void UpdateMatchDay(int id, MatchDay updated)
     {
         var matchDay = _context.MatchDays.Find(id);
         if (matchDay != null)
@@ -39,7 +39,7 @@ public class MatchDayService
         }
     }
 
-    public void DeleteMatchday(int id)
+    public void DeleteMatchDay(int id)
     {
         var matchDay = _context.MatchDays.Find(id);
         if (matchDay != null)
