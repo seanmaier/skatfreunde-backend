@@ -12,6 +12,9 @@ public class MatchDay
     
     [Required]
     public DateTime Date { get; set; }
+    public int TotalPoints { get; set; }
+    public int TotalMatchShare { get; set; }
+    public int PointsChangeFromLastMatch { get; set; }
 
     public List<Match> Matches { get; set; } = new List<Match>();
 }
