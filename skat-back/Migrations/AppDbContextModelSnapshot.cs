@@ -158,6 +158,46 @@ namespace skat_back.Migrations
                     b.ToTable("Players");
                 });
 
+            modelBuilder.Entity("skat_back.data.TotalMatchDays", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Lost")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MatchShare")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Matches")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PointsAvg")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Won")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TotalMatchDays");
+                });
+
             modelBuilder.Entity("skat_back.data.User", b =>
                 {
                     b.Property<int>("Id")
@@ -229,6 +269,17 @@ namespace skat_back.Migrations
                 });
 
             modelBuilder.Entity("skat_back.data.MatchDay", b =>
+                {
+                    b.HasOne("skat_back.data.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("skat_back.data.TotalMatchDays", b =>
                 {
                     b.HasOne("skat_back.data.User", "User")
                         .WithMany()
