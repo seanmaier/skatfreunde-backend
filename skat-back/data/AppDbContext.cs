@@ -7,6 +7,7 @@ public class AppDbContext : DbContext
     public DbSet<Player> Players { get; set; }
     public DbSet<Match> Matches { get; set; }
     public DbSet<MatchDay> MatchDays { get; set; }
+    public DbSet<TotalMatchDays> TotalMatchDays { get; set; }
     public DbSet<BlogPost> BlogPosts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,6 +32,14 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Match>()
             .HasIndex(m => m.PlayerId);
 
+
+        // ===========TotalMatchDays===========
+        modelBuilder.Entity<TotalMatchDays>()
+            .HasOne(tmd => tmd.User)
+            .WithMany()
+            .HasForeignKey(tmd => tmd.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
         
         // ===========BlogPosts===========
         modelBuilder.Entity<BlogPost>()
