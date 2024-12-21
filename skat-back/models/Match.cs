@@ -1,10 +1,12 @@
-﻿namespace skat_back.data;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace skat_back.data;
 
 public class Match
 {
     
     public int Id { get; set; } 
-    public int MatchdayId { get; set; } 
+    public int MatchDayId { get; set; } 
     public Matchday Matchday { get; set; }
     
     public int PlayerId { get; set; }
