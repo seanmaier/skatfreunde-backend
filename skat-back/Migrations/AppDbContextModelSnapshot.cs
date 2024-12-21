@@ -16,6 +16,68 @@ namespace skat_back.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
+            modelBuilder.Entity("skat_back.data.BlogPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MetaDescription")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MetaTitle")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Summary")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BlogPosts");
+                });
+
             modelBuilder.Entity("skat_back.data.Match", b =>
                 {
                     b.Property<int>("Id")
@@ -28,7 +90,7 @@ namespace skat_back.Migrations
                     b.Property<int>("Lost")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("MatchdayId")
+                    b.Property<int>("MatchDayId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("PlayerId")
@@ -48,14 +110,14 @@ namespace skat_back.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MatchdayId");
+                    b.HasIndex("MatchDayId");
 
                     b.HasIndex("PlayerId");
 
                     b.ToTable("Matches");
                 });
 
-            modelBuilder.Entity("skat_back.data.Matchday", b =>
+            modelBuilder.Entity("skat_back.data.MatchDay", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,9 +126,14 @@ namespace skat_back.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Matchdays");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MatchDays");
                 });
 
             modelBuilder.Entity("skat_back.data.Player", b =>
@@ -80,6 +147,7 @@ namespace skat_back.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -90,11 +158,62 @@ namespace skat_back.Migrations
                     b.ToTable("Players");
                 });
 
+            modelBuilder.Entity("skat_back.data.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("skat_back.data.BlogPost", b =>
+                {
+                    b.HasOne("skat_back.data.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("skat_back.data.Match", b =>
                 {
-                    b.HasOne("skat_back.data.Matchday", "Matchday")
+                    b.HasOne("skat_back.data.MatchDay", "MatchDay")
                         .WithMany("Matches")
-                        .HasForeignKey("MatchdayId")
+                        .HasForeignKey("MatchDayId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -104,12 +223,23 @@ namespace skat_back.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Matchday");
+                    b.Navigation("MatchDay");
 
                     b.Navigation("Player");
                 });
 
-            modelBuilder.Entity("skat_back.data.Matchday", b =>
+            modelBuilder.Entity("skat_back.data.MatchDay", b =>
+                {
+                    b.HasOne("skat_back.data.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("skat_back.data.MatchDay", b =>
                 {
                     b.Navigation("Matches");
                 });
