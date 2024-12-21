@@ -11,16 +11,22 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Match>()
-            .HasOne(m => m.Matchday)
+            .HasOne(m => m.MatchDay)
             .WithMany(m => m.Matches)
-            .HasForeignKey(m => m.MatchdayId)
+            .HasForeignKey(m => m.MatchDayId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Match>()
+            .HasIndex(m => m.MatchDayId);
 
         modelBuilder.Entity<Match>()
             .HasOne(m => m.Player)
             .WithMany(p => p.Matches)
             .HasForeignKey(m => m.PlayerId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Match>()
+            .HasIndex(m => m.PlayerId);
         
         base.OnModelCreating(modelBuilder);
     }
