@@ -31,22 +31,22 @@ public class MatchDayService
     public void UpdateMatchDay(int id, MatchDay updated)
     {
         var matchDay = _context.MatchDays.Find(id);
-        if (matchDay != null)
-        {
-            matchDay.Date = updated.Date;
-            matchDay.Matches = updated.Matches;
-            _context.SaveChanges();
-        }
+        
+        if (matchDay == null) return;
+        
+        matchDay.Date = updated.Date;
+        matchDay.Matches = updated.Matches;
+        _context.SaveChanges();
     }
 
     public void DeleteMatchDay(int id)
     {
         var matchDay = _context.MatchDays.Find(id);
-        if (matchDay != null)
-        {
-            _context.MatchDays.Remove(matchDay);
-            _context.SaveChanges();
-        }
+
+        if (matchDay == null) return;
+        
+        _context.MatchDays.Remove(matchDay);
+        _context.SaveChanges();
     }
 
     public Player? GetPlayerById(int id)
