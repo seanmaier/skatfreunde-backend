@@ -5,47 +5,39 @@ namespace skat_back.services;
 
 public class MatchDayService
 {
-    private readonly AppDbContext _context;
+    private readonly Repository<MatchDay> _repository;
 
-    public MatchDayService(AppDbContext context)
+    public MatchDayService(Repository<MatchDay> repository)
     {
-        _context = context;
+        _repository = repository;
     }
 
-    public List<MatchDay> GetAllMatchDays()
+    public IEnumerable<MatchDay> GetAllMatchDays()
     {
-        return _context.MatchDays.Include(m => m.Matches).ToList();
+        return _repository.GetAll();
     }
 
     public MatchDay? GetMatchById(int id)
     {
-        return _context.MatchDays.Include(m => m.Matches).FirstOrDefault(m => m.Id == id);
+        return _repository.GetById(id);
     }
 
     public void AddMatchDay(MatchDay matchDay)
     {
-        _context.MatchDays.Add(matchDay);
-        _context.SaveChanges();
+        _repository.Add(matchDay);
     }
 
-    public void UpdateMatchDay(int id, MatchDay updated)
+    public void UpdateMatchDay(int id, MatchDay updatedMatchDay)
     {
-        var matchDay = _context.MatchDays.Find(id);
-        
-        if (matchDay == null) return;
-        
-        matchDay.Date = updated.Date;
-        matchDay.Matches = updated.Matches;
-        _context.SaveChanges();
+        _repository.Update(id, updatedMatchDay, (existing, updated) =>
+        {
+            existing.Matches = updated.Matches;
+            existing.Date = updated.Date;
+        } );
     }
 
     public void DeleteMatchDay(int id)
     {
-        var matchDay = _context.MatchDays.Find(id);
-
-        if (matchDay == null) return;
-        
-        _context.MatchDays.Remove(matchDay);
-        _context.SaveChanges();
+        _repository.Delete(id);
     }
 }
