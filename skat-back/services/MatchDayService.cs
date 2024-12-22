@@ -48,9 +48,4 @@ public class MatchDayService
         _context.MatchDays.Remove(matchDay);
         _context.SaveChanges();
     }
-
-    public Player? GetPlayerById(int id)
-    {
-        return _context.Players.Find(id);
-    }
 }
