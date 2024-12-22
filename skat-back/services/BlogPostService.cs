@@ -5,51 +5,45 @@ namespace skat_back.services;
 
 public class BlogPostService
 {
-    private readonly AppDbContext _context;
+    private readonly Repository<BlogPost> _repository;
 
-    public BlogPostService(AppDbContext context)
+    public BlogPostService(Repository<BlogPost> repository)
     {
-        _context = context;
+        _repository = repository;
     }
 
     public BlogPost? GetBlogPost(int id)
     {
-        return _context.BlogPosts.Include(b => b.User).FirstOrDefault(b => b.UserId == id);
+        return _repository.GetById(id);
     }
 
-    public List<BlogPost> GetAllBlogPosts()
+    public IEnumerable<BlogPost> GetAllBlogPosts()
     {
-        return _context.BlogPosts.ToList();
+        return _repository.GetAll();
     }
 
     public void AddBlogPost(BlogPost blogPost)
     {
-        _context.BlogPosts.Add(blogPost);
-        _context.SaveChanges();
+        _repository.Add(blogPost);
     }
 
-    public void UpdateBlogPost(BlogPost updated, int id)
+    public void UpdateBlogPost(BlogPost updatedBlogPost, int id)
     {
-        var blogPost = _context.BlogPosts.Find(id);
-        
-        if (blogPost == null) return;
-        
-        blogPost.Status = updated.Status;
-        blogPost.Summary = updated.Summary;
-        blogPost.Text = updated.Text;
-        blogPost.User = updated.User;
-        blogPost.MetaDescription = updated.MetaDescription;
-        blogPost.MetaTitle = updated.MetaTitle;
-        blogPost.UpdatedAt = DateTime.UtcNow;
+        _repository.Update(id, updatedBlogPost, (existing, updated) =>
+        {
+            existing.User = updated.User;
+            existing.UserId = updated.UserId;
+            existing.UpdatedAt = existing.UpdatedAt;
+            existing.Status = updated.Status;
+            existing.Summary = updated.Summary;
+            existing.Title = updated.Title;
+            existing.Text = updated.Text;
+            existing.MetaDescription = updated.MetaDescription;
+        });
     }
 
     public void DeleteBlogPost(int id)
     {
-        var blogPost = _context.BlogPosts.Find(id);
-        
-        if (blogPost == null) return;
-        
-        _context.BlogPosts.Remove(blogPost);
-        _context.SaveChanges();
+        _repository.Delete(id);
     }
 }
