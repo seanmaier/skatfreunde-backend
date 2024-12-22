@@ -19,15 +19,15 @@ public class MatchdayController: ControllerBase
     [HttpGet]
     public IActionResult GetAllMatchDays()
     {
-        var matchdays = _service.GetAllMatchDays();
-        return Ok(matchdays);
+        var matchDays = _service.GetAllMatchDays();
+        return Ok(matchDays);
     }
 
     [HttpGet("{id}")]
     public IActionResult GetMatchById(int id)
     {
-        var matchday = _service.GetMatchById(id);
-        return Ok(matchday);
+        var matchDay = _service.GetMatchById(id);
+        return Ok(matchDay);
     }
 
     [HttpPost]
@@ -49,12 +49,5 @@ public class MatchdayController: ControllerBase
     {
         _service.DeleteMatchDay(id);
         return NoContent();
-    }
-
-    [HttpGet("player/{id}")]
-    public IActionResult GetPlayerById(int id)
-    {
-        var player = _service.GetPlayerById(id);
-        return Ok(player);
     }
 }
