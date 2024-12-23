@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using skat_back.controllers;
 using skat_back.data;
 
 namespace skat_back.services;
 
-public class MatchDayService
+public class MatchDayService: IService<MatchDay>
 {
     private readonly Repository<MatchDay> _repository;
 
@@ -12,22 +13,22 @@ public class MatchDayService
         _repository = repository;
     }
 
-    public IEnumerable<MatchDay> GetAllMatchDays()
+    public IEnumerable<MatchDay> GetAll()
     {
         return _repository.GetAll();
     }
 
-    public MatchDay? GetMatchById(int id)
+    public MatchDay? GetById(int id)
     {
         return _repository.GetById(id);
     }
 
-    public void AddMatchDay(MatchDay matchDay)
+    public void Add(MatchDay matchDay)
     {
         _repository.Add(matchDay);
     }
 
-    public void UpdateMatchDay(int id, MatchDay updatedMatchDay)
+    public void Update(int id, MatchDay updatedMatchDay)
     {
         _repository.Update(id, updatedMatchDay, (existing, updated) =>
         {
@@ -36,7 +37,7 @@ public class MatchDayService
         } );
     }
 
-    public void DeleteMatchDay(int id)
+    public void Delete(int id)
     {
         _repository.Delete(id);
     }
