@@ -7,7 +7,7 @@ public class AppDbContext : DbContext
     public DbSet<Player> Players { get; set; }
     public DbSet<Match> Matches { get; set; }
     public DbSet<MatchDay> MatchDays { get; set; }
-    public DbSet<TotalMatchDays> TotalMatchDays { get; set; }
+    public DbSet<TotalMatchDays> AggregatedMatchDayStats { get; set; }
     public DbSet<BlogPost> BlogPosts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
