@@ -1,9 +1,10 @@
-﻿using skat_back.data;
+﻿using skat_back.controllers;
+using skat_back.data;
 using SQLitePCL;
 
 namespace skat_back.services;
 
-public class PlayerService
+public class PlayerService: IService<Player>
 {
     private readonly Repository<Player> _repository;
 
@@ -12,22 +13,22 @@ public class PlayerService
         _repository = repository;
     }
     
-    public Player? GetPlayerById(int id)
+    public Player? GetById(int id)
     {
         return _repository.GetById(id);
     }
 
-    public IEnumerable<Player> GetAllPlayer()
+    public IEnumerable<Player> GetAll()
     {
         return _repository.GetAll();
     }
     
-    public void AddPlayer(Player player)
+    public void Add(Player player)
     {
         _repository.Add(player);
     }
 
-    public void UpdatePlayer(int id, Player updatedPlayer)
+    public void Update(int id, Player updatedPlayer)
     {
         _repository.Update(id, updatedPlayer, (existing, updated) =>
         {
@@ -36,7 +37,7 @@ public class PlayerService
         });
     }
 
-    public void DeletePlayer(int id)
+    public void Delete(int id)
     {
         _repository.Delete(id);
     }
