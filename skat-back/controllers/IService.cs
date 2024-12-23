@@ -2,11 +2,11 @@
 
 namespace skat_back.controllers;
 
-public interface IService<in T> where T: class
+public interface IService<T> where T: class
 {
-    IActionResult GetAll();
-    IActionResult GetById(int id);
-    IActionResult Add(T entity);
-    IActionResult Update(int id, T entity);
-    IActionResult Delete(int id);
+    IEnumerable<T> GetAll();
+    T? GetById(int id);
+    void Add(T entity);
+    void Update(int id, T entity);
+    void Delete(int id);
 }
