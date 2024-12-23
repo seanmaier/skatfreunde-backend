@@ -1,40 +1,35 @@
 ﻿using skat_back.controllers;
 using skat_back.data;
-using SQLitePCL;
 
 namespace skat_back.services;
 
-public class PlayerService: IService<Player>
+public class PlayerService : IService<Player>
 {
-    private readonly Repository<Player> _repository;
+    private readonly IRepository<Player> _repository;
 
-    public PlayerService(Repository<Player> repository)
+    public PlayerService(IRepository<Player> repository)
     {
         _repository = repository;
-    }
-    
-    public Player? GetById(int id)
-    {
-        return _repository.GetById(id);
     }
 
     public IEnumerable<Player> GetAll()
     {
         return _repository.GetAll();
     }
-    
-    public void Add(Player player)
+
+    public Player? GetById(int id)
     {
-        _repository.Add(player);
+        return _repository.GetById(id);
     }
 
-    public void Update(int id, Player updatedPlayer)
+    public void Add(Player entity)
     {
-        _repository.Update(id, updatedPlayer, (existing, updated) =>
-        {
-            existing.Name = updated.Name;
-            existing.UpdatedAt = updated.UpdatedAt;
-        });
+        _repository.Add(entity);
+    }
+
+    public void Update(int id, Player entity)
+    {
+        _repository.Update(id, entity, (e, u) => { /* update logic */ });
     }
 
     public void Delete(int id)
