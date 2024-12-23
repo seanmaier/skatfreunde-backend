@@ -5,7 +5,9 @@ namespace skat_back.controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public abstract class BaseController<T, TService> : ControllerBase where T : class where TService : IService<T>
+public abstract class BaseController<T, TService> : ControllerBase 
+    where T : class 
+    where TService : IService<T>
 {
     protected readonly TService _service;
 
