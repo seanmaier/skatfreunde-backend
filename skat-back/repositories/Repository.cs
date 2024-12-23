@@ -1,10 +1,10 @@
 ﻿namespace skat_back.services;
 
-public abstract class Repository<T> : IRepository<T> where T : class
+public class Repository<T> : IRepository<T> where T : class
 {
     private readonly AppDbContext _context;
     
-    protected Repository(AppDbContext context)
+    public Repository(AppDbContext context)
     {
         _context = context;
     }
