@@ -31,7 +31,7 @@ public abstract class BaseController<T, TService> : ControllerBase
     }
 
     [HttpPost]
-    public virtual IActionResult Create([FromBody] T item)
+    public virtual IActionResult Add([FromBody] T item)
     {
         _service.Add(item);
         return CreatedAtAction(nameof(GetById), new { id = (item as dynamic).Id }, item);
