@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using skat_back.controllers;
+﻿using skat_back.controllers;
 using skat_back.data;
 
-namespace skat_back.services;
+namespace skat_back.services.MatchDayService;
 
-public class MatchDayService: IService<MatchDay>
+public class MatchDayService: IMatchDayService
 {
     private readonly IRepository<MatchDay> _repository;
 
