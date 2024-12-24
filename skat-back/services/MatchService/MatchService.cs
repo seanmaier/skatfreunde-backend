@@ -1,10 +1,9 @@
 ﻿using skat_back.controllers;
 using skat_back.data;
-using SQLitePCL;
 
-namespace skat_back.services;
+namespace skat_back.services.MatchService;
 
-public class MatchService: IService<Match>
+public class MatchService: IMatchService
 {
     private readonly IRepository<Match> _repository;
 
