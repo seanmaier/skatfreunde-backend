@@ -23,7 +23,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // dependency injection registrations
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped<PlayerService>();
 
 var app = builder.Build();
 
