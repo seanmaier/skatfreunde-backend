@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using skat_back.services;
+using skat_back.services.PlayerService;
 
 var builder = WebApplication.CreateBuilder(args);
 
