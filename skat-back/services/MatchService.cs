@@ -1,9 +1,10 @@
-﻿using skat_back.data;
+﻿using skat_back.controllers;
+using skat_back.data;
 using SQLitePCL;
 
 namespace skat_back.services;
 
-public class MatchService
+public class MatchService: IService<Match>
 {
     private readonly Repository<Match> _repository;
 
@@ -12,22 +13,22 @@ public class MatchService
         _repository = repository;
     }
 
-    public IEnumerable<Match> GetAllMatches()
+    public IEnumerable<Match> GetAll()
     {
         return _repository.GetAll();
     }
 
-    public Match? GetMatchById(int id)
+    public Match? GetById(int id)
     {
         return _repository.GetById(id);
     }
 
-    public void AddMatch(Match match)
+    public void Add(Match match)
     {
         _repository.Add(match);
     }
 
-    public void UpdateMatch(int id, Match updatedMatch)
+    public void Update(int id, Match updatedMatch)
     {
         _repository.Update(id, updatedMatch, (existing, updated) =>
         {
@@ -39,7 +40,7 @@ public class MatchService
         });
     }
 
-    public void DeleteMatch(int id)
+    public void Delete(int id)
     {
         _repository.Delete(id);
     }
