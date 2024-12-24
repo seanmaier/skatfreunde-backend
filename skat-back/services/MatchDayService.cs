@@ -6,9 +6,9 @@ namespace skat_back.services;
 
 public class MatchDayService: IService<MatchDay>
 {
-    private readonly Repository<MatchDay> _repository;
+    private readonly IRepository<MatchDay> _repository;
 
-    public MatchDayService(Repository<MatchDay> repository)
+    public MatchDayService(IRepository<MatchDay> repository)
     {
         _repository = repository;
     }
