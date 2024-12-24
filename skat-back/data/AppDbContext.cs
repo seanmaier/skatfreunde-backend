@@ -7,7 +7,7 @@ public class AppDbContext : DbContext
     public DbSet<Player> Players { get; set; }
     public DbSet<Match> Matches { get; set; }
     public DbSet<MatchDay> MatchDays { get; set; }
-    public DbSet<TotalMatchDays> AggregatedMatchDayStats { get; set; }
+    public DbSet<MatchAnalytics> MatchAnalytics { get; set; }
     public DbSet<BlogPost> BlogPosts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,7 +34,7 @@ public class AppDbContext : DbContext
 
 
         // ===========TotalMatchDays===========
-        modelBuilder.Entity<TotalMatchDays>()
+        modelBuilder.Entity<MatchAnalytics>()
             .HasOne(tmd => tmd.User)
             .WithMany()
             .HasForeignKey(tmd => tmd.UserId)

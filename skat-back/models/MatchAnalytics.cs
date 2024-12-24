@@ -2,7 +2,7 @@
 
 namespace skat_back.data;
 
-public class TotalMatchDays
+public class MatchAnalytics
 {
     [Key]
     public int Id { get; set; }
