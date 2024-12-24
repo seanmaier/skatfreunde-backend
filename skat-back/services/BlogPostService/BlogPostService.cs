@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using skat_back.controllers;
-using skat_back.data;
+﻿using skat_back.data;
 
-namespace skat_back.services;
+namespace skat_back.services.BlogPostService;
 
-public class BlogPostService: IService<BlogPost>
+public class BlogPostService: IBlogPostService
 {
     private readonly IRepository<BlogPost> _repository;
 
