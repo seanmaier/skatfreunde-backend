@@ -29,7 +29,11 @@ public class PlayerService : IPlayerService
 
     public void Update(int id, Player entity)
     {
-        _repository.Update(id, entity, (e, u) => { /* update logic */ });
+        _repository.Update(id, entity, (existing, updated) =>
+        {
+            existing.Name = updated.Name;
+            existing.UpdatedAt = DateTime.UtcNow;
+        });
     }
 
     public void Delete(int id)
