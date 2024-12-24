@@ -3,7 +3,7 @@ using skat_back.data;
 
 namespace skat_back.services;
 
-public class PlayerService : IService<Player>
+public class PlayerService : IPlayerService
 {
     private readonly IRepository<Player> _repository;
 
