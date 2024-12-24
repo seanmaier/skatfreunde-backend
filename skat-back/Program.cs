@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using skat_back;
 using skat_back.services;
+using skat_back.services.MatchService;
 using skat_back.services.PlayerService;
+using skat_back.services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +25,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // dependency injection registrations
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
