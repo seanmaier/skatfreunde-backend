@@ -6,9 +6,9 @@ namespace skat_back.services;
 
 public class MatchService: IService<Match>
 {
-    private readonly Repository<Match> _repository;
+    private readonly IRepository<Match> _repository;
 
-    public MatchService(Repository<Match> repository)
+    public MatchService(IRepository<Match> repository)
     {
         _repository = repository;
     }
