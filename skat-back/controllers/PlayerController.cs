@@ -1,5 +1,5 @@
 ﻿using skat_back.data;
-using skat_back.services;
+using skat_back.services.PlayerService;
 
 namespace skat_back.controllers;
 
