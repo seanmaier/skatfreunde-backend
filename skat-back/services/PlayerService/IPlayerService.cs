@@ -5,5 +5,5 @@ namespace skat_back.services;
 
 public interface IPlayerService: IService<Player>
 {
-    
+    // Add specific methods here
 }
