@@ -9,29 +9,32 @@ public class BlogPost
     public int Id { get; set; }
     
     public int UserId { get; set; }
-    public User User { get; set; }
+    public required User User { get; set; }
     
     [Required]
     [MaxLength(255)]
-    public string Title { get; set; }
+    public required string Title { get; set; }
     
     [Required]
-    public string Text { get; set; }
+    [MaxLength(1000)]
+    public required string Text { get; set; }
     
     [Required]
     [MaxLength(255)]
-    public string Slug { get; set; }
+    public required string Slug { get; set; }
     
     [MaxLength(500)]
-    public string Summary { get; set; }
+    public string? Summary { get; set; }
 
-    [Required] public string Status { get; set; } = "Draft"; 
+    [Required]
+    [MaxLength(100)]
+    public string Status { get; set; } = "Draft"; 
     
     [MaxLength(255)]
-    public string MetaTitle { get; set; }
+    public required string MetaTitle { get; set; }
     
     [MaxLength(500)]
-    public string MetaDescription { get; set; }
+    public required string MetaDescription { get; set; }
 
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

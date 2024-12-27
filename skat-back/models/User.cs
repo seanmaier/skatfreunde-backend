@@ -10,19 +10,19 @@ public class User
     
     [Required]
     [MaxLength(100)]
-    public string FirstName { get; set; }
+    public required string FirstName { get; set; }
     
     [Required]
     [MaxLength(100)]
-    public string LastName { get; set; }
+    public required string LastName { get; set; }
     
     [Required]
     [MaxLength(255)]
-    public string PasswordHash { get; set; }
+    public required string PasswordHash { get; set; }
     
     [Required]
     [MaxLength(255)]
-    public string Email { get; set; }
+    public required string Email { get; set; }
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; }

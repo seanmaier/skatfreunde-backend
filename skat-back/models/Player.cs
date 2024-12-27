@@ -7,13 +7,18 @@ public class Player
 {
     [Key]
     public int Id { get; set; }
+
+    [Required]
+    [MaxLength(100)]
+    public string FirstName { get; set; } = "Max";
     
     [Required]
     [MaxLength(100)]
-    public string Name { get; set; }
+    public string LastName { get; set; } = "Mustermann";
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; }
 
     public List<Match> Matches { get; set; } = new List<Match>();
+    
 }

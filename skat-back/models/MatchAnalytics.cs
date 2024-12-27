@@ -9,7 +9,7 @@ public class MatchAnalytics
     
     
     public int UserId { get; set; }
-    public User User { get; set; }
+    public required User User { get; set; }
     
     // Every entry represents total value 
     [Range(0, int.MaxValue, ErrorMessage = "Value cannot be negative")]
