@@ -31,7 +31,8 @@ public class PlayerService : IPlayerService
     {
         _repository.Update(id, entity, (existing, updated) =>
         {
-            existing.Name = updated.Name;
+            existing.FirstName = updated.FirstName;
+            existing.LastName = updated.LastName;
             existing.UpdatedAt = DateTime.UtcNow;
         });
     }
