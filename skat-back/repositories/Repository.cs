@@ -1,4 +1,6 @@
-﻿namespace skat_back.services;
+﻿using skat_back.data;
+
+namespace skat_back.services;
 
 public class Repository<T> : IRepository<T> where T : class
 {

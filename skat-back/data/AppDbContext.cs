@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using skat_back.data;
+
+namespace skat_back.data;
 
 public class AppDbContext : DbContext
 {

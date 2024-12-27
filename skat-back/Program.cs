@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using skat_back;
+using skat_back.data;
 using skat_back.services;
 using skat_back.services.MatchService;
 using skat_back.services.PlayerService;
@@ -40,10 +41,10 @@ app.UseCors();
 app.UseHttpsRedirection();
 app.MapControllers();
 
-/*using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     DataSeeder.Seed(context);
-}*/
+}
 
 app.Run();
