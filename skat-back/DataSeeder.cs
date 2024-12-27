@@ -7,9 +7,9 @@ public static class DataSeeder
         if (!context.Players.Any())
         {
             context.Players.AddRange(
-                new Player { Name = "John Doe", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-                new Player { Name = "Jane Smith", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-                new Player { Name = "Sam Fisher", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
+                new Player { FirstName = "John", LastName = "Doe", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
+                new Player { FirstName = "Jane", LastName = "Smith",CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
+                new Player { FirstName = "Sam", LastName = "Fisher",CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
             );
 
             context.SaveChanges();
