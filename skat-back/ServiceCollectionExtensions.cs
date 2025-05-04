@@ -9,16 +9,14 @@ namespace skat_back;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    public static void ConfigureServices(this IServiceCollection services)
     {
-        services.AddScoped<IUserService,UserService>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IMatchRoundService, MatchRoundRoundService>();
         services.AddScoped<IPlayerRoundResultService, PlayerRoundResultService>();
         services.AddScoped<IBlogPostService, BlogPostService>();
         services.AddScoped<IMatchSessionService, MatchSessionService>();
         services.AddScoped<IPlayerService, PlayerService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-        return services;
     }
 }

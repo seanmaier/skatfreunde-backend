@@ -22,7 +22,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // dependency injection registrations
-builder.Services.AddApplicationServices();
+builder.Services.ConfigureServices();
 
 // AutoMapper configuration
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -40,10 +40,10 @@ app.UseCors();
 app.UseHttpsRedirection();
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    //DataSeeder.Seed(context);
-}
+    DataSeeder.Seed(context);
+}*/
 
 app.Run();
