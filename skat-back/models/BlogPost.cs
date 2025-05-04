@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static skat_back.constants.ValidationConstats;
+using static skat_back.utilities.constants.ValidationConstants;
 
 namespace skat_back.models;
 
@@ -16,28 +16,27 @@ public class BlogPost
     public required User User { get; set; }
     
     [Required]
-    [MaxLength(BlogPostTitleMaxLength)]
+    [MaxLength(MaxTextLength)]
     public required string Title { get; set; }
     
     [Required]
-    [MaxLength(BlogPostContentMaxLength)]
+    [MaxLength(MaxTextLength)]
     public required string Text { get; set; }
     
     [Required]
-    [MaxLength(BlogPostSlugMaxLength)]
+    [MaxLength(MaxSlugLength)]
     public required string Slug { get; set; }
     
-    [MaxLength(BlogPostSummaryMaxLength)]
+    [MaxLength(MaxSummaryLength)]
     public string? Summary { get; set; }
 
     [Required]
-    [MaxLength(BlogPostStatusMaxLength)]
-    public string Status { get; set; } = "Draft"; 
+    public BlogStatus Status { get; set; } = BlogStatus.Draft; 
     
-    [MaxLength(BlogPostMetaTitleMaxLength)]
+    [MaxLength(MaxTitleLength)]
     public required string MetaTitle { get; set; }
     
-    [MaxLength(BlogPostMetaDescriptionMaxLength)]
+    [MaxLength(MaxDescriptionLength)]
     public required string MetaDescription { get; set; }
 
     

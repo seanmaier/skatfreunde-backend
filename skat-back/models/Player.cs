@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static skat_back.constants.ValidationConstats;
+using static skat_back.utilities.constants.ValidationConstants;
 
 namespace skat_back.models;
 
@@ -11,7 +11,8 @@ public class Player
     public string Id { get; set; }
 
     [Required]
-    [MaxLength(NameMaxLength)]
+    [MinLength(MinNameLength)]
+    [MaxLength(MaxNameLength)]
     public string Name { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

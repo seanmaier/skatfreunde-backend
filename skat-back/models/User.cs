@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static skat_back.constants.ValidationConstats;
+using static skat_back.utilities.constants.ValidationConstants;
 
 namespace skat_back.models;
 
@@ -10,16 +10,24 @@ public class User
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public string Id { get; set; } = null!;
 
-    [Required] [MaxLength(NameMaxLength)] public required string FirstName { get; set; }
-
-    [Required] [MaxLength(NameMaxLength)] public required string LastName { get; set; }
+    [Required]
+    [MinLength(MinNameLength)]
+    [MaxLength(MaxNameLength)]
+    public required string FirstName { get; set; }
 
     [Required]
-    [MaxLength(PasswordMaxLength)]
+    [MinLength(MinNameLength)]
+    [MaxLength(MaxNameLength)]
+    public required string LastName { get; set; }
+
+    [Required]
+    [MinLength(MinPasswordLength)]
+    [MaxLength(MaxPasswordLength)]
     public required string Password { get; set; }
 
     [Required]
-    [MaxLength(EmailMaxLength)]
+    [MinLength(MinEmailLength)]
+    [MaxLength(MaxEmailLength)]
     [EmailAddress]
     public required string Email { get; set; }
 

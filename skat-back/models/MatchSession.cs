@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static skat_back.constants.ValidationConstats;
+using static skat_back.utilities.constants.ValidationConstants;
+
 
 namespace skat_back.models;
 
