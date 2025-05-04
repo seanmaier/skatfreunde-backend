@@ -1,14 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.InteropServices.JavaScript;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace skat_back.data;
+namespace skat_back.models;
 
 public class BlogPost
 {
-    [Key] 
-    public int Id { get; set; }
-    
-    public int UserId { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public string Id { get; set; } = null!;
+
+    [Required]
+    [MaxLength(100)]
+    public string UserId { get; set; } = null!;
     public required User User { get; set; }
     
     [Required]

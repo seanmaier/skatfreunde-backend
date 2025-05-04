@@ -1,69 +1,49 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using skat_back.models;
 
 namespace skat_back.data;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Player> Players { get; set; }
-    public DbSet<Match> Matches { get; set; }
-    public DbSet<MatchDay> MatchDays { get; set; }
-    public DbSet<MatchAnalytics> MatchAnalytics { get; set; }
+    public DbSet<MatchRound> MatchRounds { get; set; }
+    public DbSet<MatchSession> MatchSessions { get; set; }
+    public DbSet<PlayerRoundResult> PlayerRoundResults { get; set; }
     public DbSet<BlogPost> BlogPosts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
-        // ===========Matches===========
-        modelBuilder.Entity<Match>()
-            .HasOne(m => m.MatchDay)
-            .WithMany(m => m.Matches)
-            .HasForeignKey(m => m.MatchDayId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<Match>()
-            .HasIndex(m => m.MatchDayId);
-
-        modelBuilder.Entity<Match>()
-            .HasOne(m => m.Player)
-            .WithMany(p => p.Matches)
-            .HasForeignKey(m => m.PlayerId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<Match>()
-            .HasIndex(m => m.PlayerId);
-
-
-        // ===========TotalMatchDays===========
-        modelBuilder.Entity<MatchAnalytics>()
-            .HasOne(tmd => tmd.User)
-            .WithMany()
-            .HasForeignKey(tmd => tmd.UserId)
+        modelBuilder.Entity<MatchSession>()
+            .HasMany(ms => ms.MatchRounds)
+            .WithOne(mr => mr.MatchSession)
+            .HasForeignKey(mr => mr.MatchSessionId)
             .OnDelete(DeleteBehavior.Cascade);
         
+        modelBuilder.Entity<MatchSession>(entity =>
+                entity.HasIndex(ms => ms.DateOfTheWeek).IsUnique());
+
+        modelBuilder.Entity<Player>()
+            .HasMany(p => p.PlayerRoundResults)
+            .WithOne(prr => prr.Player)
+            .HasForeignKey(prr => prr.PlayerId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<Player>(entity =>
+            entity.HasIndex(p => p.Name).IsUnique());
+
+        modelBuilder.Entity<PlayerRoundResult>()
+            .HasKey(prr => new { prr.MatchRoundId, prr.PlayerId });
         
         // ===========BlogPosts===========
         modelBuilder.Entity<BlogPost>()
             .HasIndex(b => b.Slug)
             .IsUnique();
 
-        modelBuilder.Entity<BlogPost>()
-            .HasIndex(b => b.Status);
-
-        modelBuilder.Entity<BlogPost>()
-            .HasIndex(b => b.CreatedAt);
-        
-        
         // ===========Users===========
         modelBuilder.Entity<User>(entity =>
-        {
-            entity.HasIndex(u => u.Email).IsUnique();
-        });
+            entity.HasIndex(u => u.Email).IsUnique());
         
         base.OnModelCreating(modelBuilder);
-    }
-
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
     }
 }

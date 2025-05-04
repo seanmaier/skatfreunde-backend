@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace skat_back.data;
+namespace skat_back.models;
 
 public class User
 {
     [Key]
-    public int Id { get; set; }
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public string Id { get; set; } = null!;
     
     [Required]
     [MaxLength(100)]
@@ -18,7 +19,7 @@ public class User
     
     [Required]
     [MaxLength(255)]
-    public required string PasswordHash { get; set; }
+    public required string Password { get; set; }
     
     [Required]
     [MaxLength(255)]

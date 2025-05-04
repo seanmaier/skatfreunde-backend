@@ -1,10 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using skat_back;
 using skat_back.data;
-using skat_back.services;
-using skat_back.services.MatchService;
-using skat_back.services.PlayerService;
-using skat_back.services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,11 +26,11 @@ builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 app.UseCors();
 
@@ -44,7 +40,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    DataSeeder.Seed(context);
+    //DataSeeder.Seed(context);
 }
 
 app.Run();

@@ -1,4 +1,4 @@
-﻿namespace skat_back.services;
+﻿namespace skat_back.repositories;
 
 public interface IRepository<T> where T: class
 {

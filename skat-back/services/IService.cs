@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace skat_back.controllers;
+﻿namespace skat_back.services;
 
 public interface IService<T> where T: class
 {

@@ -1,24 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.InteropServices.JavaScript;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace skat_back.data;
+namespace skat_back.models;
 
 public class Player
 {
     [Key]
-    public int Id { get; set; }
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public string Id { get; set; }
 
     [Required]
     [MaxLength(100)]
-    public string FirstName { get; set; } = "Max";
-    
-    [Required]
-    [MaxLength(100)]
-    public string LastName { get; set; } = "Mustermann";
+    public string Name { get; set; } = string.Empty;
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; }
-
-    public List<Match> Matches { get; set; } = new List<Match>();
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     
+    public ICollection<PlayerRoundResult> PlayerRoundResults { get; set; } = new List<PlayerRoundResult>();
 }

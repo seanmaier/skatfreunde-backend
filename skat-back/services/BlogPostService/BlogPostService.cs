@@ -1,34 +1,28 @@
-﻿using skat_back.data;
+﻿using skat_back.models;
+using skat_back.repositories;
 
 namespace skat_back.services.BlogPostService;
 
-public class BlogPostService: IBlogPostService
+public class BlogPostService(IRepository<BlogPost> repository) : IBlogPostService
 {
-    private readonly IRepository<BlogPost> _repository;
-
-    public BlogPostService(IRepository<BlogPost> repository)
-    {
-        _repository = repository;
-    }
-
     public BlogPost? GetById(int id)
     {
-        return _repository.GetById(id);
+        return repository.GetById(id);
     }
 
     public IEnumerable<BlogPost> GetAll()
     {
-        return _repository.GetAll();
+        return repository.GetAll();
     }
 
     public void Add(BlogPost blogPost)
     {
-        _repository.Add(blogPost);
+        repository.Add(blogPost);
     }
 
     public void Update(int id, BlogPost updatedBlogPost)
     {
-        _repository.Update(id, updatedBlogPost, (existing, updated) =>
+        repository.Update(id, updatedBlogPost, (existing, updated) =>
         {
             existing.User = updated.User;
             existing.UserId = updated.UserId;
@@ -43,6 +37,6 @@ public class BlogPostService: IBlogPostService
 
     public void Delete(int id)
     {
-        _repository.Delete(id);
+        repository.Delete(id);
     }
 }

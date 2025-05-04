@@ -5,16 +5,11 @@ namespace skat_back.controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public abstract class BaseController<T, TService> : ControllerBase 
-    where T : class 
+public abstract class BaseController<T, TService>(TService service) : ControllerBase
+    where T : class
     where TService : IService<T>
 {
-    protected readonly TService _service;
-
-    protected BaseController(TService service)
-    {
-        _service = service;
-    }
+    private readonly TService _service = service;
 
     [HttpGet]
     public virtual IActionResult GetAll()
