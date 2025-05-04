@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static skat_back.constants.ValidationConstats;
 
 namespace skat_back.models;
 
@@ -10,7 +11,7 @@ public class MatchRound
     public string Id { get; set; } = null!;
 
     [Required]
-    [MaxLength(100)]
+    [MaxLength(MaxIdLength)]
     public string MatchSessionId { get; set; } = null!;
     [Required]
     public required MatchSession MatchSession { get; set; } = null!;
