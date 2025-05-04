@@ -24,12 +24,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // dependency injection registrations
 builder.Services.AddApplicationServices();
 
+// AutoMapper configuration
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 var app = builder.Build();
 
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 //}
 
 app.UseCors();

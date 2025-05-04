@@ -1,5 +1,5 @@
 ﻿namespace skat_back.DTO.PlayerDTO;
 
-public record UpdatePlayerDto(
+public record CreatePlayerDto(
     string Name
 );

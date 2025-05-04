@@ -1,14 +1,12 @@
-﻿using skat_back.DTO;
-using skat_back.DTO.PlayerDTO;
-using skat_back.models;
+﻿using skat_back.DTO.PlayerDTO;
 
 namespace skat_back.services.PlayerService;
 
 public interface IPlayerService
 {
-    Task<IEnumerable<PlayerDto>> GetAllPlayersAsync();
-    Task<PlayerDto?> GetPlayerByIdAsync(string id);
-    Task<PlayerDto> CreatePlayerAsync(CreatePlayerDto playerDto);
-    Task<bool> UpdatePlayerAsync(string id, UpdatePlayerDto playerDtoDto);
+    Task<IEnumerable<PlayerResponseDto>> GetAllPlayersAsync();
+    Task<PlayerResponseDto?> GetPlayerByIdAsync(string id);
+    Task<PlayerResponseDto> CreatePlayerAsync(CreatePlayerDto dto);
+    Task<bool> UpdatePlayerAsync(string id, UpdatePlayerDto dto);
     Task<bool> DeletePlayerAsync(string id);
 }

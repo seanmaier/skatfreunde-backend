@@ -1,38 +1,43 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using skat_back.data;
+using skat_back.DTO.UserDTO;
 using skat_back.models;
 
 namespace skat_back.services.UserService;
 
-public class UserService(IUnitOfWork uow, AppDbContext db) : IUserService
+public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper) : IUserService
 {
-    public async Task<IEnumerable<User>> GetAllUsersAsync()
+    public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
     {
-        return await db.Users.ToListAsync();
+        return await db.Users.ProjectTo<UserResponseDto>(mapper.ConfigurationProvider).ToListAsync();
     }
 
-    public async Task<User?> GetUserByIdAsync(string id)
+    public async Task<UserResponseDto?> GetUserByIdAsync(string id)
     {
-        return await db.Users.FindAsync(id);
+        User? player = await db.Users.FindAsync(id);
+        return player == null ? null : mapper.Map<UserResponseDto>(player);
     }
 
-    public async Task<User> CreateUserAsync(User user)
+    public async Task<UserResponseDto> CreateUserAsync(CreateUserDto dto)
     {
-        db.Add(user);
+        User user = mapper.Map<User>(dto);
+        
+        db.Users.Add(user);
         await uow.CommitAsync();
-        return user;
+        return mapper.Map<UserResponseDto>(user);
     }
 
-    public async Task<bool> UpdateUserAsync(string id, User updatedUser)
+    public async Task<bool> UpdateUserAsync(string id, UpdateUserDto dto)
     {
         var existingUser = await db.Users.FindAsync(id);
         if (existingUser == null)
             return false;
 
-        existingUser.FirstName = updatedUser.FirstName;
-        existingUser.LastName = updatedUser.LastName;
-        existingUser.Email = updatedUser.Email;
-        existingUser.Password = updatedUser.Password;
+        existingUser.FirstName = dto.FirstName;
+        existingUser.LastName = dto.LastName;
+        existingUser.Email = dto.Email;
         existingUser.UpdatedAt = DateTime.UtcNow;
 
         await uow.CommitAsync();
