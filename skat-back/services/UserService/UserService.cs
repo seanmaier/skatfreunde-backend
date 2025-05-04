@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using skat_back.data;
 using skat_back.DTO.UserDTO;
 using skat_back.models;
+using ILogger = Serilog.ILogger;
 
 namespace skat_back.services.UserService;
 
-public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper) : IUserService
+public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper, ILogger logger) : IUserService
 {
     public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
     {
@@ -16,41 +17,79 @@ public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper) : IUs
 
     public async Task<UserResponseDto?> GetUserByIdAsync(string id)
     {
-        User? player = await db.Users.FindAsync(id);
-        return player == null ? null : mapper.Map<UserResponseDto>(player);
+        logger.Information("Getting user by id: {Id}", id);
+
+        try
+        {
+            var player = await db.Users.FindAsync(id);
+            return player == null ? null : mapper.Map<UserResponseDto>(player);
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, "Error getting user by id: {Id}", id);
+            throw;
+        }
     }
 
     public async Task<UserResponseDto> CreateUserAsync(CreateUserDto dto)
     {
-        User user = mapper.Map<User>(dto);
-        
-        db.Users.Add(user);
-        await uow.CommitAsync();
-        return mapper.Map<UserResponseDto>(user);
+        logger.Information("Creating user: {@User}", dto);
+
+        try
+        {
+            var user = mapper.Map<User>(dto);
+
+            db.Users.Add(user);
+            await uow.CommitAsync();
+            return mapper.Map<UserResponseDto>(user);
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, "Error creating user: {@User}", dto);
+            throw;
+        }
     }
 
     public async Task<bool> UpdateUserAsync(string id, UpdateUserDto dto)
     {
-        var existingUser = await db.Users.FindAsync(id);
-        if (existingUser == null)
-            return false;
+        logger.Information("Updating user: {@User}", dto);
+        try
+        {
+            var existingUser = await db.Users.FindAsync(id);
+            if (existingUser == null)
+                return false;
 
-        existingUser.FirstName = dto.FirstName;
-        existingUser.LastName = dto.LastName;
-        existingUser.Email = dto.Email;
-        existingUser.UpdatedAt = DateTime.UtcNow;
+            existingUser.FirstName = dto.FirstName;
+            existingUser.LastName = dto.LastName;
+            existingUser.Email = dto.Email;
+            existingUser.UpdatedAt = DateTime.UtcNow;
 
-        await uow.CommitAsync();
-        return true;
+            await uow.CommitAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, "Error updating user: {@User}", dto);
+            throw;
+        }
     }
 
     public async Task<bool> DeleteUserAsync(string id)
     {
-        User? user = await db.Users.FindAsync(id);
-        if (user == null)
-            return false;
-        db.Users.Remove(user);
-        await uow.CommitAsync();
-        return true;
+        logger.Information("Deleting user with id: {Id}", id);
+        try
+        {
+            var user = await db.Users.FindAsync(id);
+            if (user == null)
+                return false;
+            db.Users.Remove(user);
+            await uow.CommitAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, "Error deleting user with id: {Id}", id);
+            throw;
+        }
     }
 }
