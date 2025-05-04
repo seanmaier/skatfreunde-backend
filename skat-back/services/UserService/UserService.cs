@@ -1,39 +1,51 @@
-﻿using skat_back.models;
-using skat_back.repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using skat_back.data;
+using skat_back.models;
 
 namespace skat_back.services.UserService;
 
-public class UserService(IRepository<User> repository) : IUserService
+public class UserService(IUnitOfWork uow, AppDbContext db) : IUserService
 {
-    public IEnumerable<User> GetAll()
+    public async Task<IEnumerable<User>> GetAllUsersAsync()
     {
-        return repository.GetAll();
+        return await db.Users.ToListAsync();
     }
 
-    public User? GetById(int id)
+    public async Task<User?> GetUserByIdAsync(string id)
     {
-        return repository.GetById(id);
+        return await db.Users.FindAsync(id);
     }
 
-    public void Add(User user)
+    public async Task<User> CreateUserAsync(User user)
     {
-        repository.Add(user);
+        db.Add(user);
+        await uow.CommitAsync();
+        return user;
     }
 
-    public void Update(int id, User updatedUser)
+    public async Task<bool> UpdateUserAsync(string id, User updatedUser)
     {
-        repository.Update(id, updatedUser, (existing, updated) =>
-        {
-            existing.Email = updated.Email;
-            existing.Password = updated.Password;
-            existing.FirstName = updated.FirstName;
-            existing.LastName = updated.LastName;
-            existing.UpdatedAt = DateTime.UtcNow;
-        });
+        var existingUser = await db.Users.FindAsync(id);
+        if (existingUser == null)
+            return false;
+
+        existingUser.FirstName = updatedUser.FirstName;
+        existingUser.LastName = updatedUser.LastName;
+        existingUser.Email = updatedUser.Email;
+        existingUser.Password = updatedUser.Password;
+        existingUser.UpdatedAt = DateTime.UtcNow;
+
+        await uow.CommitAsync();
+        return true;
     }
 
-    public void Delete(int id)
+    public async Task<bool> DeleteUserAsync(string id)
     {
-        repository.Delete(id);
+        User? user = await db.Users.FindAsync(id);
+        if (user == null)
+            return false;
+        db.Users.Remove(user);
+        await uow.CommitAsync();
+        return true;
     }
 }

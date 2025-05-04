@@ -16,4 +16,7 @@ public class MatchRound
     public required MatchSession MatchSession { get; set; } = null!;
     
     public int RoundNumber { get; set; }
+    
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

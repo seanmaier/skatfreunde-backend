@@ -19,7 +19,7 @@ public abstract class BaseController<T, TService>(TService service) : Controller
     }
 
     [HttpGet("{id}")]
-    public virtual IActionResult GetById(int id)
+    public virtual IActionResult GetById(string id)
     {
         var item = _service.GetById(id);
         return Ok(item);
@@ -33,14 +33,14 @@ public abstract class BaseController<T, TService>(TService service) : Controller
     }
 
     [HttpPut("{id}")]
-    public virtual IActionResult Update(int id, [FromBody] T item)
+    public virtual IActionResult Update(string id, [FromBody] T item)
     {
         _service.Update(id, item);
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public virtual IActionResult Delete(int id)
+    public virtual IActionResult Delete(string id)
     {
         _service.Delete(id);
         return NoContent();

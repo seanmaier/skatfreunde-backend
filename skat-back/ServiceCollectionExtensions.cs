@@ -1,7 +1,4 @@
-﻿using skat_back.models;
-using skat_back.repositories;
-using skat_back.services;
-using skat_back.services.BlogPostService;
+﻿using skat_back.services.BlogPostService;
 using skat_back.services.MatchRoundService;
 using skat_back.services.MatchSessionService;
 using skat_back.services.PlayerRoundResultsService;
@@ -14,13 +11,13 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        services.AddScoped<PlayerService>();
-        services.AddScoped<UserService>();
-        services.AddScoped<MatchRoundService>();
-        services.AddScoped<PlayerRoundResultService>();
-        services.AddScoped<BlogPostService>();
-        services.AddScoped<MatchSessionService>();
+        services.AddScoped<IUserService,UserService>();
+        services.AddScoped<IMatchRoundService, MatchRoundRoundService>();
+        services.AddScoped<IPlayerRoundResultService, PlayerRoundResultService>();
+        services.AddScoped<IBlogPostService, BlogPostService>();
+        services.AddScoped<IMatchSessionService, MatchSessionService>();
+        services.AddScoped<IPlayerService, PlayerService>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }

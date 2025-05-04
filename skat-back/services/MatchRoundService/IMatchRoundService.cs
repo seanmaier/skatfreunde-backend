@@ -2,7 +2,7 @@
 
 namespace skat_back.services.MatchRoundService;
 
-public interface IMatchService: IService<MatchRound>
+public interface IMatchRoundService: IService<MatchRound>
 {
     // Add specific methods here
 }

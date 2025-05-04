@@ -1,35 +1,41 @@
-﻿using skat_back.models;
-using skat_back.repositories;
+﻿using skat_back.data;
+using skat_back.models;
 
 namespace skat_back.services.MatchSessionService;
 
-public class MatchSessionService(IRepository<MatchSession> repository) : IMatchSessionService
+public class MatchSessionService(AppDbContext db): IMatchSessionService
 {
     public IEnumerable<MatchSession> GetAll()
     {
-        return repository.GetAll();
+        return db.MatchSessions.ToList();
     }
 
-    public MatchSession? GetById(int id)
+    public MatchSession? GetById(string id)
     {
-        return repository.GetById(id);
+        return db.MatchSessions.Find(id);
     }
 
     public void Add(MatchSession matchSession)
     {
-        repository.Add(matchSession);
+        db.Add(matchSession);
+        db.SaveChanges();
     }
 
-    public void Update(int id, MatchSession updatedMatchSession)
+    public void Update(string id, MatchSession updatedMatchSession)
     {
-        repository.Update(id, updatedMatchSession, (existing, updated) =>
-        {
-            existing.DateOfTheWeek = updated.DateOfTheWeek;
-        });
+        var existingMatchSession = db.MatchSessions.Find(id);
+        if (existingMatchSession == null)
+            throw new Exception("MatchSession not found");
+
+        existingMatchSession.DateOfTheWeek = updatedMatchSession.DateOfTheWeek;
+        db.SaveChanges();
     }
 
-    public void Delete(int id)
+    public void Delete(string id)
     {
-        repository.Delete(id);
+        var matchSession = db.MatchSessions.Find(id);
+        if (matchSession == null)
+            throw new Exception("MatchSession not found");
+        db.MatchSessions.Find(matchSession);
     }
 }

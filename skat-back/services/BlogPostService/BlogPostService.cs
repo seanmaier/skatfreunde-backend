@@ -1,42 +1,50 @@
-﻿using skat_back.models;
-using skat_back.repositories;
+﻿using skat_back.data;
+using skat_back.models;
 
 namespace skat_back.services.BlogPostService;
 
-public class BlogPostService(IRepository<BlogPost> repository) : IBlogPostService
+public class BlogPostService(AppDbContext db) : IBlogPostService
 {
-    public BlogPost? GetById(int id)
-    {
-        return repository.GetById(id);
-    }
-
     public IEnumerable<BlogPost> GetAll()
     {
-        return repository.GetAll();
+        return db.BlogPosts.ToList();
+    }
+
+    public BlogPost? GetById(string id)
+    {
+        return db.BlogPosts.Find(id);
     }
 
     public void Add(BlogPost blogPost)
     {
-        repository.Add(blogPost);
+        db.Add(blogPost);   
+        db.SaveChanges();
     }
 
-    public void Update(int id, BlogPost updatedBlogPost)
+    public void Update(string id, BlogPost updatedBlogPost)
     {
-        repository.Update(id, updatedBlogPost, (existing, updated) =>
-        {
-            existing.User = updated.User;
-            existing.UserId = updated.UserId;
-            existing.UpdatedAt = existing.UpdatedAt;
-            existing.Status = updated.Status;
-            existing.Summary = updated.Summary;
-            existing.Title = updated.Title;
-            existing.Text = updated.Text;
-            existing.MetaDescription = updated.MetaDescription;
-        });
+        var existingBlogPost = db.BlogPosts.Find(id);
+        if (existingBlogPost == null)
+            throw new Exception("BlogPost not found");
+
+        existingBlogPost.Title = updatedBlogPost.Title;
+        existingBlogPost.Text = updatedBlogPost.Text;
+        existingBlogPost.Slug = updatedBlogPost.Slug;
+        existingBlogPost.Summary = updatedBlogPost.Summary;
+        existingBlogPost.Status = updatedBlogPost.Status;
+        existingBlogPost.MetaTitle = updatedBlogPost.MetaTitle;
+        existingBlogPost.MetaDescription = updatedBlogPost.MetaDescription;
+        existingBlogPost.UpdatedAt = DateTime.UtcNow;
+
+        db.SaveChanges();
     }
 
-    public void Delete(int id)
+    public void Delete(string id)
     {
-        repository.Delete(id);
+        var blogPost = db.BlogPosts.Find(id);
+        if (blogPost == null)
+            throw new Exception("BlogPost not found");
+        db.BlogPosts.Remove(blogPost);
+        db.SaveChanges();
     }
 }

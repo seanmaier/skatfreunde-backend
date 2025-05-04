@@ -1,38 +1,47 @@
+using skat_back.data;
 using skat_back.models;
-using skat_back.repositories;
 
 namespace skat_back.services.PlayerRoundResultsService;
 
-public class PlayerRoundResultService(IRepository<PlayerRoundResult> repository) : IPlayerRoundResultService
+public class PlayerRoundResultService(AppDbContext db): IPlayerRoundResultService
 {
     public IEnumerable<PlayerRoundResult> GetAll()
     {
-        return repository.GetAll();
+        return db.PlayerRoundResults.ToList();
     }
 
-    public PlayerRoundResult? GetById(int id)
+    public PlayerRoundResult? GetById(string id)
     {
-        return repository.GetById(id);
+        return db.PlayerRoundResults.Find(id);
     }
 
     public void Add(PlayerRoundResult entity)
     {
-        repository.Add(entity);
+        db.Add(entity);
+        db.SaveChanges();
     }
 
-    public void Update(int id, PlayerRoundResult entity)
+    public void Update(string id, PlayerRoundResult entity)
     {
-        repository.Update(id, entity, (existing, updated) =>
-        {
-            existing.Points = updated.Points;
-            existing.Won = updated.Won;
-            existing.Lost = updated.Lost;
-            existing.Table = existing.Table;
-        });
+        var existing = db.PlayerRoundResults.Find(id);
+        if (existing == null)
+            throw new Exception("PlayerRoundResult not found");
+        
+        existing.PlayerId = entity.PlayerId;
+        existing.Won = entity.Won;
+        existing.Lost = entity.Lost;
+        existing.Points = entity.Points;
+        existing.Table = entity.Table;
+        existing.UpdatedAt = DateTime.UtcNow;
+
+        db.SaveChanges();
     }
 
-    public void Delete(int id)
+    public void Delete(string id)
     {
-        repository.Delete(id);
+        var playerRoundResult = db.PlayerRoundResults.Find(id);
+        if (playerRoundResult == null)
+            throw new Exception("PlayerRoundResult not found");
+        db.PlayerRoundResults.Remove(playerRoundResult);
     }
 }
