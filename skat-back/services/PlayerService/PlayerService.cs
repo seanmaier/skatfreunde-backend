@@ -32,7 +32,7 @@ public class PlayerService(IUnitOfWork uow, AppDbContext db, IMapper mapper) : I
 
     public async Task<bool> UpdatePlayerAsync(int id, UpdatePlayerDto dto)
     {
-        var existing = db.Players.FirstOrDefault(p => p.Id == id);
+        var existing = await db.Players.FindAsync(id);
         if (existing == null)
             return false;
 

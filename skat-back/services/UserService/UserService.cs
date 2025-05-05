@@ -12,6 +12,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper, ILogg
 {
     public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
     {
+        logger.Information("Getting all users");
         return await db.Users.ProjectTo<UserResponseDto>(mapper.ConfigurationProvider).ToListAsync();
     }
 
