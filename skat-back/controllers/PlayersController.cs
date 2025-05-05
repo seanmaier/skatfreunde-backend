@@ -5,7 +5,7 @@ using skat_back.services.PlayerService;
 namespace skat_back.controllers;
 
 [ApiController]
-[Route("api/players")]
+[Route("api/[controller]")]
 public class PlayersController(IPlayerService service) : ControllerBase
 {
     [HttpGet]

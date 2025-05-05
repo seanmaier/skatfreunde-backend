@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using skat_back.dto.BlogPostDto;
 using skat_back.DTO.PlayerDTO;
 using skat_back.DTO.UserDTO;
 using skat_back.models;
@@ -14,5 +15,7 @@ public class MappingProfile : Profile
 
         CreateMap<CreatePlayerDto, Player>();
         CreateMap<Player, PlayerResponseDto>();
+
+        CreateMap<BlogPostRequest, BlogPost>();
     }
 }

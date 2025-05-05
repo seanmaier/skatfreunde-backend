@@ -1,50 +1,92 @@
-﻿using skat_back.data;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using skat_back.data;
+using skat_back.dto.BlogPostDto;
 using skat_back.models;
+using ILogger = Serilog.ILogger;
 
 namespace skat_back.services.BlogPostService;
 
-public class BlogPostService(AppDbContext db) : IBlogPostService
+public class BlogPostService(AppDbContext db, IUnitOfWork uow, IMapper mapper, ILogger logger) : IBlogPostService
 {
-    public IEnumerable<BlogPost> GetAll()
+    public async Task<IEnumerable<BlogPost>> GetAllAsync()
     {
-        return db.BlogPosts.ToList();
+        logger.Information("Fetching all blog posts");
+        return await db.BlogPosts.ToListAsync();
     }
 
-    public BlogPost? GetById(string id)
+    public async Task<BlogPost?> GetByIdAsync(int id)
     {
-        return db.BlogPosts.Find(id);
+        logger.Information("Fetching blog post with ID: {Id}", id);
+        return await db.BlogPosts.FindAsync(id);
     }
 
-    public void Add(BlogPost blogPost)
+    public async Task<BlogPost> CreateAsync(BlogPostRequest dto)
     {
-        db.Add(blogPost);   
-        db.SaveChanges();
+        logger.Information("Creating blog post: {@BlogPost}", dto);
+
+        try
+        {
+            var blogPost = mapper.Map<BlogPost>(dto);
+            
+            db.Add(blogPost);
+            await uow.CommitAsync();
+
+            return blogPost;
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, "Error creating blog post: {@BlogPost}", dto);
+            throw;
+        }
     }
 
-    public void Update(string id, BlogPost updatedBlogPost)
+    public async Task<bool> UpdateAsync(int id, BlogPostRequest dto)
     {
-        var existingBlogPost = db.BlogPosts.Find(id);
-        if (existingBlogPost == null)
-            throw new Exception("BlogPost not found");
+        logger.Information("Updating blog post with ID: {Id}", id);
 
-        existingBlogPost.Title = updatedBlogPost.Title;
-        existingBlogPost.Text = updatedBlogPost.Text;
-        existingBlogPost.Slug = updatedBlogPost.Slug;
-        existingBlogPost.Summary = updatedBlogPost.Summary;
-        existingBlogPost.Status = updatedBlogPost.Status;
-        existingBlogPost.MetaTitle = updatedBlogPost.MetaTitle;
-        existingBlogPost.MetaDescription = updatedBlogPost.MetaDescription;
-        existingBlogPost.UpdatedAt = DateTime.UtcNow;
+        try
+        {
+            var existingBlogPost = await db.BlogPosts.FindAsync(id);
+            if (existingBlogPost == null)
+                return false;
 
-        db.SaveChanges();
+            existingBlogPost.Title = dto.Title;
+            existingBlogPost.Text = dto.Text;
+            existingBlogPost.Slug = dto.Slug;
+            existingBlogPost.Summary = dto.Summary;
+            existingBlogPost.Status = dto.Status;
+            existingBlogPost.MetaTitle = dto.MetaTitle;
+            existingBlogPost.MetaDescription = dto.MetaDescription;
+            existingBlogPost.UpdatedAt = DateTime.UtcNow;
+
+            await uow.CommitAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, "Error updating blog post with ID: {Id}", id);
+            throw;
+        }
     }
 
-    public void Delete(string id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var blogPost = db.BlogPosts.Find(id);
-        if (blogPost == null)
-            throw new Exception("BlogPost not found");
-        db.BlogPosts.Remove(blogPost);
-        db.SaveChanges();
+        logger.Information("Deleting blog post with ID: {Id}", id);
+        try
+        {
+            var blogPost = await db.BlogPosts.FindAsync(id);
+            if (blogPost == null)
+                return false;
+
+            db.BlogPosts.Remove(blogPost);
+            await uow.CommitAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, "Error deleting blog post with ID: {Id}", id);
+            throw;
+        }
     }
 }
