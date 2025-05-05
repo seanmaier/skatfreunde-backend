@@ -15,7 +15,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper, ILogg
         return await db.Users.ProjectTo<UserResponseDto>(mapper.ConfigurationProvider).ToListAsync();
     }
 
-    public async Task<UserResponseDto?> GetUserByIdAsync(string id)
+    public async Task<UserResponseDto?> GetUserByIdAsync(int id)
     {
         logger.Information("Getting user by id: {Id}", id);
 
@@ -50,7 +50,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper, ILogg
         }
     }
 
-    public async Task<bool> UpdateUserAsync(string id, UpdateUserDto dto)
+    public async Task<bool> UpdateUserAsync(int id, UpdateUserDto dto)
     {
         logger.Information("Updating user: {@User}", dto);
         try
@@ -74,7 +74,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper, ILogg
         }
     }
 
-    public async Task<bool> DeleteUserAsync(string id)
+    public async Task<bool> DeleteUserAsync(int id)
     {
         logger.Information("Deleting user with id: {Id}", id);
         try

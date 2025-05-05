@@ -16,7 +16,7 @@ public class PlayersController(IPlayerService service) : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetPlayerById(string id)
+    public async Task<IActionResult> GetPlayerById(int id)
     {
         var player = await service.GetPlayerByIdAsync(id);
         if (player == null)
@@ -33,14 +33,14 @@ public class PlayersController(IPlayerService service) : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdatePlayer(string id, [FromBody] UpdatePlayerDto playerDtoDto)
+    public async Task<IActionResult> UpdatePlayer(int id, [FromBody] UpdatePlayerDto playerDtoDto)
     {
         var updated = await service.UpdatePlayerAsync(id, playerDtoDto);
         return updated ? NoContent() : NotFound();
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletePlayer(string id)
+    public async Task<IActionResult> DeletePlayer(int id)
     {
         var deleted = await service.DeletePlayerAsync(id);
         return deleted ? NoContent() : NotFound();

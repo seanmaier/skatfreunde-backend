@@ -14,7 +14,7 @@ public class PlayerService(IUnitOfWork uow, AppDbContext db, IMapper mapper) : I
         return await db.Players.ProjectTo<PlayerResponseDto>(mapper.ConfigurationProvider).ToListAsync();
     }
 
-    public async Task<PlayerResponseDto?> GetPlayerByIdAsync(string id)
+    public async Task<PlayerResponseDto?> GetPlayerByIdAsync(int id)
     {
         var player = await db.Players.FindAsync(id);
         return player == null ? null : mapper.Map<PlayerResponseDto>(player);
@@ -24,13 +24,13 @@ public class PlayerService(IUnitOfWork uow, AppDbContext db, IMapper mapper) : I
     {
         var player = mapper.Map<Player>(dto);
 
-        db.Add(player);
+        db.Add((object)player);
         await uow.CommitAsync();
 
         return mapper.Map<PlayerResponseDto>(player);
     }
 
-    public async Task<bool> UpdatePlayerAsync(string id, UpdatePlayerDto dto)
+    public async Task<bool> UpdatePlayerAsync(int id, UpdatePlayerDto dto)
     {
         var existing = db.Players.FirstOrDefault(p => p.Id == id);
         if (existing == null)
@@ -43,7 +43,7 @@ public class PlayerService(IUnitOfWork uow, AppDbContext db, IMapper mapper) : I
         return true;
     }
 
-    public async Task<bool> DeletePlayerAsync(string id)
+    public async Task<bool> DeletePlayerAsync(int id)
     {
         var player = await db.Players.FindAsync(id);
         if (player == null)

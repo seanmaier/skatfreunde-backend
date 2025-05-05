@@ -19,22 +19,22 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .WithOne(mr => mr.MatchSession)
             .HasForeignKey(mr => mr.MatchSessionId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         modelBuilder.Entity<MatchSession>(entity =>
-                entity.HasIndex(ms => ms.DateOfTheWeek).IsUnique());
+            entity.HasIndex(ms => ms.DateOfTheWeek).IsUnique());
 
         modelBuilder.Entity<Player>()
             .HasMany(p => p.PlayerRoundResults)
             .WithOne(prr => prr.Player)
             .HasForeignKey(prr => prr.PlayerId)
             .OnDelete(DeleteBehavior.Restrict);
-        
+
         modelBuilder.Entity<Player>(entity =>
             entity.HasIndex(p => p.Name).IsUnique());
 
         modelBuilder.Entity<PlayerRoundResult>()
             .HasKey(prr => new { prr.MatchRoundId, prr.PlayerId });
-        
+
         // ===========BlogPosts===========
         modelBuilder.Entity<BlogPost>()
             .HasIndex(b => b.Slug)
@@ -43,7 +43,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         // ===========Users===========
         modelBuilder.Entity<User>(entity =>
             entity.HasIndex(u => u.Email).IsUnique());
-        
+
         base.OnModelCreating(modelBuilder);
     }
 }

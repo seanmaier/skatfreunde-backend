@@ -1,4 +1,5 @@
-﻿using skat_back.services.BlogPostService;
+﻿using Serilog;
+using skat_back.services.BlogPostService;
 using skat_back.services.MatchRoundService;
 using skat_back.services.MatchSessionService;
 using skat_back.services.PlayerRoundResultsService;
@@ -18,5 +19,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMatchSessionService, MatchSessionService>();
         services.AddScoped<IPlayerService, PlayerService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddSingleton(Log.Logger);
     }
 }

@@ -1,23 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using static skat_back.utilities.constants.ValidationConstants;
 
 namespace skat_back.models;
 
-public class MatchRound
+public class MatchRound : BaseEntity
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; } = null!;
+    [Key] public int Id { get; set; }
 
-    [Required]
-    [MaxLength(MaxIdLength)]
-    public string MatchSessionId { get; set; } = null!;
-    [Required]
-    public required MatchSession MatchSession { get; set; } = null!;
-    
+    [Required] [MaxLength(MaxIdLength)] public int MatchSessionId { get; set; }
+
+    [Required] public required MatchSession MatchSession { get; set; } = null!;
+
     public int RoundNumber { get; set; }
-    
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

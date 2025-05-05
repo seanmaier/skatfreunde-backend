@@ -4,11 +4,11 @@ using static skat_back.utilities.constants.ValidationConstants;
 
 namespace skat_back.models;
 
-public class User
+public class User : BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; } = null!;
+    public Guid Id { get; set; }
 
     [Required]
     [MinLength(MinNameLength)]
@@ -30,7 +30,4 @@ public class User
     [MaxLength(MaxEmailLength)]
     [EmailAddress]
     public required string Email { get; set; }
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; }
 }

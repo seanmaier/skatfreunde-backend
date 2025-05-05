@@ -25,6 +25,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Configure Serilog
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
+    .Enrich.FromLogContext()
     .WriteTo.Console()
     .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
@@ -38,6 +39,8 @@ builder.Services.ConfigureServices();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 //if (app.Environment.IsDevelopment())
 //{
