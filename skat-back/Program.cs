@@ -1,17 +1,15 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using skat_back;
 using skat_back.data;
+using skat_back.utilities.validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => { options.Filters.Add<ValidationFilter>(); });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// Configure Serilog
-builder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) =>
-    loggerConfiguration.ReadFrom.Configuration(hostBuilderContext.Configuration));
 
 builder.Services.AddCors(options =>
 {
@@ -23,9 +21,16 @@ builder.Services.AddCors(options =>
     });
 });
 
+/*builder.Services.AddFluentValidationAutoValidation();*/
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+
+// Configure Serilog
+builder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) =>
+    loggerConfiguration.ReadFrom.Configuration(hostBuilderContext.Configuration));
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 
 // dependency injection registrations
 builder.Services.ConfigureServices();
