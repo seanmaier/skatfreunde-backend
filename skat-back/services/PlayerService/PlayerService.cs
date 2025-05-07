@@ -24,7 +24,7 @@ public class PlayerService(IUnitOfWork uow, AppDbContext db, IMapper mapper) : I
     {
         var player = mapper.Map<Player>(dto);
 
-        db.Add((object)player);
+        db.Players.Add(player);
         await uow.CommitAsync();
 
         return mapper.Map<PlayerResponseDto>(player);
