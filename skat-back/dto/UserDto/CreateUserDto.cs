@@ -1,6 +1,6 @@
 ﻿namespace skat_back.DTO.UserDTO;
 
-public record CreateUserDto(
+public sealed record CreateUserDto(
     string FirstName,
     string LastName,
     string Email,
