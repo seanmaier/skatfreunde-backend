@@ -29,7 +29,7 @@ public class BlogPostService(AppDbContext db, IUnitOfWork uow, ILogger logger) :
         {
             var blogPost = dto.ToEntity();
 
-            db.Add(blogPost);
+            db.BlogPosts.Add(blogPost);
             await uow.CommitAsync();
 
             return blogPost.ToDto();

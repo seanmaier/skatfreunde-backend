@@ -12,5 +12,10 @@ public class Player : BaseEntity
     [MaxLength(MaxNameLength)]
     public string Name { get; set; } = string.Empty;
 
+    /*--------------------Navigation  Properties--------------------*/
+
+    [Required] public required Guid CreatedById { get; set; }
+    public User CreatedBy { get; set; } = null!;
+
     public ICollection<PlayerRoundStats> PlayerRoundResults { get; set; } = new HashSet<PlayerRoundStats>();
 }

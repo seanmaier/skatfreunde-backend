@@ -9,7 +9,8 @@ public static class PlayerMapping
     {
         return new Player
         {
-            Name = entity.Name
+            Name = entity.Name,
+            CreatedById = entity.CreatedById
         };
     }
 
@@ -17,7 +18,8 @@ public static class PlayerMapping
     {
         return new Player
         {
-            Name = entity.Name
+            Name = entity.Name,
+            CreatedById = entity.CreatedById
         };
     }
 

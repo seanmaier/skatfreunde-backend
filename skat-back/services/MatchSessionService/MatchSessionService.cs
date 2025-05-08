@@ -43,10 +43,6 @@ public class MatchSessionService(IUnitOfWork uow, AppDbContext db)
             await transaction.RollbackAsync();
             throw;
         }
-
-        await uow.CommitAsync();
-
-        //return mapper.Map<ResponseMatchSessionDto>(matchSession);
     }
 
     public async Task<bool> UpdateAsync(int id, UpdateMatchSessionDto dto)
