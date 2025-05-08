@@ -5,7 +5,13 @@ namespace skat_back.controllers;
 
 /// <summary>
 ///     A generic controller providing basic CRUD operations for a specified entity type.
+///     This controller is designed to work with a service layer that handles the entity's business logic.
 /// </summary>
+/// <typeparam name="TResponse">The type of the response DTO.</typeparam>
+/// <typeparam name="TCreate">The type of the DTO used for creating entities.</typeparam>
+/// <typeparam name="TUpdate">The type of the DTO used for updating entities.</typeparam>
+/// <typeparam name="TId">The type of the entity identifier.</typeparam>
+/// <typeparam name="TService">The type of the Business Service</typeparam>
 [ApiController]
 [Route("api/[controller]")]
 public class GenericController<TResponse, TCreate, TUpdate, TId, TService>(TService service) : ControllerBase
