@@ -4,4 +4,5 @@ namespace skat_back.services.UserService;
 
 public interface IUserService : IService<ResponseUserDto, CreateUserDto, UpdateUserDto, Guid>
 {
+    Task<bool> CheckEmailAsync(string email);
 }

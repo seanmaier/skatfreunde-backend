@@ -89,4 +89,19 @@ public class UserService(IUnitOfWork uow, AppDbContext db, ILogger logger) : IUs
             throw;
         }
     }
+    
+    public async Task<bool> CheckEmailAsync(string email)
+    {
+        logger.Information("Checking email: {Email}", email);
+        try
+        {
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Email == email);
+            return user != null;
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, "Error checking email: {Email}", email);
+            throw;
+        }
+    }
 }
