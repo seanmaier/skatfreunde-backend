@@ -3,7 +3,7 @@
 namespace skat_back.dto.MatchSessionDto;
 
 public sealed record ResponseMatchSessionDto(
-    string Id,
+    int Id,
     Guid CreatedByUserId,
     string CalendarWeek,
     ICollection<ResponseMatchRoundDto> MatchRounds,

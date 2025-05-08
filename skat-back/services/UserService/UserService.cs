@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using skat_back.data;
 using skat_back.DTO.UserDTO;
-using skat_back.models;
 using skat_back.utilities.mapping;
 using ILogger = Serilog.ILogger;
 
@@ -14,7 +11,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, ILogger logger) : IUs
     public async Task<ICollection<ResponseUserDto>> GetAllAsync()
     {
         logger.Information("Getting all users");
-        return await db.Users.Select(r => r.ToDto()).ToListAsync();
+        return await db.Users.Select(r => r.ToResponse()).ToListAsync();
     }
 
     public async Task<ResponseUserDto?> GetByIdAsync(Guid id)
@@ -24,7 +21,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, ILogger logger) : IUs
         try
         {
             var player = await db.Users.FindAsync(id);
-            return player?.ToDto();
+            return player?.ToResponse();
         }
         catch (Exception ex)
         {
@@ -43,7 +40,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, ILogger logger) : IUs
 
             db.Users.Add(user);
             await uow.CommitAsync();
-            return user.ToDto();
+            return user.ToResponse();
         }
         catch (Exception ex)
         {

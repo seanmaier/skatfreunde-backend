@@ -36,8 +36,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // dependency injection registrations
 builder.Services.ConfigureServices();
 
-// AutoMapper configuration
-builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 

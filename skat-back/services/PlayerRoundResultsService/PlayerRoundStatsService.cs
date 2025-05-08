@@ -1,34 +1,32 @@
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using skat_back.data;
 using skat_back.dto.PlayerRoundResultDto;
-using skat_back.models;
+using skat_back.utilities.mapping;
 
 namespace skat_back.services.PlayerRoundResultsService;
 
-public class PlayerRoundResultService(AppDbContext db, IMapper mapper, IUnitOfWork uow) : IPlayerRoundResultService
+public class PlayerRoundStatsService(AppDbContext db, IUnitOfWork uow) : IPlayerRoundStatsService
 {
     public async Task<ICollection<ResponsePlayerRoundStatsDto>> GetAllAsync()
     {
-        return await db.PlayerRoundResults.ProjectTo<ResponsePlayerRoundStatsDto>(mapper.ConfigurationProvider)
+        return await db.PlayerRoundResults.Select(prr => prr.ToDto())
             .ToListAsync();
     }
 
     public async Task<ResponsePlayerRoundStatsDto?> GetByIdAsync(int id)
     {
         var playerRoundStats = await db.PlayerRoundResults.FindAsync(id);
-        return playerRoundStats == null ? null : mapper.Map<ResponsePlayerRoundStatsDto>(playerRoundStats);
+        return playerRoundStats?.ToDto();
     }
 
     public async Task<ResponsePlayerRoundStatsDto> CreateAsync(CreatePlayerRoundStatsDto dto)
     {
-        var playerRoundStats = mapper.Map<PlayerRoundStats>(dto);
+        var playerRoundStats = dto.ToEntity();
         db.PlayerRoundResults.Add(playerRoundStats);
 
         await uow.CommitAsync();
 
-        return mapper.Map<ResponsePlayerRoundStatsDto>(playerRoundStats);
+        return playerRoundStats.ToDto();
     }
 
     public async Task<bool> UpdateAsync(int id, UpdatePlayerRoundStatsDto dto)

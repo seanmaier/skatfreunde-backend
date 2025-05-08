@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using skat_back.dto.BlogPostDto;
-using skat_back.models;
 using skat_back.services.BlogPostService;
 
 namespace skat_back.controllers;
@@ -8,6 +7,6 @@ namespace skat_back.controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class BlogPostsController(IBlogPostService service)
-    : BaseController<BlogPost, BlogPostRequest, BlogPostRequest, int, IBlogPostService>(service)
+    : BaseController<ResponseBlogPostDto, CreateBlogPostDto, UpdateBlogPostDto, int, IBlogPostService>(service)
 {
 }

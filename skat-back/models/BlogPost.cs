@@ -17,6 +17,6 @@ public class BlogPost : BaseEntity
 
     /*--------------------Navigation  Properties--------------------*/
 
-    [Required] public Guid UserId { get; set; }
-    public required User User { get; set; } = null!;
+    [Required] public required Guid CreatedById { get; set; }
+    public User User { get; set; } = null!;
 }

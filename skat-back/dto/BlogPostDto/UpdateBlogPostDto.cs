@@ -1,8 +1,8 @@
 ﻿namespace skat_back.dto.BlogPostDto;
 
-public record BlogPostRequest(
+public record UpdateBlogPostDto(
     int Id,
-    Guid UserId,
+    Guid CreatedById,
     string Title,
     string Text,
     string Slug,

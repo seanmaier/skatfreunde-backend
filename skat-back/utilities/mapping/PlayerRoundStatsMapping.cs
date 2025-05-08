@@ -1,0 +1,48 @@
+﻿using skat_back.dto.PlayerRoundResultDto;
+using skat_back.models;
+
+namespace skat_back.utilities.mapping;
+
+public static class PlayerRoundStatsMapping
+{
+    public static PlayerRoundStats ToEntity(this CreatePlayerRoundStatsDto entity)
+    {
+        return new PlayerRoundStats
+        {
+            MatchRoundId = entity.MatchRoundId,
+            PlayerId = entity.PlayerId,
+            Points = entity.Points,
+            Won = entity.Won,
+            Lost = entity.Lost,
+            Table = entity.Table
+        };
+    }
+
+    public static PlayerRoundStats ToEntity(this UpdatePlayerRoundStatsDto entity)
+    {
+        return new PlayerRoundStats
+        {
+            MatchRoundId = entity.MatchRoundId,
+            PlayerId = entity.PlayerId,
+            Points = entity.Points,
+            Won = entity.Won,
+            Lost = entity.Lost,
+            Table = entity.Table
+        };
+    }
+
+    public static ResponsePlayerRoundStatsDto ToDto(this PlayerRoundStats entity)
+    {
+        return new ResponsePlayerRoundStatsDto
+        (
+            entity.PlayerId,
+            entity.MatchRoundId,
+            entity.Points,
+            entity.Won,
+            entity.Lost,
+            entity.Table,
+            entity.CreatedAt,
+            entity.UpdatedAt
+        );
+    }
+}

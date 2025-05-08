@@ -1,24 +1,23 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using skat_back.data;
 using skat_back.dto.MatchSessionDto;
 using skat_back.models;
+using skat_back.utilities.mapping;
 
 namespace skat_back.services.MatchSessionService;
 
-public class MatchSessionService(IUnitOfWork uow, AppDbContext db, IMapper mapper)
+public class MatchSessionService(IUnitOfWork uow, AppDbContext db)
     : IMatchSessionService
 {
     public async Task<ICollection<ResponseMatchSessionDto>> GetAllAsync()
     {
-        return await db.MatchSessions.ProjectTo<ResponseMatchSessionDto>(mapper.ConfigurationProvider).ToListAsync();
+        return await db.MatchSessions.Select(ms => ms.ToDto()).ToListAsync();
     }
 
     public async Task<ResponseMatchSessionDto?> GetByIdAsync(int id)
     {
         var matchSession = await db.MatchSessions.FindAsync(id);
-        return matchSession == null ? null : mapper.Map<ResponseMatchSessionDto>(matchSession);
+        return matchSession?.ToDto();
     }
 
     public async Task<ResponseMatchSessionDto> CreateAsync(CreateMatchSessionDto dto)
@@ -27,23 +26,7 @@ public class MatchSessionService(IUnitOfWork uow, AppDbContext db, IMapper mappe
 
         db.MatchSessions.Add(matchSession);*/
 
-        var session = new MatchSession
-        {
-            CreatedByUserId = dto.CreatedByUserId,
-            CalendarWeek = dto.CalendarWeek,
-            MatchRounds = dto.MatchRound.Select(roundDto => new MatchRound
-            {
-                RoundNumber = roundDto.RoundNumber,
-                PlayerRoundResult = roundDto.PlayerRoundResults.Select(playerRoundDto => new PlayerRoundStats
-                {
-                    PlayerId = playerRoundDto.PlayerId,
-                    Points = playerRoundDto.Points,
-                    Won = playerRoundDto.Won,
-                    Lost = playerRoundDto.Lost,
-                    Table = playerRoundDto.Table
-                }).ToList()
-            }).ToList()
-        };
+        var session = dto.ToEntity();
 
         db.MatchSessions.Add(session);
 
@@ -53,14 +36,14 @@ public class MatchSessionService(IUnitOfWork uow, AppDbContext db, IMapper mappe
         {
             await db.SaveChangesAsync();
             await transaction.CommitAsync();
-            return mapper.Map<ResponseMatchSessionDto>(session);
+            return session.ToDto();
         }
         catch
         {
             await transaction.RollbackAsync();
             throw;
         }
-        
+
         await uow.CommitAsync();
 
         //return mapper.Map<ResponseMatchSessionDto>(matchSession);
@@ -68,15 +51,16 @@ public class MatchSessionService(IUnitOfWork uow, AppDbContext db, IMapper mappe
 
     public async Task<bool> UpdateAsync(int id, UpdateMatchSessionDto dto)
     {
-        var existingMatchSession = await db.MatchSessions
+        var existingMatchSession = await db.MatchSessions // TODO check logic
             .Include(ms => ms.MatchRounds)
-            .ThenInclude(mr => mr.PlayerRoundResult)
+            .ThenInclude(mr => mr.PlayerRoundResults)
             .SingleOrDefaultAsync();
 
         if (existingMatchSession == null)
             return false;
 
-        var matchSession = mapper.Map(dto, existingMatchSession);
+        var matchSession = dto.ToEntity();
+        db.Entry(existingMatchSession).CurrentValues.SetValues(matchSession);
 
         UpdateRounds(existingMatchSession.MatchRounds, matchSession.MatchRounds);
 
@@ -102,7 +86,7 @@ public class MatchSessionService(IUnitOfWork uow, AppDbContext db, IMapper mappe
             if (updatedRound == null) continue;
 
             db.Entry(existingRound).CurrentValues.SetValues(updatedRound);
-            UpdatePlayerResults(existingRound.PlayerRoundResult, updatedRound.PlayerRoundResult);
+            UpdatePlayerResults(existingRound.PlayerRoundResults, updatedRound.PlayerRoundResults);
         }
     }
 

@@ -3,7 +3,7 @@ using skat_back.services.PlayerRoundResultsService;
 
 namespace skat_back.controllers;
 
-public class PlayerRoundStatsController(IPlayerRoundResultService service)
+public class PlayerRoundStatsController(IPlayerRoundStatsService service)
     : BaseController<ResponsePlayerRoundStatsDto, CreatePlayerRoundStatsDto, UpdatePlayerRoundStatsDto, int,
-        IPlayerRoundResultService>(
+        IPlayerRoundStatsService>(
         service);

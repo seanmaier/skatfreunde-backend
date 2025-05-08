@@ -15,7 +15,7 @@ public static class UserMapping
             Password = userDto.Password
         };
     }
-    
+
     public static User ToEntity(this UpdateUserDto userDto)
     {
         return new User
@@ -26,15 +26,15 @@ public static class UserMapping
             Password = userDto.Password
         };
     }
-    
-    public static ResponseUserDto ToDto(this User userDto)
+
+    public static ResponseUserDto ToResponse(this User userDto)
     {
         return new ResponseUserDto(
-            Id: userDto.Id,
-            FirstName: userDto.FirstName,
-            LastName: userDto.LastName,
-            Password: userDto.Password,
-            Email: userDto.Email
+            userDto.Id,
+            userDto.FirstName,
+            userDto.LastName,
+            userDto.Email,
+            userDto.Password
         );
     }
 }

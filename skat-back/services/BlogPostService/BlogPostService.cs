@@ -1,38 +1,38 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using skat_back.data;
 using skat_back.dto.BlogPostDto;
-using skat_back.models;
+using skat_back.utilities.mapping;
 using ILogger = Serilog.ILogger;
 
 namespace skat_back.services.BlogPostService;
 
-public class BlogPostService(AppDbContext db, IUnitOfWork uow, IMapper mapper, ILogger logger) : IBlogPostService
+public class BlogPostService(AppDbContext db, IUnitOfWork uow, ILogger logger) : IBlogPostService
 {
-    public async Task<ICollection<BlogPost>> GetAllAsync()
+    public async Task<ICollection<ResponseBlogPostDto>> GetAllAsync()
     {
         logger.Information("Fetching all blog posts");
-        return await db.BlogPosts.ToListAsync();
+        return await db.BlogPosts.Select(bp => bp.ToDto()).ToListAsync();
     }
 
-    public async Task<BlogPost?> GetByIdAsync(int id)
+    public async Task<ResponseBlogPostDto?> GetByIdAsync(int id)
     {
         logger.Information("Fetching blog post with ID: {Id}", id);
-        return await db.BlogPosts.FindAsync(id);
+        var blogPost = await db.BlogPosts.FindAsync(id);
+        return blogPost?.ToDto();
     }
 
-    public async Task<BlogPost> CreateAsync(BlogPostRequest dto)
+    public async Task<ResponseBlogPostDto> CreateAsync(CreateBlogPostDto dto)
     {
         logger.Information("Creating blog post: {@BlogPost}", dto);
 
         try
         {
-            var blogPost = mapper.Map<BlogPost>(dto);
-            
+            var blogPost = dto.ToEntity();
+
             db.Add(blogPost);
             await uow.CommitAsync();
 
-            return blogPost;
+            return blogPost.ToDto();
         }
         catch (Exception ex)
         {
@@ -41,7 +41,7 @@ public class BlogPostService(AppDbContext db, IUnitOfWork uow, IMapper mapper, I
         }
     }
 
-    public async Task<bool> UpdateAsync(int id, BlogPostRequest dto)
+    public async Task<bool> UpdateAsync(int id, UpdateBlogPostDto dto)
     {
         logger.Information("Updating blog post with ID: {Id}", id);
 

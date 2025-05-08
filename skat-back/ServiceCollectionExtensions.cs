@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IMatchRoundService, MatchRoundRoundService>();
-        services.AddScoped<IPlayerRoundResultService, PlayerRoundResultService>();
+        services.AddScoped<IPlayerRoundStatsService, PlayerRoundStatsService>();
         services.AddScoped<IBlogPostService, BlogPostService>();
         services.AddScoped<IMatchSessionService, MatchSessionService>();
         services.AddScoped<IPlayerService, PlayerService>();

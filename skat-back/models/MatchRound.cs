@@ -14,5 +14,5 @@ public class MatchRound : BaseEntity
     [Required] public int MatchSessionId { get; set; }
     public MatchSession MatchSession { get; set; } = null!;
 
-    public ICollection<PlayerRoundStats> PlayerRoundResult { get; set; } = null!;
+    public ICollection<PlayerRoundStats> PlayerRoundResults { get; set; } = null!;
 }

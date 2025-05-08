@@ -2,12 +2,11 @@
 
 namespace skat_back.dto.MatchRoundDto;
 
-public sealed record ResponseMatchRoundDto
-{
-    public string Id { get; init; } = string.Empty;
-    public string RoundNumber { get; init; } = string.Empty;
-    public string MatchSessionId { get; init; } = string.Empty;
-    public ICollection<ResponsePlayerRoundStatsDto> PlayerRoundResults { get; init; } = new List<ResponsePlayerRoundStatsDto>();
-    public DateTime CreatedAt { get; init; }
-    public DateTime UpdatedAt { get; init; }
-}
+public sealed record ResponseMatchRoundDto(
+    int Id,
+    int MatchSessionId,
+    string RoundNumber,
+    ICollection<ResponsePlayerRoundStatsDto> PlayerRoundStats,
+    DateTime CreatedAt,
+    DateTime UpdatedAt
+);

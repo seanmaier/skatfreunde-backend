@@ -1,6 +1,7 @@
 ﻿namespace skat_back.dto.PlayerRoundResultDto;
 
 public sealed record UpdatePlayerRoundStatsDto(
+    int MatchRoundId,
     int PlayerId,
     int Points,
     int Won,
