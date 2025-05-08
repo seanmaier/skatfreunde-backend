@@ -24,14 +24,14 @@ public class GenericController<TResponse, TCreate, TUpdate, TId, TService>(TServ
     private TService _service = service;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public virtual async Task<IActionResult> GetAll()
     {
         var items = await _service.GetAllAsync();
         return Ok(items);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(TId id)
+    public virtual async Task<IActionResult> GetById(TId id)
     {
         var item = await _service.GetByIdAsync(id);
         if (item == null)
@@ -40,14 +40,14 @@ public class GenericController<TResponse, TCreate, TUpdate, TId, TService>(TServ
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] TCreate dto)
+    public virtual async Task<IActionResult> Create([FromBody] TCreate dto)
     {
         var item = await _service.CreateAsync(dto);
         return CreatedAtAction(nameof(GetById), new { id = (item as dynamic).Id }, item);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(TId id, [FromBody] TUpdate dto)
+    public virtual async Task<IActionResult> Update(TId id, [FromBody] TUpdate dto)
     {
         var result = await _service.UpdateAsync(id, dto);
         if (!result)
@@ -56,7 +56,7 @@ public class GenericController<TResponse, TCreate, TUpdate, TId, TService>(TServ
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(TId id)
+    public virtual async Task<IActionResult> Delete(TId id)
     {
         var result = await _service.DeleteAsync(id);
         if (!result)
