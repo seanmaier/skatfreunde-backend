@@ -1,6 +1,6 @@
 namespace skat_back.DTO.PlayerDTO;
 
-public record PlayerResponseDto(
+public record ResponsePlayerDto(
     string Id,
     string Name,
     DateTime CreatedAt,

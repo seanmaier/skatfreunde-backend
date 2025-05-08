@@ -9,25 +9,25 @@ namespace skat_back.services.PlayerService;
 
 public class PlayerService(IUnitOfWork uow, AppDbContext db, IMapper mapper) : IPlayerService
 {
-    public async Task<IEnumerable<PlayerResponseDto>> GetAllAsync()
+    public async Task<ICollection<ResponsePlayerDto>> GetAllAsync()
     {
-        return await db.Players.ProjectTo<PlayerResponseDto>(mapper.ConfigurationProvider).ToListAsync();
+        return await db.Players.ProjectTo<ResponsePlayerDto>(mapper.ConfigurationProvider).ToListAsync();
     }
 
-    public async Task<PlayerResponseDto?> GetByIdAsync(int id)
+    public async Task<ResponsePlayerDto?> GetByIdAsync(int id)
     {
         var player = await db.Players.FindAsync(id);
-        return player == null ? null : mapper.Map<PlayerResponseDto>(player);
+        return player == null ? null : mapper.Map<ResponsePlayerDto>(player);
     }
 
-    public async Task<PlayerResponseDto> CreateAsync(CreatePlayerDto dto)
+    public async Task<ResponsePlayerDto> CreateAsync(CreatePlayerDto dto)
     {
         var player = mapper.Map<Player>(dto);
 
         db.Players.Add(player);
         await uow.CommitAsync();
 
-        return mapper.Map<PlayerResponseDto>(player);
+        return mapper.Map<ResponsePlayerDto>(player);
     }
 
     public async Task<bool> UpdateAsync(int id, UpdatePlayerDto dto)

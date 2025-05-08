@@ -2,6 +2,6 @@
 
 namespace skat_back.services.PlayerService;
 
-public interface IPlayerService : IBaseService<PlayerResponseDto, CreatePlayerDto, UpdatePlayerDto, int>
+public interface IPlayerService : IService<ResponsePlayerDto, CreatePlayerDto, UpdatePlayerDto, int>
 {
 }

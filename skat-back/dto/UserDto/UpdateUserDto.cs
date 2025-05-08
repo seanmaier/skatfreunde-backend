@@ -1,6 +1,6 @@
 ﻿namespace skat_back.DTO.UserDTO;
 
-public record UpdateUserDto(
+public sealed record UpdateUserDto(
     string FirstName,
     string LastName,
     string Email,

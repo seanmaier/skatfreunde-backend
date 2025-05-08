@@ -7,21 +7,16 @@ public class BlogPost : BaseEntity
 {
     [Key] public int Id { get; set; }
 
-    [Required] [MaxLength(MaxIdLength)] public Guid UserId { get; set; }
-
-    public required User User { get; set; }
-
-    [Required] [MaxLength(MaxTextLength)] public required string Title { get; set; }
-
-    [Required] [MaxLength(MaxTextLength)] public required string Text { get; set; }
-
-    [Required] [MaxLength(MaxSlugLength)] public required string Slug { get; set; }
-
+    [MaxLength(MaxTextLength)] public required string Title { get; set; }
+    [MaxLength(MaxTextLength)] public required string Text { get; set; }
+    [MaxLength(MaxSlugLength)] public required string Slug { get; set; }
     [MaxLength(MaxSummaryLength)] public string? Summary { get; set; }
-
-    [Required] public BlogStatus Status { get; set; } = BlogStatus.Draft;
-
+    public BlogStatus Status { get; set; } = BlogStatus.Draft;
     [MaxLength(MaxTitleLength)] public required string MetaTitle { get; set; }
-
     [MaxLength(MaxDescriptionLength)] public required string MetaDescription { get; set; }
+
+    /*--------------------Navigation  Properties--------------------*/
+
+    [Required] public Guid UserId { get; set; }
+    public required User User { get; set; } = null!;
 }

@@ -1,47 +1,61 @@
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using skat_back.data;
+using skat_back.dto.PlayerRoundResultDto;
 using skat_back.models;
 
 namespace skat_back.services.PlayerRoundResultsService;
 
-public class PlayerRoundResultService(AppDbContext db): IPlayerRoundResultService
+public class PlayerRoundResultService(AppDbContext db, IMapper mapper, IUnitOfWork uow) : IPlayerRoundResultService
 {
-    public IEnumerable<PlayerRoundResult> GetAll()
+    public async Task<ICollection<ResponsePlayerRoundStatsDto>> GetAllAsync()
     {
-        return db.PlayerRoundResults.ToList();
+        return await db.PlayerRoundResults.ProjectTo<ResponsePlayerRoundStatsDto>(mapper.ConfigurationProvider)
+            .ToListAsync();
     }
 
-    public PlayerRoundResult? GetById(string id)
+    public async Task<ResponsePlayerRoundStatsDto?> GetByIdAsync(int id)
     {
-        return db.PlayerRoundResults.Find(id);
+        var playerRoundStats = await db.PlayerRoundResults.FindAsync(id);
+        return playerRoundStats == null ? null : mapper.Map<ResponsePlayerRoundStatsDto>(playerRoundStats);
     }
 
-    public void Add(PlayerRoundResult entity)
+    public async Task<ResponsePlayerRoundStatsDto> CreateAsync(CreatePlayerRoundStatsDto dto)
     {
-        db.Add(entity);
-        db.SaveChanges();
+        var playerRoundStats = mapper.Map<PlayerRoundStats>(dto);
+        db.PlayerRoundResults.Add(playerRoundStats);
+
+        await uow.CommitAsync();
+
+        return mapper.Map<ResponsePlayerRoundStatsDto>(playerRoundStats);
     }
 
-    public void Update(string id, PlayerRoundResult entity)
+    public async Task<bool> UpdateAsync(int id, UpdatePlayerRoundStatsDto dto)
     {
-        var existing = db.PlayerRoundResults.Find(id);
+        var existing = await db.PlayerRoundResults.FindAsync(id);
         if (existing == null)
-            throw new Exception("PlayerRoundResult not found");
-        
-        existing.PlayerId = entity.PlayerId;
-        existing.Won = entity.Won;
-        existing.Lost = entity.Lost;
-        existing.Points = entity.Points;
-        existing.Table = entity.Table;
+            return false;
+
+        existing.PlayerId = dto.PlayerId;
+        existing.Won = dto.Won;
+        existing.Lost = dto.Lost;
+        existing.Points = dto.Points;
+        existing.Table = dto.Table;
         existing.UpdatedAt = DateTime.UtcNow;
 
-        db.SaveChanges();
+        await uow.CommitAsync();
+        return true;
     }
 
-    public void Delete(string id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var playerRoundResult = db.PlayerRoundResults.Find(id);
+        var playerRoundResult = await db.PlayerRoundResults.FindAsync(id);
         if (playerRoundResult == null)
-            throw new Exception("PlayerRoundResult not found");
+            return false;
+
         db.PlayerRoundResults.Remove(playerRoundResult);
+        await uow.CommitAsync();
+        return true;
     }
 }

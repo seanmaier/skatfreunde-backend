@@ -2,6 +2,6 @@
 
 namespace skat_back.services.UserService;
 
-public interface IUserService : IBaseService<UserResponseDto, CreateUserDto, UpdateUserDto, Guid>
+public interface IUserService : IService<ResponseUserDto, CreateUserDto, UpdateUserDto, Guid>
 {
 }

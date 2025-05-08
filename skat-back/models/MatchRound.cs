@@ -7,9 +7,12 @@ public class MatchRound : BaseEntity
 {
     [Key] public int Id { get; set; }
 
-    [Required] [MaxLength(MaxIdLength)] public int MatchSessionId { get; set; }
+    [MaxLength(MaxCharLength)] public string RoundNumber { get; set; }
 
-    [Required] public required MatchSession MatchSession { get; set; } = null!;
+    /*--------------------Navigation  Properties--------------------*/
 
-    public int RoundNumber { get; set; }
+    [Required] public int MatchSessionId { get; set; }
+    public MatchSession MatchSession { get; set; } = null!;
+
+    public ICollection<PlayerRoundStats> PlayerRoundResult { get; set; } = null!;
 }

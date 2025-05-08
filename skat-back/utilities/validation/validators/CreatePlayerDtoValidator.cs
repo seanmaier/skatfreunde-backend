@@ -2,7 +2,7 @@
 using skat_back.DTO.PlayerDTO;
 using static skat_back.utilities.constants.ValidationConstants;
 
-namespace skat_back.utilities.validation;
+namespace skat_back.utilities.validation.validators;
 
 public class CreatePlayerDtoValidator : AbstractValidator<CreatePlayerDto>
 {

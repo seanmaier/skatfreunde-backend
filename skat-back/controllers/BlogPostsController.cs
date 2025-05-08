@@ -8,6 +8,6 @@ namespace skat_back.controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class BlogPostsController(IBlogPostService service)
-    : GenericController<BlogPost, BlogPostRequest, BlogPostRequest, int, IBlogPostService>(service)
+    : BaseController<BlogPost, BlogPostRequest, BlogPostRequest, int, IBlogPostService>(service)
 {
 }

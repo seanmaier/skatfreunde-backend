@@ -3,46 +3,64 @@ using skat_back.services;
 
 namespace skat_back.controllers;
 
+/// <summary>
+///     A generic controller providing basic CRUD operations for a specified entity type.
+///     This controller is designed to work with a service layer that handles the entity's business logic.
+/// </summary>
+/// <typeparam name="TResponse">The type of the response DTO.</typeparam>
+/// <typeparam name="TCreate">The type of the DTO used for creating entities.</typeparam>
+/// <typeparam name="TUpdate">The type of the DTO used for updating entities.</typeparam>
+/// <typeparam name="TId">The type of the entity identifier.</typeparam>
+/// <typeparam name="TService">The type of the Business Service</typeparam>
 [ApiController]
 [Route("api/[controller]")]
-public abstract class BaseController<T, TService>(TService service) : ControllerBase
-    where T : class
-    where TService : IService<T>
+public class BaseController<TResponse, TCreate, TUpdate, TId, TService>(TService service) : ControllerBase
+    where TResponse : class
+    where TCreate : class
+    where TUpdate : class
+    where TId : struct
+    where TService : IService<TResponse, TCreate, TUpdate, TId>
 {
-    private readonly TService _service = service;
+    private TService _service = service;
 
     [HttpGet]
-    public virtual IActionResult GetAll()
+    public virtual async Task<IActionResult> GetAll()
     {
-        var items = _service.GetAll();
+        var items = await _service.GetAllAsync();
         return Ok(items);
     }
 
     [HttpGet("{id}")]
-    public virtual IActionResult GetById(string id)
+    public virtual async Task<IActionResult> GetById(TId id)
     {
-        var item = _service.GetById(id);
+        var item = await _service.GetByIdAsync(id);
+        if (item == null)
+            return NotFound();
         return Ok(item);
     }
 
     [HttpPost]
-    public virtual IActionResult Add([FromBody] T item)
+    public virtual async Task<IActionResult> Create([FromBody] TCreate dto)
     {
-        _service.Add(item);
+        var item = await _service.CreateAsync(dto);
         return CreatedAtAction(nameof(GetById), new { id = (item as dynamic).Id }, item);
     }
 
     [HttpPut("{id}")]
-    public virtual IActionResult Update(string id, [FromBody] T item)
+    public virtual async Task<IActionResult> Update(TId id, [FromBody] TUpdate dto)
     {
-        _service.Update(id, item);
+        var result = await _service.UpdateAsync(id, dto);
+        if (!result)
+            return NotFound();
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public virtual IActionResult Delete(string id)
+    public virtual async Task<IActionResult> Delete(TId id)
     {
-        _service.Delete(id);
+        var result = await _service.DeleteAsync(id);
+        if (!result)
+            return NotFound();
         return NoContent();
     }
 }

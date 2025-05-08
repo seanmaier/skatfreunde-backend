@@ -1,18 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static skat_back.utilities.constants.ValidationConstants;
-
 
 namespace skat_back.models;
 
-public class MatchSession
+public class MatchSession : BaseEntity
 {
     [Key] public int Id { get; set; }
 
-    public DateTime DateOfTheWeek { get; set; }
+    public string CalendarWeek { get; set; }
 
-    [Required] [MaxLength(MaxIdLength)] public Guid CreatedByUserId { get; set; }
+    /*--------------------Navigation  Properties--------------------*/
 
-    [Required] public User CreatedByUser { get; set; } = null!;
+    [Required] public Guid CreatedByUserId { get; set; }
 
-    public ICollection<MatchRound> MatchRounds { get; set; } = new List<MatchRound>();
+    public User CreatedByUser { get; set; } = null!;
+
+    public ICollection<MatchRound> MatchRounds { get; set; } = new HashSet<MatchRound>();
 }

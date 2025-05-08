@@ -9,7 +9,7 @@ namespace skat_back.services.BlogPostService;
 
 public class BlogPostService(AppDbContext db, IUnitOfWork uow, IMapper mapper, ILogger logger) : IBlogPostService
 {
-    public async Task<IEnumerable<BlogPost>> GetAllAsync()
+    public async Task<ICollection<BlogPost>> GetAllAsync()
     {
         logger.Information("Fetching all blog posts");
         return await db.BlogPosts.ToListAsync();

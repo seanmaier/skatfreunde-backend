@@ -1,7 +1,7 @@
 ﻿namespace skat_back.DTO.UserDTO;
 
-public record UserResponseDto(
-    string Id,
+public sealed record ResponseUserDto(
+    Guid Id,
     string FirstName,
     string LastName,
     string Email,

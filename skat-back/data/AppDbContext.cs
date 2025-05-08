@@ -9,7 +9,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Player> Players { get; set; }
     public DbSet<MatchRound> MatchRounds { get; set; }
     public DbSet<MatchSession> MatchSessions { get; set; }
-    public DbSet<PlayerRoundResult> PlayerRoundResults { get; set; }
+    public DbSet<PlayerRoundStats> PlayerRoundResults { get; set; }
     public DbSet<BlogPost> BlogPosts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,7 +21,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<MatchSession>(entity =>
-            entity.HasIndex(ms => ms.DateOfTheWeek).IsUnique());
+            entity.HasIndex(ms => ms.CalendarWeek).IsUnique());
 
         modelBuilder.Entity<Player>()
             .HasMany(p => p.PlayerRoundResults)
@@ -32,7 +32,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<Player>(entity =>
             entity.HasIndex(p => p.Name).IsUnique());
 
-        modelBuilder.Entity<PlayerRoundResult>()
+        modelBuilder.Entity<PlayerRoundStats>()
             .HasKey(prr => new { prr.MatchRoundId, prr.PlayerId });
 
         // ===========BlogPosts===========

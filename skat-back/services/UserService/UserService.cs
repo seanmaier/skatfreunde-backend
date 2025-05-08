@@ -4,26 +4,27 @@ using Microsoft.EntityFrameworkCore;
 using skat_back.data;
 using skat_back.DTO.UserDTO;
 using skat_back.models;
+using skat_back.utilities.mapping;
 using ILogger = Serilog.ILogger;
 
 namespace skat_back.services.UserService;
 
-public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper, ILogger logger) : IUserService
+public class UserService(IUnitOfWork uow, AppDbContext db, ILogger logger) : IUserService
 {
-    public async Task<IEnumerable<UserResponseDto>> GetAllAsync()
+    public async Task<ICollection<ResponseUserDto>> GetAllAsync()
     {
         logger.Information("Getting all users");
-        return await db.Users.ProjectTo<UserResponseDto>(mapper.ConfigurationProvider).ToListAsync();
+        return await db.Users.Select(r => r.ToDto()).ToListAsync();
     }
 
-    public async Task<UserResponseDto?> GetByIdAsync(Guid id)
+    public async Task<ResponseUserDto?> GetByIdAsync(Guid id)
     {
         logger.Information("Getting user by id: {Id}", id);
 
         try
         {
             var player = await db.Users.FindAsync(id);
-            return player == null ? null : mapper.Map<UserResponseDto>(player);
+            return player?.ToDto();
         }
         catch (Exception ex)
         {
@@ -32,17 +33,17 @@ public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper, ILogg
         }
     }
 
-    public async Task<UserResponseDto> CreateAsync(CreateUserDto dto)
+    public async Task<ResponseUserDto> CreateAsync(CreateUserDto dto)
     {
         logger.Information("Creating user: {@User}", dto);
 
         try
         {
-            var user = mapper.Map<User>(dto);
+            var user = dto.ToEntity();
 
             db.Users.Add(user);
             await uow.CommitAsync();
-            return mapper.Map<UserResponseDto>(user);
+            return user.ToDto();
         }
         catch (Exception ex)
         {
@@ -60,11 +61,9 @@ public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper, ILogg
             if (existingUser == null)
                 return false;
 
-            existingUser.FirstName = dto.FirstName;
-            existingUser.LastName = dto.LastName;
-            existingUser.Email = dto.Email;
-            existingUser.UpdatedAt = DateTime.UtcNow;
+            var user = dto.ToEntity();
 
+            db.Users.Update(user);
             await uow.CommitAsync();
             return true;
         }

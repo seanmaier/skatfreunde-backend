@@ -1,43 +1,56 @@
-﻿using skat_back.data;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
+using skat_back.data;
+using skat_back.dto.MatchRoundDto;
 using skat_back.models;
 
 namespace skat_back.services.MatchRoundService;
 
-public class MatchRoundRoundService(AppDbContext repository) : IMatchRoundService
+public class MatchRoundRoundService(AppDbContext db, IMapper mapper, IUnitOfWork uow) : IMatchRoundService
 {
-    public IEnumerable<MatchRound> GetAll()
+    public async Task<ICollection<ResponseMatchRoundDto>> GetAllAsync()
     {
-        return repository.MatchRounds.ToList();
+        return await db.MatchRounds.ProjectTo<ResponseMatchRoundDto>(mapper.ConfigurationProvider).ToListAsync();
     }
 
-    public MatchRound? GetById(string id)
+    public async Task<ResponseMatchRoundDto?> GetByIdAsync(int id)
     {
-        return repository.MatchRounds.Find(id);
+        var matchRound = await db.MatchRounds.FindAsync(id);
+        return matchRound == null ? null : mapper.Map<ResponseMatchRoundDto>(matchRound);
     }
 
-    public void Add(MatchRound matchRound)
+    public async Task<ResponseMatchRoundDto> CreateAsync(CreateMatchRoundDto dto)
     {
-        repository.Add(matchRound);
-        repository.SaveChanges();
+        var matchRound = mapper.Map<MatchRound>(dto);
+
+        db.MatchRounds.Add(matchRound);
+        await uow.CommitAsync();
+
+        return mapper.Map<ResponseMatchRoundDto>(matchRound);
     }
 
-    public void Update(string id, MatchRound updatedMatchRound)
+    public async Task<bool> UpdateAsync(int id, UpdateMatchRoundDto dto)
     {
-        var existingMatchRound = repository.MatchRounds.Find(id);
+        var existingMatchRound = await db.MatchRounds.FindAsync(id);
         if (existingMatchRound == null)
-            throw new Exception("MatchRound not found");
+            return false;
 
-        existingMatchRound.RoundNumber = updatedMatchRound.RoundNumber;
+        existingMatchRound.RoundNumber = dto.RoundNumber;
         existingMatchRound.UpdatedAt = DateTime.UtcNow;
 
-        repository.SaveChanges();
+        await uow.CommitAsync();
+        return true;
     }
 
-    public void Delete(string id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var matchRound = repository.MatchRounds.Find(id);
+        var matchRound = await db.MatchRounds.FindAsync(id);
         if (matchRound == null)
-            throw new Exception("MatchRound not found");
-        repository.Remove(matchRound);
+            return false;
+        db.Remove(matchRound);
+        
+        await uow.CommitAsync();
+        return true;
     }
 }
