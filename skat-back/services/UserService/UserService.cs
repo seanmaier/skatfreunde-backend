@@ -10,13 +10,13 @@ namespace skat_back.services.UserService;
 
 public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper, ILogger logger) : IUserService
 {
-    public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
+    public async Task<IEnumerable<UserResponseDto>> GetAllAsync()
     {
         logger.Information("Getting all users");
         return await db.Users.ProjectTo<UserResponseDto>(mapper.ConfigurationProvider).ToListAsync();
     }
 
-    public async Task<UserResponseDto?> GetUserByIdAsync(Guid id)
+    public async Task<UserResponseDto?> GetByIdAsync(Guid id)
     {
         logger.Information("Getting user by id: {Id}", id);
 
@@ -32,7 +32,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper, ILogg
         }
     }
 
-    public async Task<UserResponseDto> CreateUserAsync(CreateUserDto dto)
+    public async Task<UserResponseDto> CreateAsync(CreateUserDto dto)
     {
         logger.Information("Creating user: {@User}", dto);
 
@@ -51,7 +51,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper, ILogg
         }
     }
 
-    public async Task<bool> UpdateUserAsync(Guid id, UpdateUserDto dto)
+    public async Task<bool> UpdateAsync(Guid id, UpdateUserDto dto)
     {
         logger.Information("Updating user: {@User}", dto);
         try
@@ -75,7 +75,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, IMapper mapper, ILogg
         }
     }
 
-    public async Task<bool> DeleteUserAsync(Guid id)
+    public async Task<bool> DeleteAsync(Guid id)
     {
         logger.Information("Deleting user with id: {Id}", id);
         try

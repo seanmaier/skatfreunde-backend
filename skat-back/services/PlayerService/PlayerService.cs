@@ -9,18 +9,18 @@ namespace skat_back.services.PlayerService;
 
 public class PlayerService(IUnitOfWork uow, AppDbContext db, IMapper mapper) : IPlayerService
 {
-    public async Task<IEnumerable<PlayerResponseDto>> GetAllPlayersAsync()
+    public async Task<IEnumerable<PlayerResponseDto>> GetAllAsync()
     {
         return await db.Players.ProjectTo<PlayerResponseDto>(mapper.ConfigurationProvider).ToListAsync();
     }
 
-    public async Task<PlayerResponseDto?> GetPlayerByIdAsync(int id)
+    public async Task<PlayerResponseDto?> GetByIdAsync(int id)
     {
         var player = await db.Players.FindAsync(id);
         return player == null ? null : mapper.Map<PlayerResponseDto>(player);
     }
 
-    public async Task<PlayerResponseDto> CreatePlayerAsync(CreatePlayerDto dto)
+    public async Task<PlayerResponseDto> CreateAsync(CreatePlayerDto dto)
     {
         var player = mapper.Map<Player>(dto);
 
@@ -30,7 +30,7 @@ public class PlayerService(IUnitOfWork uow, AppDbContext db, IMapper mapper) : I
         return mapper.Map<PlayerResponseDto>(player);
     }
 
-    public async Task<bool> UpdatePlayerAsync(int id, UpdatePlayerDto dto)
+    public async Task<bool> UpdateAsync(int id, UpdatePlayerDto dto)
     {
         var existing = await db.Players.FindAsync(id);
         if (existing == null)
@@ -43,7 +43,7 @@ public class PlayerService(IUnitOfWork uow, AppDbContext db, IMapper mapper) : I
         return true;
     }
 
-    public async Task<bool> DeletePlayerAsync(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
         var player = await db.Players.FindAsync(id);
         if (player == null)

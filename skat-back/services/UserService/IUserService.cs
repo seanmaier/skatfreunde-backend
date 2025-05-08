@@ -2,11 +2,6 @@
 
 namespace skat_back.services.UserService;
 
-public interface IUserService
+public interface IUserService : IBaseService<UserResponseDto, CreateUserDto, UpdateUserDto, Guid>
 {
-    Task<IEnumerable<UserResponseDto>> GetAllUsersAsync();
-    Task<UserResponseDto?> GetUserByIdAsync(Guid id);
-    Task<UserResponseDto> CreateUserAsync(CreateUserDto dto);
-    Task<bool> UpdateUserAsync(Guid id, UpdateUserDto dto);
-    Task<bool> DeleteUserAsync(Guid id);
 }
