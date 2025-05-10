@@ -1,10 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using skat_back.data;
-using skat_back.dto.PlayerRoundResultDto;
 using skat_back.utilities.mapping;
 
-namespace skat_back.services.PlayerRoundResultsService;
+namespace skat_back.Features.PlayerRoundStatistics;
 
+/// <summary>
+///     Represents the service for managing player round statistics.
+/// </summary>
+/// <param name="db">The database context</param>
+/// <param name="uow">To be removed</param>
 public class PlayerRoundStatsService(AppDbContext db, IUnitOfWork uow) : IPlayerRoundStatsService
 {
     public async Task<ICollection<ResponsePlayerRoundStatsDto>> GetAllAsync()

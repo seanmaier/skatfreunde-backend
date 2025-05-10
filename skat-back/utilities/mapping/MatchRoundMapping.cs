@@ -1,5 +1,4 @@
-﻿using skat_back.dto.MatchRoundDto;
-using skat_back.models;
+﻿using skat_back.Features.MatchRounds;
 
 namespace skat_back.utilities.mapping;
 
@@ -10,7 +9,7 @@ public static class MatchRoundMapping
         return new MatchRound
         {
             RoundNumber = entity.RoundNumber,
-            PlayerRoundResults = entity.PlayerRoundResults.Select(x => x.ToEntity()).ToList()
+            PlayerRoundStats = entity.PlayerRoundStats.Select(x => x.ToEntity()).ToList()
         };
     }
 
@@ -19,7 +18,7 @@ public static class MatchRoundMapping
         return new MatchRound
         {
             RoundNumber = entity.RoundNumber,
-            PlayerRoundResults = entity.PlayerRoundStats.Select(x => x.ToEntity()).ToList()
+            PlayerRoundStats = entity.PlayerRoundStats.Select(x => x.ToEntity()).ToList()
         };
     }
 
@@ -29,7 +28,7 @@ public static class MatchRoundMapping
             entity.Id,
             entity.MatchSessionId,
             entity.RoundNumber,
-            entity.PlayerRoundResults.Select(x => x.ToDto()).ToList(),
+            entity.PlayerRoundStats.Select(x => x.ToDto()).ToList(),
             entity.CreatedAt,
             entity.UpdatedAt
         );

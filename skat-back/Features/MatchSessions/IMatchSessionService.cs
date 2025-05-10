@@ -1,9 +1,13 @@
-﻿using skat_back.dto.MatchSessionDto;
-using skat_back.models;
+﻿using skat_back.services;
 
-namespace skat_back.services.MatchSessionService;
+namespace skat_back.Features.MatchSessions;
 
-public interface IMatchSessionService : IService<ResponseMatchSessionDto, CreateMatchSessionDto, UpdateMatchSessionDto, int>
+/// <summary>
+///     Represents the service interface for managing match sessions.
+///     Specific implementations for the MatchSession Service should be provided here.
+/// </summary>
+public interface
+    IMatchSessionService : IService<ResponseMatchSessionDto, CreateMatchSessionDto, UpdateMatchSessionDto, int>
 {
     // Add specific methods here
 }

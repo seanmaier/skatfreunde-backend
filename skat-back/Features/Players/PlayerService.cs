@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using skat_back.data;
-using skat_back.DTO.PlayerDTO;
-using skat_back.models;
 using skat_back.utilities.mapping;
 
-namespace skat_back.services.PlayerService;
+namespace skat_back.Features.Players;
 
+/// <summary>
+///     Represents the service implementation for managing players.
+/// </summary>
+/// <param name="uow">To be removed</param>
+/// <param name="db">The database context</param>
 public class PlayerService(IUnitOfWork uow, AppDbContext db) : IPlayerService
 {
     public async Task<ICollection<ResponsePlayerDto>> GetAllAsync()

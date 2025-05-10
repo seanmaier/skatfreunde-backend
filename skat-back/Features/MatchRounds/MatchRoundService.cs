@@ -1,11 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using skat_back.data;
-using skat_back.dto.MatchRoundDto;
 using skat_back.utilities.mapping;
 
-namespace skat_back.services.MatchRoundService;
+namespace skat_back.Features.MatchRounds;
 
-public class MatchRoundRoundService(AppDbContext db, IUnitOfWork uow) : IMatchRoundService
+/// <summary>
+///     Represents the service for managing match rounds.
+/// </summary>
+/// <param name="db">The Database context</param>
+/// <param name="uow">To be removed</param>
+public class MatchRoundService(AppDbContext db, IUnitOfWork uow) : IMatchRoundService
 {
     public async Task<ICollection<ResponseMatchRoundDto>> GetAllAsync()
     {

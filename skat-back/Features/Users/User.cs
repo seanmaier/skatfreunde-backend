@@ -1,8 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using skat_back.models;
 using static skat_back.utilities.constants.ValidationConstants;
 
-namespace skat_back.models;
+namespace skat_back.Features.Users;
 
+/// <summary>
+///     Represents a user entity for the Database.
+/// </summary>
 public class User : BaseEntity
 {
     [Key] public Guid Id { get; set; }

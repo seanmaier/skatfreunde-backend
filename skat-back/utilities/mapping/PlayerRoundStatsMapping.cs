@@ -1,5 +1,4 @@
-﻿using skat_back.dto.PlayerRoundResultDto;
-using skat_back.models;
+﻿using skat_back.Features.PlayerRoundStatistics;
 
 namespace skat_back.utilities.mapping;
 

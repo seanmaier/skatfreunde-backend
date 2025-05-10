@@ -1,5 +1,4 @@
-﻿using skat_back.dto.MatchSessionDto;
-using skat_back.models;
+﻿using skat_back.Features.MatchSessions;
 
 namespace skat_back.utilities.mapping;
 

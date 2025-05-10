@@ -1,9 +1,9 @@
 using FluentValidation;
-using skat_back.DTO.UserDTO;
+using skat_back.Features.Users;
 
 namespace skat_back.utilities.validation.validators;
 
-public class UpdateUserValidator: AbstractValidator<UpdateUserDto>
+public class UpdateUserValidator : AbstractValidator<UpdateUserDto>
 {
     public UpdateUserValidator()
     {

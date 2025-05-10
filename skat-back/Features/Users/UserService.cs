@@ -1,11 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using skat_back.data;
-using skat_back.DTO.UserDTO;
 using skat_back.utilities.mapping;
 using ILogger = Serilog.ILogger;
 
-namespace skat_back.services.UserService;
+namespace skat_back.Features.Users;
 
+/// <summary>
+///     Represents the service implementation for managing users.
+/// </summary>
+/// <param name="uow">To be removed</param>
+/// <param name="db">The database context</param>
+/// <param name="logger">The injected logger</param>
 public class UserService(IUnitOfWork uow, AppDbContext db, ILogger logger) : IUserService
 {
     public async Task<ICollection<ResponseUserDto>> GetAllAsync()
@@ -89,7 +94,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, ILogger logger) : IUs
             throw;
         }
     }
-    
+
     public async Task<bool> CheckEmailAsync(string email)
     {
         logger.Information("Checking email: {Email}", email);

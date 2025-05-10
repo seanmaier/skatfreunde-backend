@@ -1,8 +1,11 @@
-﻿using skat_back.dto.MatchSessionDto;
-using skat_back.models;
-using skat_back.services.MatchSessionService;
+﻿using skat_back.controllers;
 
-namespace skat_back.controllers;
+namespace skat_back.Features.MatchSessions;
 
+/// <summary>
+///     Represents the API controller for managing match sessions.
+/// </summary>
+/// <param name="service">The injected MatchSession Service</param>
 public class MatchSessionsController(IMatchSessionService service)
-    : BaseController<ResponseMatchSessionDto, CreateMatchSessionDto, UpdateMatchSessionDto, int, IMatchSessionService>(service);
+    : BaseController<ResponseMatchSessionDto, CreateMatchSessionDto, UpdateMatchSessionDto, int, IMatchSessionService>(
+        service);

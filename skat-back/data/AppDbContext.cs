@@ -1,6 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using skat_back.Features.BlogPosts;
-using skat_back.models;
+using skat_back.Features.MatchRounds;
+using skat_back.Features.MatchSessions;
+using skat_back.Features.PlayerRoundStatistics;
+using skat_back.Features.Players;
+using skat_back.Features.Users;
 
 namespace skat_back.data;
 

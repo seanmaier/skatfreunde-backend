@@ -1,5 +1,8 @@
 ﻿namespace skat_back.dto.BlogPostDto;
 
+/// <summary>
+///     Represents a data transfer object (DTO) for a blog post.
+/// </summary>
 public record ResponseBlogPostDto(
     int Id,
     Guid CreatedById,

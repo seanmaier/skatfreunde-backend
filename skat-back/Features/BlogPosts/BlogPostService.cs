@@ -4,8 +4,14 @@ using skat_back.dto.BlogPostDto;
 using skat_back.utilities.mapping;
 using ILogger = Serilog.ILogger;
 
-namespace skat_back.services.BlogPostService;
+namespace skat_back.Features.BlogPosts;
 
+/// <summary>
+///     Represents the service for managing blog posts.
+/// </summary>
+/// <param name="db">The Database context</param>
+/// <param name="uow">To be removed</param>
+/// <param name="logger">The injected Logger</param>
 public class BlogPostService(AppDbContext db, IUnitOfWork uow, ILogger logger) : IBlogPostService
 {
     public async Task<ICollection<ResponseBlogPostDto>> GetAllAsync()

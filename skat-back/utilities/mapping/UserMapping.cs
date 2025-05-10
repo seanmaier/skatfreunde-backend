@@ -1,4 +1,4 @@
-﻿using skat_back.DTO.UserDTO;
+﻿using skat_back.Features.Users;
 using skat_back.models;
 
 namespace skat_back.utilities.mapping;

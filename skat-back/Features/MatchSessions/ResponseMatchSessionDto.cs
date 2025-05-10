@@ -1,7 +1,14 @@
-﻿using skat_back.dto.MatchRoundDto;
+﻿using skat_back.Features.MatchRounds;
 
-namespace skat_back.dto.MatchSessionDto;
+namespace skat_back.Features.MatchSessions;
 
+/// <summary>
+///     Represents the data transfer object (DTO) for a match session response.
+/// </summary>
+/// <param name="Id">The id of the MatchSession</param>
+/// <param name="CreatedByUserId">The User who created the MatchSession</param>
+/// <param name="CalendarWeek">The CalenderWeek the MatchSession happened</param>
+/// <param name="MatchRounds">A collection of match Rounds that happened on that day</param>
 public sealed record ResponseMatchSessionDto(
     int Id,
     Guid CreatedByUserId,

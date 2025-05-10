@@ -1,5 +1,4 @@
-﻿using skat_back.DTO.PlayerDTO;
-using skat_back.models;
+﻿using skat_back.Features.Players;
 
 namespace skat_back.utilities.mapping;
 
@@ -10,7 +9,7 @@ public static class PlayerMapping
         return new Player
         {
             Name = entity.Name,
-            CreatedById = entity.CreatedById
+            CreatedById = entity.CreatedByUserId
         };
     }
 
@@ -19,7 +18,7 @@ public static class PlayerMapping
         return new Player
         {
             Name = entity.Name,
-            CreatedById = entity.CreatedById
+            CreatedById = entity.CreatedByUserId
         };
     }
 
