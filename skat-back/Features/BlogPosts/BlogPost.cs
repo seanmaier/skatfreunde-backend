@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using skat_back.models;
 using static skat_back.utilities.constants.ValidationConstants;
 
-namespace skat_back.models;
+namespace skat_back.Features.BlogPosts;
+
 
 public class BlogPost : BaseEntity
 {

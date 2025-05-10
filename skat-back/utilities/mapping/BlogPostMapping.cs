@@ -1,4 +1,5 @@
 ﻿using skat_back.dto.BlogPostDto;
+using skat_back.Features.BlogPosts;
 using skat_back.models;
 
 namespace skat_back.utilities.mapping;
