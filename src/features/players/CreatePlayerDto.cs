@@ -6,6 +6,6 @@
 /// <param name="CreatedByUserId">The user who created the player</param>
 /// <param name="Name">The name of the player</param>
 public record CreatePlayerDto(
-    Guid CreatedByUserId,
+    string CreatedByUserId,
     string Name
 );
