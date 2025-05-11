@@ -8,10 +8,9 @@ namespace skat_back.Features.Users;
 /// <summary>
 ///     Represents the service implementation for managing users.
 /// </summary>
-/// <param name="uow">To be removed</param>
 /// <param name="db">The database context</param>
 /// <param name="logger">The injected logger</param>
-public class UserService(IUnitOfWork uow, AppDbContext db, ILogger logger) : IUserService
+public class UserService(AppDbContext db, ILogger logger) : IUserService
 {
     public async Task<ICollection<ResponseUserDto>> GetAllAsync()
     {
@@ -44,7 +43,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, ILogger logger) : IUs
             var user = dto.ToEntity();
 
             db.Users.Add(user);
-            await uow.CommitAsync();
+            await db.SaveChangesAsync();
             return user.ToResponse();
         }
         catch (Exception ex)
@@ -66,7 +65,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, ILogger logger) : IUs
             var user = dto.ToEntity();
 
             db.Users.Update(user);
-            await uow.CommitAsync();
+            await db.SaveChangesAsync();
             return true;
         }
         catch (Exception ex)
@@ -85,7 +84,7 @@ public class UserService(IUnitOfWork uow, AppDbContext db, ILogger logger) : IUs
             if (user == null)
                 return false;
             db.Users.Remove(user);
-            await uow.CommitAsync();
+            await db.SaveChangesAsync();
             return true;
         }
         catch (Exception ex)

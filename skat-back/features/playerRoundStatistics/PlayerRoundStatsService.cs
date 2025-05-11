@@ -8,8 +8,7 @@ namespace skat_back.Features.PlayerRoundStatistics;
 ///     Represents the service for managing player round statistics.
 /// </summary>
 /// <param name="db">The database context</param>
-/// <param name="uow">To be removed</param>
-public class PlayerRoundStatsService(AppDbContext db, IUnitOfWork uow) : IPlayerRoundStatsService
+public class PlayerRoundStatsService(AppDbContext db) : IPlayerRoundStatsService
 {
     public async Task<ICollection<ResponsePlayerRoundStatsDto>> GetAllAsync()
     {
@@ -28,7 +27,7 @@ public class PlayerRoundStatsService(AppDbContext db, IUnitOfWork uow) : IPlayer
         var playerRoundStats = dto.ToEntity();
         db.PlayerRoundResults.Add(playerRoundStats);
 
-        await uow.CommitAsync();
+        await db.SaveChangesAsync();
 
         return playerRoundStats.ToDto();
     }
@@ -46,7 +45,7 @@ public class PlayerRoundStatsService(AppDbContext db, IUnitOfWork uow) : IPlayer
         existing.Table = dto.Table;
         existing.UpdatedAt = DateTime.UtcNow;
 
-        await uow.CommitAsync();
+        await db.SaveChangesAsync();
         return true;
     }
 
@@ -57,7 +56,7 @@ public class PlayerRoundStatsService(AppDbContext db, IUnitOfWork uow) : IPlayer
             return false;
 
         db.PlayerRoundResults.Remove(playerRoundResult);
-        await uow.CommitAsync();
+        await db.SaveChangesAsync();
         return true;
     }
 }

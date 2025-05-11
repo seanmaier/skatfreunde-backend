@@ -10,9 +10,8 @@ namespace skat_back.Features.BlogPosts;
 ///     Represents the service for managing blog posts.
 /// </summary>
 /// <param name="db">The Database context</param>
-/// <param name="uow">To be removed</param>
 /// <param name="logger">The injected Logger</param>
-public class BlogPostService(AppDbContext db, IUnitOfWork uow, ILogger logger) : IBlogPostService
+public class BlogPostService(AppDbContext db, ILogger logger) : IBlogPostService
 {
     public async Task<ICollection<ResponseBlogPostDto>> GetAllAsync()
     {
@@ -36,7 +35,7 @@ public class BlogPostService(AppDbContext db, IUnitOfWork uow, ILogger logger) :
             var blogPost = dto.ToEntity();
 
             db.BlogPosts.Add(blogPost);
-            await uow.CommitAsync();
+            await db.SaveChangesAsync();
 
             return blogPost.ToDto();
         }
@@ -66,7 +65,9 @@ public class BlogPostService(AppDbContext db, IUnitOfWork uow, ILogger logger) :
             existingBlogPost.MetaDescription = dto.MetaDescription;
             existingBlogPost.UpdatedAt = DateTime.UtcNow;
 
-            await uow.CommitAsync();
+            db.BlogPosts.Update(existingBlogPost);
+            await db.SaveChangesAsync();
+
             return true;
         }
         catch (Exception ex)
@@ -86,7 +87,8 @@ public class BlogPostService(AppDbContext db, IUnitOfWork uow, ILogger logger) :
                 return false;
 
             db.BlogPosts.Remove(blogPost);
-            await uow.CommitAsync();
+            await db.SaveChangesAsync();
+
             return true;
         }
         catch (Exception ex)

@@ -7,9 +7,8 @@ namespace skat_back.Features.Players;
 /// <summary>
 ///     Represents the service implementation for managing players.
 /// </summary>
-/// <param name="uow">To be removed</param>
 /// <param name="db">The database context</param>
-public class PlayerService(IUnitOfWork uow, AppDbContext db) : IPlayerService
+public class PlayerService(AppDbContext db) : IPlayerService
 {
     public async Task<ICollection<ResponsePlayerDto>> GetAllAsync()
     {
@@ -27,7 +26,7 @@ public class PlayerService(IUnitOfWork uow, AppDbContext db) : IPlayerService
         var player = dto.ToEntity();
 
         db.Players.Add(player);
-        await uow.CommitAsync();
+        await db.SaveChangesAsync();
 
         return player.ToDto(); //TODO check if fits to database
     }
@@ -41,7 +40,7 @@ public class PlayerService(IUnitOfWork uow, AppDbContext db) : IPlayerService
         existing.Name = dto.Name;
         existing.UpdatedAt = DateTime.UtcNow;
 
-        await uow.CommitAsync();
+        await db.SaveChangesAsync();
         return true;
     }
 
@@ -51,7 +50,7 @@ public class PlayerService(IUnitOfWork uow, AppDbContext db) : IPlayerService
         if (player == null)
             return false;
         db.Players.Remove(player);
-        await uow.CommitAsync();
+        await db.SaveChangesAsync();
         return true;
     }
 }

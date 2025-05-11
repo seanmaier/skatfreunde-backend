@@ -8,8 +8,7 @@ namespace skat_back.Features.MatchRounds;
 ///     Represents the service for managing match rounds.
 /// </summary>
 /// <param name="db">The Database context</param>
-/// <param name="uow">To be removed</param>
-public class MatchRoundService(AppDbContext db, IUnitOfWork uow) : IMatchRoundService
+public class MatchRoundService(AppDbContext db) : IMatchRoundService
 {
     public async Task<ICollection<ResponseMatchRoundDto>> GetAllAsync()
     {
@@ -27,8 +26,8 @@ public class MatchRoundService(AppDbContext db, IUnitOfWork uow) : IMatchRoundSe
         var matchRound = dto.ToEntity();
 
         db.MatchRounds.Add(matchRound);
-        await uow.CommitAsync();
-
+        await db.SaveChangesAsync();
+        
         return matchRound.ToDto();
     }
 
@@ -41,7 +40,7 @@ public class MatchRoundService(AppDbContext db, IUnitOfWork uow) : IMatchRoundSe
         existingMatchRound.RoundNumber = dto.RoundNumber;
         existingMatchRound.UpdatedAt = DateTime.UtcNow;
 
-        await uow.CommitAsync();
+        await db.SaveChangesAsync();
         return true;
     }
 
@@ -52,7 +51,7 @@ public class MatchRoundService(AppDbContext db, IUnitOfWork uow) : IMatchRoundSe
             return false;
         db.Remove(matchRound);
 
-        await uow.CommitAsync();
+        await db.SaveChangesAsync();
         return true;
     }
 }

@@ -17,6 +17,5 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IBlogPostService, BlogPostService>();
         services.AddScoped<IMatchSessionService, MatchSessionService>();
         services.AddScoped<IPlayerService, PlayerService>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }

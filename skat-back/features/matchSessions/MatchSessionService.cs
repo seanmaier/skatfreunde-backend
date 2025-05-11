@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using skat_back.data;
 using skat_back.Features.MatchRounds;
+using skat_back.Features.PlayerRoundStatistics;
 using skat_back.utilities.mapping;
 
 namespace skat_back.Features.MatchSessions;
@@ -9,8 +10,7 @@ namespace skat_back.Features.MatchSessions;
 ///     Represents the service for managing match sessions.
 /// </summary>
 /// <param name="db">The Database context</param>
-/// <param name="uow">To be removed</param>
-public class MatchSessionService(IUnitOfWork uow, AppDbContext db)
+public class MatchSessionService(AppDbContext db)
     : IMatchSessionService
 {
     public async Task<ICollection<ResponseMatchSessionDto>> GetAllAsync()
@@ -64,7 +64,7 @@ public class MatchSessionService(IUnitOfWork uow, AppDbContext db)
 
         UpdateRounds(existingMatchSession.MatchRounds, matchSession.MatchRounds);
 
-        await uow.CommitAsync();
+        await db.SaveChangesAsync();
         return true;
     }
 
@@ -74,7 +74,7 @@ public class MatchSessionService(IUnitOfWork uow, AppDbContext db)
         if (matchSession == null)
             return false;
         db.MatchSessions.Remove(matchSession);
-        await uow.CommitAsync();
+        await db.SaveChangesAsync();
         return true;
     }
 
@@ -90,8 +90,8 @@ public class MatchSessionService(IUnitOfWork uow, AppDbContext db)
         }
     }
 
-    private void UpdatePlayerStats(ICollection<PlayerRoundStatistics.PlayerRoundStats> existingResults,
-        ICollection<PlayerRoundStatistics.PlayerRoundStats> updatedResults)
+    private void UpdatePlayerStats(ICollection<PlayerRoundStats> existingResults,
+        ICollection<PlayerRoundStats> updatedResults)
     {
         foreach (var existingResult in existingResults)
         {
