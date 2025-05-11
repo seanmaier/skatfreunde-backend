@@ -7,7 +7,7 @@ using skat_back.Features.Users;
 
 namespace skat_back;
 
-public static class ServiceCollectionExtensions
+public static class ServiceCollection
 {
     public static void ConfigureServices(this IServiceCollection services)
     {
