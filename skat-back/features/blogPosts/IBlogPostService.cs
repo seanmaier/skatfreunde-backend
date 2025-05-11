@@ -1,4 +1,4 @@
-﻿using skat_back.dto.BlogPostDto;
+﻿using skat_back.features.blogPosts;
 using skat_back.services;
 
 namespace skat_back.Features.BlogPosts;

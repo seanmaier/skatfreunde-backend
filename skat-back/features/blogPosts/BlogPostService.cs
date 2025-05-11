@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using skat_back.data;
-using skat_back.dto.BlogPostDto;
+using skat_back.features.blogPosts;
 using skat_back.utilities.mapping;
 using ILogger = Serilog.ILogger;
 

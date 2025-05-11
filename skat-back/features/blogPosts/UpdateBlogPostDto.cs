@@ -1,4 +1,4 @@
-﻿namespace skat_back.dto.BlogPostDto;
+﻿namespace skat_back.features.blogPosts;
 
 /// <summary>
 ///     Represents a data transfer object (DTO) for updating a blog post.
