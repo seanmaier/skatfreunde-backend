@@ -49,7 +49,7 @@ public class PlayerValidationTests
 
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().NotBeEmpty();
+        result.Errors.Should().Contain(e => e.ErrorMessage.Contains("GUID"));
     }
 
     [Theory]
@@ -113,7 +113,7 @@ public class PlayerValidationTests
 
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().NotBeEmpty();
+        result.Errors.Should().Contain(e => e.ErrorMessage.Contains("GUID"));
     }
 
     [Theory]
