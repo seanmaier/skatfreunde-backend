@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using skat_back.controllers;
 using skat_back.features.blogPosts;
+using skat_back.Lib;
 
 namespace skat_back.Features.BlogPosts;
 

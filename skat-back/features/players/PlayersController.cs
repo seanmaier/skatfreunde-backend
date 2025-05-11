@@ -1,4 +1,4 @@
-﻿using skat_back.controllers;
+﻿using skat_back.Lib;
 
 namespace skat_back.Features.Players;
 

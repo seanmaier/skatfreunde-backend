@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using skat_back.services;
 
-namespace skat_back.controllers;
+namespace skat_back.Lib;
 
 /// <summary>
 ///     A generic controller providing basic CRUD operations for a specified entity type.
