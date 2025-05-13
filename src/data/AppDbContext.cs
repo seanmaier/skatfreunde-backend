@@ -14,7 +14,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Player> Players { get; set; }
     public DbSet<MatchRound> MatchRounds { get; set; }
     public DbSet<MatchSession> MatchSessions { get; set; }
-    public DbSet<PlayerRoundStats> PlayerRoundResults { get; set; }
+    public DbSet<PlayerRoundStats> PlayerRoundStats { get; set; }
     public DbSet<BlogPost> BlogPosts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

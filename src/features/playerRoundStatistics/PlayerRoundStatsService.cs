@@ -12,20 +12,20 @@ public class PlayerRoundStatsService(AppDbContext db) : IPlayerRoundStatsService
 {
     public async Task<ICollection<ResponsePlayerRoundStatsDto>> GetAllAsync()
     {
-        return await db.PlayerRoundResults.Select(prr => prr.ToDto())
+        return await db.PlayerRoundStats.Select(prr => prr.ToDto())
             .ToListAsync();
     }
 
     public async Task<ResponsePlayerRoundStatsDto?> GetByIdAsync(int id)
     {
-        var playerRoundStats = await db.PlayerRoundResults.FindAsync(id);
+        var playerRoundStats = await db.PlayerRoundStats.FindAsync(id);
         return playerRoundStats?.ToDto();
     }
 
     public async Task<ResponsePlayerRoundStatsDto> CreateAsync(CreatePlayerRoundStatsDto dto)
     {
         var playerRoundStats = dto.ToEntity();
-        db.PlayerRoundResults.Add(playerRoundStats);
+        db.PlayerRoundStats.Add(playerRoundStats);
 
         await db.SaveChangesAsync();
 
@@ -34,7 +34,7 @@ public class PlayerRoundStatsService(AppDbContext db) : IPlayerRoundStatsService
 
     public async Task<bool> UpdateAsync(int id, UpdatePlayerRoundStatsDto dto)
     {
-        var existing = await db.PlayerRoundResults.FindAsync(id);
+        var existing = await db.PlayerRoundStats.FindAsync(id);
         if (existing == null)
             return false;
 
@@ -51,11 +51,11 @@ public class PlayerRoundStatsService(AppDbContext db) : IPlayerRoundStatsService
 
     public async Task<bool> DeleteAsync(int id)
     {
-        var playerRoundResult = await db.PlayerRoundResults.FindAsync(id);
+        var playerRoundResult = await db.PlayerRoundStats.FindAsync(id);
         if (playerRoundResult == null)
             return false;
 
-        db.PlayerRoundResults.Remove(playerRoundResult);
+        db.PlayerRoundStats.Remove(playerRoundResult);
         await db.SaveChangesAsync();
         return true;
     }
