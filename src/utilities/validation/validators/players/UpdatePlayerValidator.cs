@@ -1,6 +1,7 @@
 using FluentValidation;
 using skat_back.Features.Players;
 using static skat_back.utilities.constants.ValidationConstants;
+using static skat_back.utilities.constants.TestingConstants;
 
 namespace skat_back.utilities.validation.validators.players;
 
@@ -21,7 +22,7 @@ public class UpdatePlayerValidator : AbstractValidator<UpdatePlayerDto>
             .WithMessage("UserId is required.")
             .Must(BeValidGuid)
             .WithMessage("UserId must be a valid GUID.")
-            .Must(guid => guid != "00000000-0000-0000-0000-000000000000")
+            .Must(guid => guid != TestUserId)
             .WithMessage("UserId must not be an empty GUID.");
     }
 

@@ -1,6 +1,8 @@
 using FluentAssertions;
 using skat_back.Features.Players;
 using skat_back.utilities.validation.validators.players;
+using static skat_back.utilities.constants.TestingConstants;
+
 
 namespace skat_back.Tests.validation;
 
@@ -147,7 +149,7 @@ public class PlayerValidationTests
             Add("not-a-guid");
             Add("123e4567-e89b-12d3");
             Add("123e4567-e89b-12d3-a456-xyzxyzxyzx");
-            Add("00000000-0000-0000-0000-000000000000");
+            Add(TestUserId);
         }
     }
 }
