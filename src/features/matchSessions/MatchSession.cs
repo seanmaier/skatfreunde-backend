@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using skat_back.features.auth.models;
 using skat_back.Features.MatchRounds;
-using skat_back.Features.Users;
 using skat_back.models;
 
 namespace skat_back.Features.MatchSessions;
@@ -17,8 +17,7 @@ public class MatchSession : BaseEntity
     /*--------------------Navigation  Properties--------------------*/
 
     [Required] public Guid CreatedByUserId { get; set; }
-
-    public User CreatedByUser { get; set; } = null!;
+    public ApplicationUser ApplicationUser { get; set; } = null!;
 
     public ICollection<MatchRound> MatchRounds { get; set; } = new HashSet<MatchRound>();
 }

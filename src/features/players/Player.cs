@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using skat_back.Features.Users;
+using skat_back.features.auth.models;
+using skat_back.Features.PlayerRoundStatistics;
 using skat_back.models;
 using static skat_back.utilities.constants.ValidationConstants;
 
@@ -20,8 +21,8 @@ public class Player : BaseEntity
     /*--------------------Navigation  Properties--------------------*/
 
     [Required] public required Guid CreatedById { get; set; }
-    public User CreatedBy { get; set; } = null!;
+    public ApplicationUser ApplicationUser { get; set; } = null!;
 
-    public ICollection<PlayerRoundStatistics.PlayerRoundStats> PlayerRoundResults { get; set; } =
-        new HashSet<PlayerRoundStatistics.PlayerRoundStats>();
+    public ICollection<PlayerRoundStats> PlayerRoundResults { get; set; } =
+        new HashSet<PlayerRoundStats>();
 }

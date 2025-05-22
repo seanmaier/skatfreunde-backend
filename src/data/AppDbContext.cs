@@ -1,16 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using skat_back.features.auth.models;
 using skat_back.Features.BlogPosts;
 using skat_back.Features.MatchRounds;
 using skat_back.Features.MatchSessions;
 using skat_back.Features.PlayerRoundStatistics;
 using skat_back.Features.Players;
-using skat_back.Features.Users;
 
 namespace skat_back.data;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
-    public DbSet<User> Users { get; set; }
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<Player> Players { get; set; }
     public DbSet<MatchRound> MatchRounds { get; set; }
     public DbSet<MatchSession> MatchSessions { get; set; }
@@ -46,7 +47,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .IsUnique();
 
         // ===========Users===========
-        modelBuilder.Entity<User>(entity =>
+        modelBuilder.Entity<ApplicationUser>(entity =>
             entity.HasIndex(u => u.Email).IsUnique());
 
         base.OnModelCreating(modelBuilder);
