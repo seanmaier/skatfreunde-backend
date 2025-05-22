@@ -8,12 +8,10 @@ public static class PlayerRoundStatsMapping
     {
         return new PlayerRoundStats
         {
-            MatchRoundId = entity.MatchRoundId,
             PlayerId = entity.PlayerId,
             Points = entity.Points,
             Won = entity.Won,
             Lost = entity.Lost,
-            Table = entity.Table
         };
     }
 
@@ -26,7 +24,6 @@ public static class PlayerRoundStatsMapping
             Points = entity.Points,
             Won = entity.Won,
             Lost = entity.Lost,
-            Table = entity.Table
         };
     }
 
@@ -39,7 +36,6 @@ public static class PlayerRoundStatsMapping
             entity.Points,
             entity.Won,
             entity.Lost,
-            entity.Table,
             entity.CreatedAt,
             entity.UpdatedAt
         );

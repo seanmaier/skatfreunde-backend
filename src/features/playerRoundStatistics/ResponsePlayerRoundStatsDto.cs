@@ -15,7 +15,6 @@ public sealed record ResponsePlayerRoundStatsDto(
     int Points,
     int Won,
     int Lost,
-    string Table,
     DateTime CreatedAt,
     DateTime UpdatedAt
 );

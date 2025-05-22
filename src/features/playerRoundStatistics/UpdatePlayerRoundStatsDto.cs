@@ -14,6 +14,5 @@ public sealed record UpdatePlayerRoundStatsDto(
     int PlayerId,
     int Points,
     int Won,
-    int Lost,
-    string Table
+    int Lost
 );

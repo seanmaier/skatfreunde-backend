@@ -42,7 +42,6 @@ public class PlayerRoundStatsService(AppDbContext db) : IPlayerRoundStatsService
         existing.Won = dto.Won;
         existing.Lost = dto.Lost;
         existing.Points = dto.Points;
-        existing.Table = dto.Table;
         existing.UpdatedAt = DateTime.UtcNow;
 
         await db.SaveChangesAsync();

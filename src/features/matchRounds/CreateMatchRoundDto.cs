@@ -9,5 +9,6 @@ namespace skat_back.Features.MatchRounds;
 /// <param name="PlayerRoundStats">A collection of statistics of each player per round</param>
 public sealed record CreateMatchRoundDto(
     string RoundNumber,
+    string Table,
     ICollection<CreatePlayerRoundStatsDto> PlayerRoundStats
 );

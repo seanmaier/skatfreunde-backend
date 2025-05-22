@@ -9,6 +9,7 @@ public static class MatchRoundMapping
         return new MatchRound
         {
             RoundNumber = entity.RoundNumber,
+            Table = entity.Table,
             PlayerRoundStats = entity.PlayerRoundStats.Select(x => x.ToEntity()).ToList()
         };
     }
@@ -18,6 +19,7 @@ public static class MatchRoundMapping
         return new MatchRound
         {
             RoundNumber = entity.RoundNumber,
+            Table = entity.Table,
             PlayerRoundStats = entity.PlayerRoundStats.Select(x => x.ToEntity()).ToList()
         };
     }
@@ -28,6 +30,7 @@ public static class MatchRoundMapping
             entity.Id,
             entity.MatchSessionId,
             entity.RoundNumber,
+            entity.Table,
             entity.PlayerRoundStats.Select(x => x.ToDto()).ToList(),
             entity.CreatedAt,
             entity.UpdatedAt

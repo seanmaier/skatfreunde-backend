@@ -9,6 +9,7 @@ public sealed record ResponseMatchRoundDto(
     int Id,
     int MatchSessionId,
     string RoundNumber,
+    string Table,
     ICollection<ResponsePlayerRoundStatsDto> PlayerRoundStats,
     DateTime CreatedAt,
     DateTime UpdatedAt

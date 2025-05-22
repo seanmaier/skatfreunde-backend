@@ -14,6 +14,8 @@ public class MatchRound : BaseEntity
     [Key] public int Id { get; set; }
 
     [MaxLength(MaxCharLength)] public string RoundNumber { get; set; }
+    
+    public required string Table { get; set; } = null!;
 
     /*--------------------Navigation  Properties--------------------*/
 
