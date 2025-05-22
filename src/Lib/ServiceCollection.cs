@@ -1,21 +1,63 @@
-﻿using skat_back.Features.BlogPosts;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
+using skat_back.features.auth;
+using skat_back.Features.BlogPosts;
 using skat_back.Features.MatchRounds;
 using skat_back.Features.MatchSessions;
 using skat_back.Features.PlayerRoundStatistics;
 using skat_back.Features.Players;
-using skat_back.Features.Users;
 
-namespace skat_back;
+namespace skat_back.Lib;
 
 public static class ServiceCollection
 {
     public static void ConfigureServices(this IServiceCollection services)
     {
-        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IMatchRoundService, MatchRoundService>();
         services.AddScoped<IPlayerRoundStatsService, PlayerRoundStatsService>();
         services.AddScoped<IBlogPostService, BlogPostService>();
         services.AddScoped<IMatchSessionService, MatchSessionService>();
         services.AddScoped<IPlayerService, PlayerService>();
+        services.AddScoped<TokenService>();
+        services.AddSwaggerGen(c =>
+        {
+            c.CustomSchemaIds(id => id.FullName);
+
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Skat API", Version = "v1" });
+
+            c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
+            {
+                Name = "JWT Authentication",
+                Description = "Enter your JWT token in this field",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = JwtBearerDefaults.AuthenticationScheme,
+                BearerFormat = "JWT"
+            });
+
+            /*c.AddSecurityDefinition("Cookie", new OpenApiSecurityScheme
+            {
+                Description = "Cookie authentication. Use the /api/auth/login endpoint first.",
+                Name = "jwt",
+                In = ParameterLocation.Cookie,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Cookie"
+            });*/
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = JwtBearerDefaults.AuthenticationScheme
+                        }
+                    },
+                    []
+                }
+            });
+        });
     }
 }

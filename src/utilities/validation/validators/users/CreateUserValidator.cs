@@ -1,23 +1,17 @@
 using FluentValidation;
-using skat_back.Features.Users;
+using skat_back.features.auth.models;
 
 namespace skat_back.utilities.validation.validators.users;
 
-public class CreateUserValidator : AbstractValidator<CreateUserDto>
+public class CreateUserValidator : AbstractValidator<RegisterDto>
 {
     public CreateUserValidator()
     {
-        RuleFor(x => x.FirstName)
+        RuleFor(x => x.Username)
             .NotEmpty()
             .WithMessage("First name is required.")
             .Length(2, 50)
             .WithMessage("First name must be between 2 and 50 characters long.");
-
-        RuleFor(x => x.LastName)
-            .NotEmpty()
-            .WithMessage("Last name is required.")
-            .Length(2, 50)
-            .WithMessage("Last name must be between 2 and 50 characters long.");
 
         RuleFor(x => x.Email)
             .NotEmpty()

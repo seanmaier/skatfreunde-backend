@@ -1,11 +1,4 @@
 ﻿using skat_back.data;
-using skat_back.Features.BlogPosts;
-using skat_back.Features.MatchRounds;
-using skat_back.Features.MatchSessions;
-using skat_back.Features.PlayerRoundStatistics;
-using skat_back.Features.Players;
-using skat_back.Features.Users;
-using static skat_back.utilities.constants.TestingConstants;
 
 namespace skat_back.Lib;
 
@@ -14,20 +7,8 @@ public static class DataSeeder
     public static void Seed(AppDbContext context)
     {
         context.Database.EnsureCreated();
-        var user = new User
-        {
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now,
-            Id = Guid.Parse(TestUserId),
-            FirstName = "Test",
-            LastName = "User",
-            Password = "TestPassword",
-            Email = "test-user@gmail.com"
-        };
 
-        context.Users.Add(user);
-
-        var player = new Player
+        /*var player = new Player
         {
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
@@ -88,8 +69,8 @@ public static class DataSeeder
             MatchRoundId = matchRound.Id
         };
 
-        context.PlayerRoundStats.Add(playerRoundStats);
-        
+        context.PlayerRoundStats.Add(playerRoundStats);*/
+
         context.SaveChanges();
     }
 }

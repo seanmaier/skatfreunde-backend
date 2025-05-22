@@ -1,40 +1,15 @@
-﻿using skat_back.Features.Users;
-using skat_back.models;
+﻿using skat_back.features.auth.models;
 
 namespace skat_back.utilities.mapping;
 
 public static class UserMapping
 {
-    public static User ToEntity(this CreateUserDto userDto)
+    public static ApplicationUser ToEntity(this RegisterDto userDto)
     {
-        return new User
+        return new ApplicationUser
         {
-            FirstName = userDto.FirstName,
-            LastName = userDto.LastName,
-            Email = userDto.Email,
-            Password = userDto.Password
+            UserName = userDto.Username,
+            Email = userDto.Email
         };
-    }
-
-    public static User ToEntity(this UpdateUserDto userDto)
-    {
-        return new User
-        {
-            FirstName = userDto.FirstName,
-            LastName = userDto.LastName,
-            Email = userDto.Email,
-            Password = userDto.Password
-        };
-    }
-
-    public static ResponseUserDto ToResponse(this User userDto)
-    {
-        return new ResponseUserDto(
-            userDto.Id,
-            userDto.FirstName,
-            userDto.LastName,
-            userDto.Email,
-            userDto.Password
-        );
     }
 }
