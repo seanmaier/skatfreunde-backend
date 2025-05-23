@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using skat_back.features.auth;
 using skat_back.Features.BlogPosts;
+using skat_back.features.email;
 using skat_back.Features.MatchRounds;
 using skat_back.Features.MatchSessions;
 using skat_back.Features.PlayerRoundStatistics;
@@ -23,9 +24,10 @@ public static class ServiceCollection
         services.AddScoped<IMatchSessionService, MatchSessionService>();
         services.AddScoped<IPlayerService, PlayerService>();
         services.AddScoped<TokenService>();
+        services.AddScoped<IEmailService, EmailService>();
     }
 
-    
+
     public static void AddCustomSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
@@ -84,7 +86,7 @@ public static class ServiceCollection
 
                 ValidIssuer = jwtSettings["Jwt:Issuer"],
                 ValidAudience = jwtSettings["Jwt:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                IssuerSigningKey = new SymmetricSecurityKey(key)
             };
 
             options.Events = new JwtBearerEvents
@@ -119,7 +121,7 @@ public static class ServiceCollection
                     }));
         });
     }
-    
+
     public static void AddCustomCors(this IServiceCollection services)
     {
         services.AddCors(options =>

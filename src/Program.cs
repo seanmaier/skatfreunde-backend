@@ -1,10 +1,10 @@
-using System.Threading.RateLimiting;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using skat_back.data;
 using skat_back.features.auth.models;
+using skat_back.features.email;
 using skat_back.Lib;
 using skat_back.utilities.middleware;
 using skat_back.utilities.validation;
@@ -51,6 +51,9 @@ builder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) =>
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Configure EmailSettings
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 // dependency injection registrations
 builder.Services.ConfigureServices();
