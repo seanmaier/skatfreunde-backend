@@ -1,7 +1,6 @@
 namespace skat_back.features.auth.models;
 
-public struct UserDto(
-    string Id,
+public record CreateUserDto(
     string Username,
     string Email
 );

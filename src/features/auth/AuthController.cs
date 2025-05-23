@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using skat_back.data;
 using skat_back.features.auth.models;
+using skat_back.features.email;
 using skat_back.utilities.mapping;
 using static skat_back.utilities.constants.GeneralConstants;
 
@@ -16,6 +17,7 @@ namespace skat_back.features.auth;
 public class AuthController(
     UserManager<ApplicationUser> userManager,
     ILogger<AuthController> logger,
+    IEmailService emailService,
     TokenService tokenService,
     AppDbContext context)
     : ControllerBase
@@ -27,17 +29,27 @@ public class AuthController(
     {
         var user = dto.ToEntity();
 
-        var result = await userManager.CreateAsync(user, dto.Password);
-
-        if (result.Succeeded)
+        if (string.IsNullOrWhiteSpace(user.Email))
         {
-            await userManager.AddToRoleAsync(user, "User");
-            logger.LogInformation("User created a new account with password.");
-            return Ok(new { Message = "User created successfully" });
+            logger.LogError("Email is required for user registration.");
+            return BadRequest("Email is required.");
         }
 
-        logger.LogError("User creation failed: {Errors}", result.Errors);
-        return BadRequest(result.Errors);
+        var result = await userManager.CreateAsync(user, dto.Password);
+
+        if (!result.Succeeded)
+        {
+            logger.LogError("User creation failed: {Errors}", result.Errors);
+            return BadRequest(result.Errors);
+        }
+
+        logger.LogInformation("User created a new account with password.");
+        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        var confirmUrl = Url.Action("ConfirmEmail", "Email", new { userId = user.Id, token }, Request.Scheme);
+
+        await emailService.SendEmailAsync(user.Email, "Confirm your email",
+            $"Please confirm your account: {confirmUrl} ");
+        return Ok(new { Message = "User created successfully" });
     }
 
 

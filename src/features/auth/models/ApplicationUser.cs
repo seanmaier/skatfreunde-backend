@@ -13,5 +13,7 @@ public class ApplicationUser : IdentityUser
 
     [DataType(DataType.Time)] public DateTime? UpdatedAt { get; set; }
 
+    public bool IsApproved { get; set; } = false;
+
     public List<RefreshToken> RefreshTokens { get; set; } = [];
 }

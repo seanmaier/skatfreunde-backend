@@ -51,6 +51,28 @@ public class EmailController(
         return BadRequest(result.Errors);
     }
 
+    [HttpGet("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail(string userId, string token)
+    {
+        var user = await userManager.FindByIdAsync(userId);
+        if (user is null)
+        {
+            logger.LogWarning("User not found for email confirmation");
+            return NotFound();
+        }
+
+        var result = await userManager.ConfirmEmailAsync(user, token);
+        if (!result.Succeeded)
+        {
+            logger.LogError("Email confirmation failed: {Errors}", result.Errors);
+            return BadRequest(result.Errors);
+        }
+
+        await emailService.SendEmailAsync("admin@skatfreunde.de", "User awaiting approval",
+            $"User {user.UserName} has confirmed their mail. Please review and approve");
+        return Ok("Email confirmed. Awaiting admin approval");
+    }
+
     [HttpPost("test-email")]
     public async Task<IActionResult> SendTestEmail()
     {
