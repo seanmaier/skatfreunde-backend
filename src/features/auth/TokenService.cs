@@ -48,7 +48,6 @@ public class TokenService(
     public RefreshToken GenerateRefreshToken(DateTime expiration, string userId)
     {
         logger.LogInformation("Generating Refresh Token");
-        //var days = rememberMe ? 30 : 7;
         var ip = httpContentAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString() ?? "unknown";
         var userAgent = httpContentAccessor.HttpContext?.Request.Headers.UserAgent.ToString() ?? "unknown";
 

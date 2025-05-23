@@ -88,7 +88,7 @@ public class AuthController(
 
         var accessToken = tokenService.GenerateJwtToken(user.UserName ?? "unknown", userClaims, ExpirationTime);
 
-        var remembered = dto.RememberMe ? 30 : 7;
+        var remembered = dto.RememberMe ? 30 : 1;
         var refreshExpiration = DateTime.UtcNow.AddDays(remembered);
         var refreshToken = tokenService.GenerateRefreshToken(refreshExpiration, user.Id);
 
