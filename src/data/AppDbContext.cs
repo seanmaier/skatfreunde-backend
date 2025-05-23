@@ -6,12 +6,14 @@ using skat_back.Features.MatchRounds;
 using skat_back.Features.MatchSessions;
 using skat_back.Features.PlayerRoundStatistics;
 using skat_back.Features.Players;
+using skat_back.Lib;
 
 namespace skat_back.data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<Player> Players { get; set; }
     public DbSet<MatchRound> MatchRounds { get; set; }
     public DbSet<MatchSession> MatchSessions { get; set; }
@@ -49,6 +51,15 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
         // ===========Users===========
         modelBuilder.Entity<ApplicationUser>(entity =>
             entity.HasIndex(u => u.Email).IsUnique());
+
+        modelBuilder.Entity<ApplicationUser>(entity =>
+            entity.HasIndex(u => u.UserName).IsUnique());
+
+        modelBuilder.Entity<ApplicationUser>(entity =>
+            entity.HasMany(e => e.RefreshTokens)
+                .WithOne(rft => rft.ApplicationUser)
+                .HasForeignKey(rft => rft.ApplicationUserId)
+                .OnDelete(DeleteBehavior.Cascade));
 
         base.OnModelCreating(modelBuilder);
     }
