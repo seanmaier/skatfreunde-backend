@@ -5,14 +5,9 @@ using MimeKit;
 
 namespace skat_back.features.email;
 
-public class EmailService : IEmailService
+public class EmailService(IOptions<EmailSettings> settings) : IEmailService
 {
-    private readonly EmailSettings _settings;
-
-    public EmailService(IOptions<EmailSettings> settings)
-    {
-        _settings = settings.Value;
-    }
+    private readonly EmailSettings _settings = settings.Value;
 
     public async Task SendEmailAsync(string toEmail, string subject, string body)
     {
