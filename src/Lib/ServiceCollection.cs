@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -22,6 +23,11 @@ public static class ServiceCollection
         services.AddScoped<IMatchSessionService, MatchSessionService>();
         services.AddScoped<IPlayerService, PlayerService>();
         services.AddScoped<TokenService>();
+    }
+
+    
+    public static void AddCustomSwagger(this IServiceCollection services)
+    {
         services.AddSwaggerGen(c =>
         {
             c.CustomSchemaIds(id => id.FullName);
@@ -37,15 +43,6 @@ public static class ServiceCollection
                 Scheme = JwtBearerDefaults.AuthenticationScheme,
                 BearerFormat = "JWT"
             });
-
-            /*c.AddSecurityDefinition("Cookie", new OpenApiSecurityScheme
-            {
-                Description = "Cookie authentication. Use the /api/auth/login endpoint first.",
-                Name = "jwt",
-                In = ParameterLocation.Cookie,
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "Cookie"
-            });*/
 
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
@@ -64,8 +61,7 @@ public static class ServiceCollection
         });
     }
 
-
-    public static IServiceCollection AddCustomJwtAuthentication(this IServiceCollection services,
+    public static void AddCustomJwtAuthentication(this IServiceCollection services,
         IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection("Jwt");
@@ -88,7 +84,7 @@ public static class ServiceCollection
 
                 ValidIssuer = jwtSettings["Jwt:Issuer"],
                 ValidAudience = jwtSettings["Jwt:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(key)
+                IssuerSigningKey = new SymmetricSecurityKey(key),
             };
 
             options.Events = new JwtBearerEvents
@@ -106,7 +102,35 @@ public static class ServiceCollection
                 }
             };
         });
+    }
 
-        return services;
+    public static void AddCustomLimiter(this IServiceCollection services)
+    {
+        services.AddRateLimiter(options =>
+        {
+            options.AddPolicy("LoginPolicy", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    context.User.Identity?.Name ?? context.Request.Host.ToString(),
+                    partition => new FixedWindowRateLimiterOptions
+                    {
+                        AutoReplenishment = true,
+                        PermitLimit = 5,
+                        Window = TimeSpan.FromMinutes(15)
+                    }));
+        });
+    }
+    
+    public static void AddCustomCors(this IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins("http://localhost:5173")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
+        });
     }
 }

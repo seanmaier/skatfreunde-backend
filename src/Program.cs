@@ -13,36 +13,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options => { options.Filters.Add<ValidationFilter>(); });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddCustomSwagger();
 
 builder.Services.AddProblemDetails();
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.WithOrigins("http://localhost:5173")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-    });
-});
+builder.Services.AddCustomCors();
 
 // Configure CSRF protection
 builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-XSRF-TOKEN";
-    options.Cookie.SecurePolicy = CookieSecurePolicy.None; // TODO set to Always in production
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // TODO set to Always in production
 });
 
 // Configure FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-
-// Configure Authorization
-/*builder.Services.AddAuthorizationBuilder()
-    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build());*/
 
 // Configure Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -56,32 +41,9 @@ builder.Services.AddCustomJwtAuthentication(builder.Configuration);
 builder.Services.Configure<IdentityOptions>(builder.Configuration.GetSection("Identity"));
 
 // Configure Authentication with Cookie
-/*builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-    options.Cookie.SecurePolicy = CookieSecurePolicy.None; // TODO set to Always in production
-    options.SlidingExpiration = true;
-    options.Events.OnRedirectToLogin = context =>
-    {
-        context.Response.StatusCode = 401;
-        return Task.CompletedTask;
-    };
-});*/
 
 // Configure Rate Limiting
-builder.Services.AddRateLimiter(options =>
-{
-    options.AddPolicy("LoginPolicy", context =>
-        RateLimitPartition.GetFixedWindowLimiter(
-            context.User.Identity?.Name ?? context.Request.Host.ToString(),
-            partition => new FixedWindowRateLimiterOptions
-            {
-                AutoReplenishment = true,
-                PermitLimit = 5,
-                Window = TimeSpan.FromMinutes(15)
-            }));
-});
+builder.Services.AddCustomLimiter();
 
 // Configure Serilog
 builder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) =>
