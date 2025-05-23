@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using skat_back.features.auth;
 using skat_back.Features.BlogPosts;
@@ -6,6 +8,7 @@ using skat_back.Features.MatchRounds;
 using skat_back.Features.MatchSessions;
 using skat_back.Features.PlayerRoundStatistics;
 using skat_back.Features.Players;
+using static skat_back.utilities.constants.GeneralConstants;
 
 namespace skat_back.Lib;
 
@@ -59,5 +62,51 @@ public static class ServiceCollection
                 }
             });
         });
+    }
+
+
+    public static IServiceCollection AddCustomJwtAuthentication(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var jwtSettings = configuration.GetSection("Jwt");
+        var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false, // TODO set to true in production
+                ValidateAudience = false, // TODO set to true in production
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.Zero,
+
+                ValidIssuer = jwtSettings["Jwt:Issuer"],
+                ValidAudience = jwtSettings["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(key)
+            };
+
+            options.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                    logger.LogInformation("Received request for token validation.");
+                    if (!context.Request.Cookies.TryGetValue(AccessTokenKey, out var token)) return Task.CompletedTask;
+
+                    context.Token = token;
+                    logger.LogInformation("Token received: {Token}", token);
+
+                    return Task.CompletedTask;
+                }
+            };
+        });
+
+        return services;
     }
 }

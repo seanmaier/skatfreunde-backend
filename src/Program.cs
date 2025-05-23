@@ -1,10 +1,7 @@
-using System.Text;
 using System.Threading.RateLimiting;
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using skat_back.data;
 using skat_back.features.auth.models;
@@ -52,63 +49,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>(); //TODO Should roles and more be added?
 
 builder.Services.AddAuthorization();
-// Configure JWT
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
 
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
-    };
-
-    /*options.Events = new JwtBearerEvents
-    {
-        OnMessageReceived = context =>
-        {
-            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-            logger.LogInformation("Received request for token validation.");
-            if (context.Request.Cookies.TryGetValue("authToken", out var token))
-            {
-                context.Token = token;
-                logger.LogInformation("Token received: {Token}", token);
-            }
-            else
-            {
-                logger.LogWarning("No token found in cookies.");
-            }
-
-            return Task.CompletedTask;
-        },
-        OnTokenValidated = context =>
-        {
-            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-            logger.LogInformation("Validated claims: {@Claims}", context.Principal?.Claims);
-            return Task.CompletedTask;
-        },
-        OnChallenge = context =>
-        {
-            // Prevent redirect to /Account/Login
-            context.HandleResponse();
-            context.Response.StatusCode = 401;
-            context.Response.ContentType = "application/json";
-            var result = System.Text.Json.JsonSerializer.Serialize(new { message = "Unauthorized" });
-            return context.Response.WriteAsync(result);
-        }
-
-    };*/
-});
-
+// Configure JWT;
+builder.Services.AddCustomJwtAuthentication(builder.Configuration);
 
 builder.Services.Configure<IdentityOptions>(builder.Configuration.GetSection("Identity"));
 

@@ -13,7 +13,7 @@ namespace skat_back.Lib;
 /// <typeparam name="TUpdate">The type of the DTO used for updating entities.</typeparam>
 /// <typeparam name="TId">The type of the entity identifier.</typeparam>
 /// <typeparam name="TService">The type of the Business Service</typeparam>
-[Authorize]
+[Authorize(Roles = "Admin,User")]
 [ApiController]
 [Route("api/[controller]")]
 public class BaseController<TResponse, TCreate, TUpdate, TId, TService>(TService service) : ControllerBase
