@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using skat_back.features.auth.models;
 
-namespace skat_back.Lib;
+namespace skat_back.features.auth.models;
 
 public class RefreshToken
 {
@@ -26,6 +25,6 @@ public class RefreshToken
 
     /*--------------------Navigation  Properties--------------------*/
 
-    [Required] public string ApplicationUserId { get; set; }
+    [Required] public required string ApplicationUserId { get; set; }
     public ApplicationUser ApplicationUser { get; set; } = null!;
 }
