@@ -11,7 +11,7 @@ namespace skat_back.features.auth;
 public class TokenService(
     IConfiguration configuration,
     ILogger<TokenService> logger,
-    IHttpContextAccessor httpContentAccessor)
+    IHttpContextAccessor httpContentAccessor) : ITokenService
 {
     /// <summary>
     ///     Generates a JWT token for the specified user with the provided claims and expiration time.
@@ -38,13 +38,6 @@ public class TokenService(
     }
 
 
-    private SigningCredentials CreateCredentials()
-    {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
-        return new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-    }
-
-
     public RefreshToken GenerateRefreshToken(DateTime expiration, string userId)
     {
         logger.LogInformation("Generating Refresh Token");
@@ -64,14 +57,6 @@ public class TokenService(
         return refreshToken;
     }
 
-    private static string GenerateRandomString(int length = 64)
-    {
-        var randomNumber = new byte[length];
-        using var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(randomNumber);
-        return Convert.ToBase64String(randomNumber);
-    }
-
 
     public (string accessToken, RefreshToken refreshToken) RotateTokens(ApplicationUser user,
         RefreshToken oldRefreshToken, List<Claim> claims)
@@ -86,9 +71,24 @@ public class TokenService(
         return (newAccessToken, newRefreshToken);
     }
 
-    public void RevokeToken(RefreshToken refreshToken)
+    public void RevokeToken(RefreshToken token)
     {
-        refreshToken.Revoked = DateTime.UtcNow;
-        refreshToken.RevokedByIp = httpContentAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+        token.Revoked = DateTime.UtcNow;
+        token.RevokedByIp = httpContentAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+    }
+
+
+    private SigningCredentials CreateCredentials()
+    {
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
+        return new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+    }
+
+    private static string GenerateRandomString(int length = 64)
+    {
+        var randomNumber = new byte[length];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
     }
 }
