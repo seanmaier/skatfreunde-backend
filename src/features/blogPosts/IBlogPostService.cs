@@ -1,5 +1,5 @@
 ﻿using skat_back.features.blogPosts;
-using skat_back.services;
+using skat_back.Lib;
 
 namespace skat_back.Features.BlogPosts;
 

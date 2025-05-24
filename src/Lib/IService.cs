@@ -1,7 +1,7 @@
-﻿namespace skat_back.services;
+﻿namespace skat_back.Lib;
 
 /// <summary>
-/// Defines a base service interface for CRUD operations.
+///     Defines a base service interface for CRUD operations.
 /// </summary>
 /// <typeparam name="TResponseDto">The type of the response DTO.</typeparam>
 /// <typeparam name="TCreateDto">The type of the DTO used for creating entities.</typeparam>
