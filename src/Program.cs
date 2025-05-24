@@ -31,7 +31,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 // Configure Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>(); //TODO Should roles and more be added?
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddAuthorization();
 
@@ -54,6 +55,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Configure EmailSettings
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
+// Add User Secrets
+builder.Configuration.AddUserSecrets<Program>();
 
 // dependency injection registrations
 builder.Services.ConfigureServices();

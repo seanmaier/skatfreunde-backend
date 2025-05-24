@@ -70,7 +70,7 @@ public class EmailController(
 
         await emailService.SendEmailAsync("admin@skatfreunde.de", "User awaiting approval",
             $"User {user.UserName} has confirmed their mail. Please review and approve");
-        return Ok("Email confirmed. Awaiting admin approval");
+        return Ok("Email confirmed. Awaiting admin approval"); // TODO return html instead
     }
 
     [HttpPost("test-email")]

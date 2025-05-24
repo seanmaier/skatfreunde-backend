@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using skat_back.features.auth;
@@ -25,6 +26,10 @@ public static class ServiceCollection
         services.AddScoped<IPlayerService, PlayerService>();
         services.AddScoped<TokenService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.Configure<DataProtectionTokenProviderOptions>(options =>
+        {
+            options.TokenLifespan = TimeSpan.FromHours(24);
+        });
     }
 
 

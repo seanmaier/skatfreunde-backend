@@ -1,6 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mail;
 using System.Security.Claims;
+using System.Text;
+using System.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +20,7 @@ public class AuthController(
     UserManager<ApplicationUser> userManager,
     ILogger<AuthController> logger,
     IEmailService emailService,
+    IWebHostEnvironment env,
     TokenService tokenService,
     AppDbContext context)
     : ControllerBase
@@ -47,9 +50,16 @@ public class AuthController(
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
         var confirmUrl = Url.Action("ConfirmEmail", "Email", new { userId = user.Id, token }, Request.Scheme);
 
-        await emailService.SendEmailAsync(user.Email, "Confirm your email",
-            $"Please confirm your account: {confirmUrl} ");
-        return Ok(new { Message = "User created successfully" });
+        if (confirmUrl is null)
+        {
+            logger.LogError("Failed to generate confirmation URL.");
+            return StatusCode(500, "An internal error occurred");
+        }
+
+        var confirmationEmailHtml = GetConfirmationEmailHtml(confirmUrl);
+
+        await emailService.SendEmailAsync(user.Email, "Confirm your email", confirmationEmailHtml);
+        return Ok(new { Message = "User created successfully. Confirm your account in the next 24 hours." });
     }
 
 
@@ -270,5 +280,12 @@ public class AuthController(
         }.Concat(roles.Select(role => new Claim(ClaimTypes.Role, role))).ToList();
 
         return claims;
+    }
+
+    private string GetConfirmationEmailHtml(string confirmUrl)
+    {
+        var path = Path.Combine(env.ContentRootPath, "wwwroot", "email-templates", "ConfirmEmailTemplate.html");
+        var template = System.IO.File.ReadAllText(path);
+        return template.Replace("{{CONFIRM_URL}}", confirmUrl);
     }
 }

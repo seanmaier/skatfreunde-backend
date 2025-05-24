@@ -1,0 +1,48 @@
+<!-- ConfirmEmailTemplate.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Your Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .footer {
+            font-size: 0.8em;
+            margin-top: 30px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Welcome at Skatfreunde!</h2>
+    <p>Thank you for registering. Please confirm your email address by clicking the button below:</p>
+    <p><a class="btn" href="{{CONFIRM_URL}}">Confirm Email</a></p>
+    <p class="footer">If you didn’t request this, please ignore this email.</p>
+</div>
+</body>
+</html>
