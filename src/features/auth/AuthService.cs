@@ -46,7 +46,7 @@ public class AuthService(
         return result;
     }
 
-    public async Task<LoginResponse> LoginAsync(LoginDto dto)
+    public async Task<LoginResponseDto> LoginAsync(LoginDto dto)
     {
         // 1. Check if the input is an email or username
         var user = IsValidEmail(dto.LoginInput)
@@ -108,7 +108,7 @@ public class AuthService(
         }
 
         logger.LogInformation("User {UserId} logged in successfully.", user.Id);
-        return new LoginResponse(accessToken, refreshToken);
+        return new LoginResponseDto(accessToken, refreshToken);
     }
 
     public async Task<IdentityResult> LogoutAsync(string userId, string refreshToken)
@@ -144,7 +144,7 @@ public class AuthService(
         return IdentityResult.Success;
     }
 
-    public async Task<RefreshTokenResponse> RefreshTokenAsync(string requestRefreshToken)
+    public async Task<RefreshTokenResponseDto> RefreshTokenAsync(string requestRefreshToken)
     {
         // 1. Find the user with the refresh token
         var user = await userManager.Users
@@ -182,7 +182,7 @@ public class AuthService(
         }
 
         logger.LogInformation("Refresh token rotated for user {UserId}", user.Id);
-        return new RefreshTokenResponse(newAccessToken, newRefreshToken.Token, oldRefreshToken.Expires);
+        return new RefreshTokenResponseDto(newAccessToken, newRefreshToken.Token, oldRefreshToken.Expires);
     }
 
     public async Task SendForgotPasswordAsync(ForgotPasswordDto dto) // TODO Redirect with frontend link

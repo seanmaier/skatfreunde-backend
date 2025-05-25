@@ -1,6 +1,6 @@
 namespace skat_back.features.auth.models;
 
-public record LoginResponse(
+public record LoginResponseDto(
     string AccessToken,
     RefreshToken RefreshToken
 );
