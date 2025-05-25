@@ -14,24 +14,33 @@ public static class UserMapping
         };
     }
 
+    public static ApplicationUser ToEntity(this CreateUserDto dto)
+    {
+        return new ApplicationUser
+        {
+            UserName = dto.Username,
+            Email = dto.Email,
+            PasswordHash = dto.Password,
+        };
+    }
+
     public static ApplicationUser ToEntity(this UpdateUserDto dto)
     {
         return new ApplicationUser
         {
-            Id = dto.UserId,
+            Id = dto.Id,
             UserName = dto.Username,
             Email = dto.Email
         };
     }
 
-    public static UserResponseDto ToResponse(this ApplicationUser user)
+    public static UserResponseDto ToResponse(this ApplicationUser user, List<string> roles)
     {
-        if (user is { UserName: not null, Email: not null })
-            return new UserResponseDto(
-                user.UserName,
-                user.Email
-            );
-
-        throw new ArgumentException("User must have a username and email to be mapped to a response DTO.");
+        return new UserResponseDto(
+            user.Id,
+            user.UserName!,
+            user.Email!,
+            roles.ToList()
+        );
     }
 }
