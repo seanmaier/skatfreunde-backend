@@ -1,5 +1,5 @@
 using FluentAssertions;
-using skat_back.Features.Players;
+using skat_back.features.players.models;
 using skat_back.utilities.validation.validators.players;
 using static skat_back.utilities.constants.TestingConstants;
 
