@@ -1,4 +1,5 @@
 ﻿using skat_back.Features.PlayerRoundStatistics;
+using skat_back.features.playerRoundStatistics.models;
 
 namespace skat_back.utilities.mapping;
 
@@ -11,7 +12,7 @@ public static class PlayerRoundStatsMapping
             PlayerId = entity.PlayerId,
             Points = entity.Points,
             Won = entity.Won,
-            Lost = entity.Lost,
+            Lost = entity.Lost
         };
     }
 
@@ -23,7 +24,7 @@ public static class PlayerRoundStatsMapping
             PlayerId = entity.PlayerId,
             Points = entity.Points,
             Won = entity.Won,
-            Lost = entity.Lost,
+            Lost = entity.Lost
         };
     }
 

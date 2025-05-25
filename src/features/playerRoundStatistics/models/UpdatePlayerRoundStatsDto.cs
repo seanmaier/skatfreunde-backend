@@ -1,4 +1,4 @@
-﻿namespace skat_back.Features.PlayerRoundStatistics;
+﻿namespace skat_back.features.playerRoundStatistics.models;
 
 /// <summary>
 ///     Represents a data transfer object (DTO) for updating player round statistics.
@@ -8,7 +8,6 @@
 /// <param name="Points">The points, the player achieved during the round</param>
 /// <param name="Won">The won games of the player in a round</param>
 /// <param name="Lost">The lost games of the player in a round</param>
-/// <param name="Table">The table the game was played at</param>
 public sealed record UpdatePlayerRoundStatsDto(
     int MatchRoundId,
     int PlayerId,

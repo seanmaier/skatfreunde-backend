@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using skat_back.data;
+using skat_back.features.playerRoundStatistics.models;
 using skat_back.utilities.mapping;
 
 namespace skat_back.Features.PlayerRoundStatistics;
