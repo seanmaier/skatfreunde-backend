@@ -19,7 +19,6 @@ public class AuthService(
     UserManager<ApplicationUser> userManager,
     IEmailService emailService,
     IUrlService urlService,
-    IWebHostEnvironment env,
     ITokenService tokenService,
     AppDbContext context) : IAuthService
 {
@@ -38,14 +37,12 @@ public class AuthService(
             return result;
         }
 
-        logger.LogInformation("User created a new account with password.");
+        logger.LogInformation("User {User} registered successfully.", user.UserName);
+        
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-
         var confirmationUrl = urlService.GenerateConfirmationUrl(user.Email, token);
-        var confirmationEmailHtml = GetConfirmationEmailHtml(confirmationUrl);
-
-        await emailService.SendEmailAsync(user.Email, "Confirm your email", confirmationEmailHtml);
-
+        await emailService.SendConfirmationEmailAsync(user.Email, confirmationUrl);
+        
         return result;
     }
 
@@ -229,15 +226,8 @@ public class AuthService(
         if (!result.Succeeded)
             throw new EmailNotConfirmedException(userId);
 
-        await emailService.SendConfirmationEmailAsync(user.UserName);
+        await emailService.SendAdminConfirmationEmailAsync(user.UserName);
     }
-
-    private string GetConfirmationEmailHtml(string confirmUrl)
-    {
-        var path = Path.Combine(env.ContentRootPath, "wwwroot", "email-templates", "ConfirmEmailTemplate.html");
-        var template = File.ReadAllText(path);
-        return template.Replace("{{CONFIRM_URL}}", confirmUrl);
-    } // TODO refactor
 
     private static bool IsValidEmail(string email)
     {

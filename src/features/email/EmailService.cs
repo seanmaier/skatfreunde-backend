@@ -10,8 +10,8 @@ namespace skat_back.features.email;
 
 public class EmailService(
     IOptions<EmailSettings> settings,
-    UserManager<ApplicationUser> userManager,
-    ILogger<EmailService> logger) : IEmailService
+    IWebHostEnvironment env
+    ) : IEmailService
 {
     private readonly EmailSettings _settings = settings.Value;
 
@@ -39,9 +39,22 @@ public class EmailService(
             $"Click here to reset your password: <a href='{resetUrl}'>Reset Password</a>");
     }
 
-    public async Task SendConfirmationEmailAsync(string username)
+    public async Task SendConfirmationEmailAsync(string email, string confirmUrl)
     {
-        await SendEmailAsync(Administrator, "User awaiting approval",
-            $"User {username} has registered to Skatfreunde dashboard and confirmed their mail. Please review and approve");
+        var body = GetConfirmationEmailHtml(confirmUrl);
+        
+        await SendEmailAsync(email, "Confirm your email", body);
     }
+    
+    public async Task SendAdminConfirmationEmailAsync(string username)
+    {
+        await SendEmailAsync(Administrator, "User awaiting approval", $"User {username} has registered to Skatfreunde dashboard and confirmed their mail. Please review and approve");
+    }
+    
+    private string GetConfirmationEmailHtml(string confirmUrl)
+    {
+        var path = Path.Combine(env.ContentRootPath, "wwwroot", "email-templates", "ConfirmEmailTemplate.html");
+        var template = File.ReadAllText(path);
+        return template.Replace("{{CONFIRM_URL}}", confirmUrl);
+    } // TODO refactor
 }
