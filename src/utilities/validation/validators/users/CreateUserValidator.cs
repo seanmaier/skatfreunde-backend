@@ -15,14 +15,7 @@ public class CreateUserValidator: AbstractValidator<CreateUserDto>
             .WithMessage($"Username must be between {MinNameLength} and {MaxNameLength} characters long.");
 
         RuleFor(x => x.Password)
-            .NotEmpty()
-            .WithMessage("Password is required.")
-            .MinimumLength(MinPasswordLength)
-            .WithMessage($"Password must be at least {MinPasswordLength} characters long.")
-            .Matches(@"[!@#$%^&*(),.?\\:{}|<>]")
-            .WithMessage("Password must contain at least one special character.")
-            .Matches(@"[A-Z]")
-            .WithMessage("Password must contain at least one uppercase letter.");
+            .ValidatePassword();
 
         RuleFor(x => x.Email)
             .NotEmpty()
