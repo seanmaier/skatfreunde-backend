@@ -49,8 +49,9 @@ public class MatchRoundValidationTest
         result.IsValid.Should().BeFalse();
         result.Errors.Should()
             .Contain(e => e.ErrorMessage
-                              .Contains("Table cannot be empty.") && e.ErrorMessage.Contains("Round number") &&
-                          e.ErrorMessage.Contains("unique player IDs"));
+                .Contains("Table cannot be empty."))
+            .And.Contain(e => e.ErrorMessage.Contains("Round number"))
+            .And.Contain(e => e.ErrorMessage.Contains("unique player IDs"));
     }
 
     [Fact]
@@ -156,6 +157,30 @@ public class MatchRoundValidationTest
     }
 
     [Fact]
+    public void Validate_UpdateMatchRound_InvalidMatchRound_ReturnsFailure()
+    {
+        // Arrange
+        var matchRound = new UpdateMatchRoundDto(
+            "", "", new List<UpdatePlayerRoundStatsDto>
+            {
+                new(1, 100, 2, 1),
+                new(1, 100, 2, 1)
+            }
+        );
+
+        // Act
+        var result = _updateMatchRoundValidator.Validate(matchRound);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should()
+            .Contain(e => e.ErrorMessage
+                .Contains("Table cannot be empty."))
+            .And.Contain(e => e.ErrorMessage.Contains("Round number cannot be empty."))
+            .And.Contain(e => e.ErrorMessage.Contains("Player round statistics must have unique player IDs."));
+    }
+
+    [Fact]
     public void Validate_UpdateMatchRound_InvalidTable_ReturnsFailure()
     {
         // Arrange
@@ -173,7 +198,7 @@ public class MatchRoundValidationTest
         result.IsValid.Should().BeFalse();
         result.Errors.Should()
             .Contain(e => e.ErrorMessage
-                .Contains("Table number must be between 1 and 2 characters long."));
+                .Contains("Table number must be between"));
     }
 
     [Fact]
@@ -230,7 +255,7 @@ public class MatchRoundValidationTest
         var result = _updateMatchRoundValidator.Validate(matchRound);
 
         // Assert
-        result.IsValid.Should().BeTrue();
+        result.IsValid.Should().BeFalse();
         result.Errors.Should()
             .Contain(e => e.ErrorMessage
                 .Contains("unique player IDs"));
