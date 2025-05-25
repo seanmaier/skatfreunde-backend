@@ -18,16 +18,6 @@ public class CreatePlayerValidator : AbstractValidator<CreatePlayerDto>
             .WithMessage("Name must only contain letters, numbers, and spaces.");
 
         RuleFor(x => x.CreatedByUserId)
-            .NotEmpty()
-            .WithMessage("UserId is required")
-            .Must(BeValidGuid)
-            .WithMessage("UserId must be a valid GUID.")
-            .Must(guid => guid != TestUserId)
-            .WithMessage("UserId must not be an empty GUID.");
-    }
-
-    private bool BeValidGuid(string guid)
-    {
-        return Guid.TryParse(guid, out _);
+            .ValidateCreatedById();
     }
 }
