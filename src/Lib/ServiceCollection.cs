@@ -12,6 +12,7 @@ using skat_back.Features.MatchSessions;
 using skat_back.Features.PlayerRoundStatistics;
 using skat_back.Features.Players;
 using skat_back.features.url;
+using skat_back.features.user;
 using static skat_back.utilities.constants.GeneralConstants;
 
 namespace skat_back.Lib;
@@ -29,6 +30,7 @@ public static class ServiceCollection
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUrlService, UrlService>();
+        services.AddScoped<IUserService, UserService>();
         services.Configure<DataProtectionTokenProviderOptions>(options =>
         {
             options.TokenLifespan = TimeSpan.FromHours(24);
