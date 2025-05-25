@@ -168,7 +168,7 @@ public class MatchSessionValidationTest
         result.Errors.Should()
             .Contain(e => e.ErrorMessage.Contains("unique player IDs"));
     }
-    
+
     /*-------------------------Update MatchSession Validation---------------------------*/
 
     [Fact]
@@ -180,7 +180,7 @@ public class MatchSessionValidationTest
             {
                 new("1", "2", new List<UpdatePlayerRoundStatsDto>
                     {
-                        new(1, 1, 100, 2, 1)
+                        new(1, 100, 2, 1)
                     }
                 )
             }
@@ -203,7 +203,7 @@ public class MatchSessionValidationTest
             {
                 new("1", "2", new List<UpdatePlayerRoundStatsDto>
                     {
-                        new(1, 1, 100, 2, 1)
+                        new(1, 100, 2, 1)
                     }
                 )
             }
@@ -226,7 +226,7 @@ public class MatchSessionValidationTest
             {
                 new("1", "2", new List<UpdatePlayerRoundStatsDto>
                     {
-                        new(1, 1, 100, 2, 1)
+                        new(1, 100, 2, 1)
                     }
                 )
             }
@@ -273,7 +273,7 @@ public class MatchSessionValidationTest
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.ErrorMessage.Contains("Player round statistics cannot be empty."));
     }
-    
+
     [Fact]
     public void Validate_UpdateMatchSession_NotUniqueRoundNumber_ReturnsFailure()
     {
@@ -283,12 +283,12 @@ public class MatchSessionValidationTest
             {
                 new("1", "2", new List<UpdatePlayerRoundStatsDto>
                     {
-                        new(1, 1, 100, 2, 1)
+                        new(1, 100, 2, 1)
                     }
                 ),
                 new("1", "2", new List<UpdatePlayerRoundStatsDto>
                 {
-                    new(1, 1, 100, 2, 1)
+                    new(1, 100, 2, 1)
                 })
             }
         );
@@ -301,7 +301,7 @@ public class MatchSessionValidationTest
         result.Errors.Should()
             .Contain(e => e.ErrorMessage.Contains("RoundNumber must be unique"));
     }
-    
+
     [Fact]
     public void Validate_UpdateMatchSession_NotUniquePlayerId_ReturnsFailure()
     {
@@ -311,8 +311,8 @@ public class MatchSessionValidationTest
             {
                 new("1", "2", new List<UpdatePlayerRoundStatsDto>
                     {
-                        new(1, 1, 100, 2, 1),
-                        new(1, 1, 100, 2, 1)
+                        new(1, 100, 2, 1),
+                        new(1, 100, 2, 1)
                     }
                 )
             }

@@ -7,10 +7,6 @@ public class UpdatePrsValidator : AbstractValidator<UpdatePlayerRoundStatsDto>
 {
     public UpdatePrsValidator()
     {
-        RuleFor(x => x.MatchRoundId)
-            .NotEmpty()
-            .WithMessage("MatchRoundId is required.");
-
         RuleFor(x => x.PlayerId)
             .NotEmpty()
             .WithMessage("PlayerId is required.");
@@ -18,6 +14,8 @@ public class UpdatePrsValidator : AbstractValidator<UpdatePlayerRoundStatsDto>
         RuleFor(x => x.Points)
             .NotEmpty()
             .WithMessage("Points are required.")
+            .GreaterThanOrEqualTo(0)
+            .WithMessage("Points must be greater than or equal to 0.")
             .LessThan(10000)
             .WithMessage("Points must be less than 10.000");
 

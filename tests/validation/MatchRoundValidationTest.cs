@@ -31,6 +31,29 @@ public class MatchRoundValidationTest
     }
 
     [Fact]
+    public void Validate_CreateMatchRound_InvalidMatchRound_ReturnsFailure()
+    {
+        // Arrange
+        var matchRound = new CreateMatchRoundDto(
+            "", "", new List<CreatePlayerRoundStatsDto>
+            {
+                new(1, 100, 2, 1),
+                new(1, 100, 2, 1)
+            }
+        );
+
+        // Act
+        var result = _createMatchRoundValidator.Validate(matchRound);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should()
+            .Contain(e => e.ErrorMessage
+                              .Contains("Table cannot be empty.") && e.ErrorMessage.Contains("Round number") &&
+                          e.ErrorMessage.Contains("unique player IDs"));
+    }
+
+    [Fact]
     public void Validate_CreateMatchRound_InvalidTable_ReturnsFailure()
     {
         // Arrange
@@ -47,7 +70,8 @@ public class MatchRoundValidationTest
         // Assert
         result.IsValid.Should().BeFalse();
         result.Errors.Should()
-            .Contain(e => e.ErrorMessage.Contains("Table number must be between 1 and 2 characters long."));
+            .Contain(e => e.ErrorMessage
+                .Contains("Table number must be between 1 and 2 characters long."));
     }
 
     [Fact]
@@ -66,7 +90,9 @@ public class MatchRoundValidationTest
 
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().Contain(e => e.ErrorMessage.Contains("Round number must be exactly 1 character long."));
+        result.Errors.Should()
+            .Contain(e => e.ErrorMessage
+                .Contains("Round number must be exactly 1 character long."));
     }
 
     [Fact]
@@ -82,7 +108,9 @@ public class MatchRoundValidationTest
 
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().Contain(e => e.ErrorMessage.Contains("Player round statistics cannot be empty."));
+        result.Errors.Should()
+            .Contain(e => e.ErrorMessage
+                .Contains("Player round statistics cannot be empty."));
     }
 
     [Fact]
@@ -96,14 +124,15 @@ public class MatchRoundValidationTest
                 new(1, 200, 3, 1) // Invalid because playerId is not unique
             }
         );
-        
+
         // Act
         var result = _createMatchRoundValidator.Validate(matchRound);
-        
+
         // Assert
         result.IsValid.Should().BeFalse();
         result.Errors.Should()
-            .Contain(e => e.ErrorMessage.Contains("unique player IDs"));
+            .Contain(e => e.ErrorMessage
+                .Contains("unique player IDs"));
     }
 
     /*-------------------------Update MatchRound Validation---------------------------*/
@@ -115,7 +144,7 @@ public class MatchRoundValidationTest
         var matchRound = new UpdateMatchRoundDto(
             "1", "2", new List<UpdatePlayerRoundStatsDto>
             {
-                new(1, 1, 100, 2, 1)
+                new(1, 100, 2, 1)
             }
         );
 
@@ -133,7 +162,7 @@ public class MatchRoundValidationTest
         var matchRound = new UpdateMatchRoundDto(
             "1", "122", new List<UpdatePlayerRoundStatsDto>
             {
-                new(1, 1, 100, 2, 1)
+                new(1, 100, 2, 1)
             }
         );
 
@@ -143,7 +172,8 @@ public class MatchRoundValidationTest
         // Assert
         result.IsValid.Should().BeFalse();
         result.Errors.Should()
-            .Contain(e => e.ErrorMessage.Contains("Table number must be between 1 and 2 characters long."));
+            .Contain(e => e.ErrorMessage
+                .Contains("Table number must be between 1 and 2 characters long."));
     }
 
     [Fact]
@@ -153,7 +183,7 @@ public class MatchRoundValidationTest
         var matchRound = new UpdateMatchRoundDto(
             "112", "1", new List<UpdatePlayerRoundStatsDto>
             {
-                new(1, 1, 100, 2, 1)
+                new(1, 100, 2, 1)
             }
         );
 
@@ -162,7 +192,9 @@ public class MatchRoundValidationTest
 
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().Contain(e => e.ErrorMessage.Contains("Round number must be exactly 1 character long."));
+        result.Errors.Should()
+            .Contain(e => e.ErrorMessage
+                .Contains("Round number must be exactly 1 character long."));
     }
 
     [Fact]
@@ -178,7 +210,8 @@ public class MatchRoundValidationTest
 
         // Assert
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().Contain(e => e.ErrorMessage.Contains("Player round statistics cannot be empty."));
+        result.Errors.Should()
+            .Contain(e => e.ErrorMessage.Contains("Player round statistics cannot be empty."));
     }
 
     [Fact]
@@ -188,8 +221,8 @@ public class MatchRoundValidationTest
         var matchRound = new UpdateMatchRoundDto(
             "1", "2", new List<UpdatePlayerRoundStatsDto>
             {
-                new(1, 1, 100, 2, 1),
-                new(2, 1, 200, 3, 1) // Valid because playerId is unique
+                new(1, 100, 2, 1),
+                new(1, 200, 3, 1) // Valid because playerId is unique
             }
         );
 
@@ -198,5 +231,8 @@ public class MatchRoundValidationTest
 
         // Assert
         result.IsValid.Should().BeTrue();
+        result.Errors.Should()
+            .Contain(e => e.ErrorMessage
+                .Contains("unique player IDs"));
     }
 }
