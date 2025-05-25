@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using skat_back.Features.MatchRounds;
+using skat_back.features.matchRounds.models;
 using skat_back.Features.Players;
+using skat_back.features.players.models;
 using skat_back.models;
 
-namespace skat_back.Features.PlayerRoundStatistics;
+namespace skat_back.features.playerRoundStatistics.models;
 
 /// <summary>
 ///     Represents a player round statistics entity for the Database.

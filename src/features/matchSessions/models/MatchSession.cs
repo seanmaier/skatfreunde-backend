@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using skat_back.features.auth.models;
 using skat_back.Features.MatchRounds;
+using skat_back.features.matchRounds.models;
 using skat_back.models;
 
-namespace skat_back.Features.MatchSessions;
+namespace skat_back.features.matchSessions.models;
 
 /// <summary>
 ///     Represents a match session entity for the Database.

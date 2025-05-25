@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using skat_back.Features.MatchSessions;
+using skat_back.features.matchSessions.models;
 using skat_back.Features.PlayerRoundStatistics;
+using skat_back.features.playerRoundStatistics.models;
 using skat_back.models;
 using static skat_back.utilities.constants.ValidationConstants;
 
-namespace skat_back.Features.MatchRounds;
+namespace skat_back.features.matchRounds.models;
 
 /// <summary>
 ///     Represents a match round entity for the Database.

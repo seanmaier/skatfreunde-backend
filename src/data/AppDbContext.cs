@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using skat_back.features.auth.models;
-using skat_back.Features.BlogPosts;
-using skat_back.Features.MatchRounds;
-using skat_back.Features.MatchSessions;
-using skat_back.Features.PlayerRoundStatistics;
-using skat_back.Features.Players;
-using skat_back.Lib;
+using skat_back.features.blogPosts.models;
+using skat_back.features.matchRounds.models;
+using skat_back.features.matchSessions.models;
+using skat_back.features.playerRoundStatistics.models;
+using skat_back.features.players.models;
 
 namespace skat_back.data;
 

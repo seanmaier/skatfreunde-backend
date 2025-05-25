@@ -3,7 +3,7 @@ using skat_back.features.auth.models;
 using skat_back.models;
 using static skat_back.utilities.constants.ValidationConstants;
 
-namespace skat_back.Features.BlogPosts;
+namespace skat_back.features.blogPosts.models;
 
 /// <summary>
 ///     The BlogPost class represents a blog post entity for the Database

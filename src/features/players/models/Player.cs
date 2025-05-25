@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using skat_back.features.auth.models;
-using skat_back.Features.PlayerRoundStatistics;
+using skat_back.features.playerRoundStatistics.models;
 using skat_back.models;
 using static skat_back.utilities.constants.ValidationConstants;
 
-namespace skat_back.Features.Players;
+namespace skat_back.features.players.models;
 
 /// <summary>
 ///     Represents a player entity for the Database.
