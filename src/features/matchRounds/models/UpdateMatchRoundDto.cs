@@ -1,6 +1,6 @@
 ﻿using skat_back.features.playerRoundStatistics.models;
 
-namespace skat_back.Features.MatchRounds;
+namespace skat_back.features.matchRounds.models;
 
 /// <summary>
 ///     Represents the data transfer object (DTO) for updating a match round.

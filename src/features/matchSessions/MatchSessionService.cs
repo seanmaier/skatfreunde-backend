@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using skat_back.data;
 using skat_back.Features.MatchRounds;
+using skat_back.features.matchSessions.models;
 using skat_back.Features.PlayerRoundStatistics;
 using skat_back.utilities.mapping;
 
