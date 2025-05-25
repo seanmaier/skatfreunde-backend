@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using skat_back.Lib;
+using skat_back.utilities.exceptions;
 
 namespace skat_back.utilities.middleware;
 
@@ -27,7 +27,9 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             ValidationException => (StatusCodes.Status400BadRequest, "Validation error"),
             HttpException httpEx => (httpEx.StatusCode, httpEx.Message),
             UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Unauthorized"),
-            KeyNotFoundException => (StatusCodes.Status404NotFound, "Not found"),
+            UserNotFoundException => (StatusCodes.Status200OK, "If the account exists a reset link has been sent"),
+            EmailNotConfirmedException => (StatusCodes.Status200OK,
+                "If the account exists a confirmation link has been sent"),
             _ => (StatusCodes.Status500InternalServerError, "Internal server error")
         };
 

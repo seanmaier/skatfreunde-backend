@@ -1,4 +1,4 @@
-namespace skat_back.Lib;
+namespace skat_back.utilities.exceptions;
 
 public class HttpException(int statusCode, string message) : Exception
 {
