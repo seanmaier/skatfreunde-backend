@@ -13,7 +13,7 @@ public class MatchRound : BaseEntity
 {
     [Key] public int Id { get; set; }
 
-    [MaxLength(MaxCharLength)] public required string RoundNumber { get; set; }
+    [MaxLength(MaxRoundNumberLength)] public required string RoundNumber { get; set; }
 
     [MaxLength(2)]
     public required string Table { get; set; } = null!;

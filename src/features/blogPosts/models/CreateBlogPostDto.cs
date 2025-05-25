@@ -1,10 +1,10 @@
-﻿namespace skat_back.Features.BlogPosts;
+﻿namespace skat_back.features.blogPosts.models;
 
 /// <summary>
 ///     Represents a data transfer object (DTO) for creating a blog post.
 /// </summary>
 public record CreateBlogPostDto(
-    Guid CreatedById,
+    string CreatedById,
     string Title,
     string Text,
     string Slug,

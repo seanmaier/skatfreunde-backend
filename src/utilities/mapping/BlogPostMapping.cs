@@ -1,5 +1,6 @@
 ﻿using skat_back.features.blogPosts;
 using skat_back.Features.BlogPosts;
+using skat_back.features.blogPosts.models;
 using skat_back.models;
 
 namespace skat_back.utilities.mapping;
@@ -15,7 +16,7 @@ public static class BlogPostMapping
             Slug = entity.Slug,
             MetaTitle = entity.MetaTitle,
             MetaDescription = entity.MetaDescription,
-            CreatedById = entity.CreatedById
+            CreatedById = Guid.Parse(entity.CreatedById)
         };
     }
 
@@ -23,7 +24,7 @@ public static class BlogPostMapping
     {
         return new BlogPost
         {
-            CreatedById = entity.CreatedById,
+            CreatedById = Guid.Parse(entity.CreatedById),
             Title = entity.Title,
             Text = entity.Text,
             Slug = entity.Slug,
