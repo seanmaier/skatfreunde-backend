@@ -1,4 +1,4 @@
-﻿namespace skat_back.Features.Players;
+﻿namespace skat_back.features.players.models;
 
 /// <summary>
 ///     Represents a data transfer object (DTO) for updating a player.

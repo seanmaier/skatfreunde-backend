@@ -1,4 +1,5 @@
 ﻿using skat_back.Features.Players;
+using skat_back.features.players.models;
 
 namespace skat_back.utilities.mapping;
 
