@@ -1,9 +1,7 @@
 using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using skat_back.features.auth.models;
 using static skat_back.utilities.constants.GeneralConstants;
 
 namespace skat_back.features.email;
@@ -11,7 +9,7 @@ namespace skat_back.features.email;
 public class EmailService(
     IOptions<EmailSettings> settings,
     IWebHostEnvironment env
-    ) : IEmailService
+) : IEmailService
 {
     private readonly EmailSettings _settings = settings.Value;
 
@@ -42,15 +40,22 @@ public class EmailService(
     public async Task SendConfirmationEmailAsync(string email, string confirmUrl)
     {
         var body = GetConfirmationEmailHtml(confirmUrl);
-        
+
         await SendEmailAsync(email, "Confirm your email", body);
     }
-    
+
     public async Task SendAdminConfirmationEmailAsync(string username)
     {
-        await SendEmailAsync(Administrator, "User awaiting approval", $"User {username} has registered to Skatfreunde dashboard and confirmed their mail. Please review and approve");
+        await SendEmailAsync(Administrator, "User awaiting approval",
+            $"User {username} has registered to Skatfreunde dashboard and confirmed their mail. Please review and approve");
     }
-    
+
+    public async Task SendAdminApprovalEmailAsync(string username, string email)
+    {
+        await SendEmailAsync(email, "Account Approved",
+            $"Hey {username} your account has been approved. You can now log in.");
+    }
+
     private string GetConfirmationEmailHtml(string confirmUrl)
     {
         var path = Path.Combine(env.ContentRootPath, "wwwroot", "email-templates", "ConfirmEmailTemplate.html");
