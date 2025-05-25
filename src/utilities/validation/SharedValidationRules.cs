@@ -2,7 +2,7 @@ using FluentValidation;
 using static skat_back.utilities.constants.ValidationConstants;
 using static skat_back.utilities.constants.TestingConstants;
 
-namespace skat_back.utilities.validation.validators;
+namespace skat_back.utilities.validation;
 
 public static class SharedValidationRules
 {
@@ -22,16 +22,20 @@ public static class SharedValidationRules
         return ruleBuilder
             .NotEmpty()
             .WithMessage("Password is required.")
-            .MinimumLength(MinPasswordLength)
-            .WithMessage($"Password must be at least {MinPasswordLength} characters long.")
-            .Matches(@"[A-Z]")
-            .WithMessage("Password must contain at least one uppercase letter.")
-            .Matches(@"[a-z]")
-            .WithMessage("Password must contain at least one lowercase letter.")
-            .Matches(@"[0-9]")
-            .WithMessage("Password must contain at least one digit.")
-            .Matches(@"[\W_]")
-            .WithMessage("Password must contain at least one special character.");
+            .DependentRules(() =>
+            {
+                ruleBuilder
+                    .MinimumLength(MinPasswordLength)
+                    .WithMessage($"Password must be at least {MinPasswordLength} characters long.")
+                    .Matches(@"[A-Z]")
+                    .WithMessage("Password must contain at least one uppercase letter.")
+                    .Matches(@"[a-z]")
+                    .WithMessage("Password must contain at least one lowercase letter.")
+                    .Matches(@"[0-9]")
+                    .WithMessage("Password must contain at least one digit.")
+                    .Matches(@"[\W_]")
+                    .WithMessage("Password must contain at least one special character.");
+            });
     }
 
     private static bool BeValidGuid(string guid)

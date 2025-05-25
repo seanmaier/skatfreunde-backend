@@ -12,7 +12,7 @@ public class UpdateMatchRoundValidator : AbstractValidator<UpdateMatchRoundDto>
             .NotEmpty()
             .WithMessage("Table cannot be empty.")
             .Length(0, 2)
-            .WithMessage("Table number must be between 0 and 2 characters long.");
+            .WithMessage("Table number must be between 1 and 2 characters long.");
 
         RuleFor(x => x.RoundNumber)
             .NotEmpty()

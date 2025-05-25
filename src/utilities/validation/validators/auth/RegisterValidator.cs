@@ -9,16 +9,21 @@ public class RegisterValidator : AbstractValidator<RegisterDto>
     public RegisterValidator()
     {
         RuleFor(x => x.Username)
-            .NotEmpty()
-            .WithMessage("Username is required.")
             .Length(MinUsernameLength, MaxUsernameLength)
-            .WithMessage($"Username must be between {MinUsernameLength} and {MaxUsernameLength} characters long.");
+            .WithMessage($"Username must be between {MinUsernameLength} and {MaxUsernameLength} characters long.")
+            .When(x => string.IsNullOrEmpty(x.Email))
+            .NotEmpty()
+            .WithMessage("Username is required.");
 
         RuleFor(x => x.Email)
             .NotEmpty()
             .WithMessage("Email is required.")
-            .EmailAddress()
-            .WithMessage("Invalid email format.");
+            .DependentRules(() =>
+            {
+                RuleFor(x => x.Email)
+                    .EmailAddress()
+                    .WithMessage("Invalid email format.");
+            });
 
         RuleFor(x => x.Password)
             .ValidatePassword();
