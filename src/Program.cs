@@ -12,6 +12,7 @@ using skat_back.utilities.validation;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options => { options.Filters.Add<ValidationFilter>(); });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCustomSwagger();
 
@@ -23,7 +24,7 @@ builder.Services.AddCustomCors();
 builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-XSRF-TOKEN";
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // TODO set to Always in production
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
 // Configure FluentValidation

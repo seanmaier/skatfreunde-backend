@@ -12,7 +12,8 @@ public class MatchSession : BaseEntity
 {
     [Key] public int Id { get; set; }
 
-    public string CalendarWeek { get; set; }
+    [MaxLength(4)]
+    public required string CalendarWeek { get; set; }
 
     /*--------------------Navigation  Properties--------------------*/
 
