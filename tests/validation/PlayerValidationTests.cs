@@ -1,8 +1,6 @@
 using FluentAssertions;
 using skat_back.features.players.models;
 using skat_back.utilities.validation.validators.players;
-using static skat_back.utilities.constants.TestingConstants;
-
 
 namespace skat_back.Tests.validation;
 
@@ -40,7 +38,7 @@ public class PlayerValidationTests
     }
 
     [Theory]
-    [ClassData(typeof(InvalidGuidTestData))]
+    [ClassData(typeof(SharedTestData.InvalidGuidTestData))]
     public void Validate_CreatePlayer_InvalidUserId_ReturnsFailure(string invalidGuid)
     {
         // Arrange
@@ -104,7 +102,7 @@ public class PlayerValidationTests
     }
 
     [Theory]
-    [ClassData(typeof(InvalidGuidTestData))]
+    [ClassData(typeof(SharedTestData.InvalidGuidTestData))]
     public void Validate_UpdatePlayer_InvalidUserId_ReturnsFailure(string invalidGuid)
     {
         // Arrange
@@ -136,20 +134,5 @@ public class PlayerValidationTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Errors.Should().NotBeEmpty();
-    }
-
-    /*-------------------------Setup for Validation---------------------------*/
-
-    private class InvalidGuidTestData : TheoryData<string>
-    {
-        public InvalidGuidTestData()
-        {
-            Add(null!); // Null
-            Add(""); // Empty
-            Add("not-a-guid");
-            Add("123e4567-e89b-12d3");
-            Add("123e4567-e89b-12d3-a456-xyzxyzxyzx");
-            Add(TestUserId);
-        }
     }
 }

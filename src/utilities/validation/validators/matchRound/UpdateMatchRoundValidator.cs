@@ -20,9 +20,16 @@ public class UpdateMatchRoundValidator : AbstractValidator<UpdateMatchRoundDto>
             .Length(1)
             .WithMessage("Round number must be exactly 1 character long.");
 
-        RuleForEach(x => x.PlayerRoundStats)
+        RuleFor(x => x.PlayerRoundStats)
             .NotEmpty()
             .WithMessage("Player round statistics cannot be empty.")
+            .Must(matchRound => matchRound
+                .GroupBy(playerRoundStats => playerRoundStats.PlayerId)
+                .All(group => group.Count() == 1))
+            .WithMessage("Player round statistics must have unique player IDs.");
+
+
+        RuleForEach(x => x.PlayerRoundStats)
             .SetValidator(new UpdatePrsValidator());
     }
 }
