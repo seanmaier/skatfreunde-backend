@@ -1,11 +1,17 @@
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using skat_back.features.auth.models;
+using static skat_back.utilities.constants.GeneralConstants;
 
 namespace skat_back.features.email;
 
-public class EmailService(IOptions<EmailSettings> settings) : IEmailService
+public class EmailService(
+    IOptions<EmailSettings> settings,
+    UserManager<ApplicationUser> userManager,
+    ILogger<EmailService> logger) : IEmailService
 {
     private readonly EmailSettings _settings = settings.Value;
 
@@ -25,5 +31,17 @@ public class EmailService(IOptions<EmailSettings> settings) : IEmailService
         await client.AuthenticateAsync(_settings.Username, _settings.Password);
         await client.SendAsync(message);
         await client.DisconnectAsync(true);
+    }
+
+    public async Task SendResetPasswordAsync(string email, string resetUrl)
+    {
+        await SendEmailAsync(email, "Reset your password",
+            $"Click here to reset your password: <a href='{resetUrl}'>Reset Password</a>");
+    }
+
+    public async Task SendConfirmationEmailAsync(string username)
+    {
+        await SendEmailAsync(Administrator, "User awaiting approval",
+            $"User {username} has registered to Skatfreunde dashboard and confirmed their mail. Please review and approve");
     }
 }

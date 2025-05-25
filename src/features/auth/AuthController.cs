@@ -1,8 +1,7 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using skat_back.data;
 using skat_back.features.auth.models;
+using skat_back.features.email.models;
 using static skat_back.utilities.constants.GeneralConstants;
 
 namespace skat_back.features.auth;
@@ -10,11 +9,8 @@ namespace skat_back.features.auth;
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController(
-    UserManager<ApplicationUser> userManager,
     ILogger<AuthController> logger,
-    IAuthService authService,
-    ITokenService tokenService,
-    AppDbContext context)
+    IAuthService authService)
     : ControllerBase
 {
     [HttpPost("register")]
@@ -84,6 +80,26 @@ public class AuthController(
         return Ok("Token refreshed");
     }
 
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ForgotPasswordDto dto)
+    {
+        await authService.SendForgotPasswordAsync(dto);
+        return Ok("Password reset link sent");
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ResetPasswordDto dto)
+    {
+        await authService.ResetPasswordAsync(dto);
+        return Ok();
+    }
+
+    [HttpGet("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail(string userId, string token)
+    {
+        await authService.ConfirmEmailAsync(userId, token);
+        return Ok("Email confirmed. Awaiting admin approval"); // TODO redirect instead
+    }
 
     private void SetTokenCookies(string accessToken, string refreshToken, DateTime refreshTokenExpiration)
     {

@@ -6,8 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using skat_back.data;
 using skat_back.features.auth.models;
 using skat_back.features.email;
+using skat_back.features.email.models;
 using skat_back.features.url;
-using skat_back.Lib;
+using skat_back.utilities.exceptions;
 using skat_back.utilities.mapping;
 using static skat_back.utilities.constants.GeneralConstants;
 
@@ -27,10 +28,7 @@ public class AuthService(
         var user = dto.ToEntity();
 
         if (string.IsNullOrEmpty(user.Email))
-        {
-            logger.LogError("Email is required for user registration.");
-            return IdentityResult.Failed(new IdentityError { Description = "Email is required." });
-        }
+            throw new EmailNotFoundException(dto.Email);
 
         var result = await userManager.CreateAsync(user, dto.Password);
 
@@ -190,12 +188,56 @@ public class AuthService(
         return new RefreshTokenResponse(newAccessToken, newRefreshToken.Token, oldRefreshToken.Expires);
     }
 
+    public async Task SendForgotPasswordAsync(ForgotPasswordDto dto) // TODO Redirect with frontend link
+    {
+        var user = await userManager.FindByEmailAsync(dto.Email)
+                   ?? throw new UserNotFoundException(dto.Email);
+
+        if (string.IsNullOrEmpty(user.Email))
+            throw new EmailNotFoundException(dto.Email);
+
+        if (await userManager.IsEmailConfirmedAsync(user))
+            throw new EmailNotConfirmedException(dto.Email);
+
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
+        var resetUrl = urlService.GenerateResetPasswordUrl(dto.Email, token);
+
+        await emailService.SendResetPasswordAsync(user.Email, resetUrl);
+        logger.LogInformation("Password reset link sent to {Email}", user.Email);
+    }
+
+    public async Task ResetPasswordAsync(ResetPasswordDto dto)
+    {
+        var user = await userManager.FindByEmailAsync(dto.Email) ?? throw new UserNotFoundException(dto.Email);
+
+        var result = await userManager.ResetPasswordAsync(user, dto.Token, dto.NewPassword);
+        if (result.Succeeded) return;
+
+        throw new PasswordResetFailedException(result.Errors);
+    }
+
+    public async Task ConfirmEmailAsync(string userId, string token)
+    {
+        var user = await userManager.FindByIdAsync(userId);
+        if (user is null)
+            throw new UserNotFoundException(userId);
+
+        if (string.IsNullOrEmpty(user.UserName))
+            throw new UserNotFoundException(userId);
+
+        var result = await userManager.ConfirmEmailAsync(user, token);
+        if (!result.Succeeded)
+            throw new EmailNotConfirmedException(userId);
+
+        await emailService.SendConfirmationEmailAsync(user.UserName);
+    }
+
     private string GetConfirmationEmailHtml(string confirmUrl)
     {
         var path = Path.Combine(env.ContentRootPath, "wwwroot", "email-templates", "ConfirmEmailTemplate.html");
         var template = File.ReadAllText(path);
         return template.Replace("{{CONFIRM_URL}}", confirmUrl);
-    }
+    } // TODO refactor
 
     private static bool IsValidEmail(string email)
     {
