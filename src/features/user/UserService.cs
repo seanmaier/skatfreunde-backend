@@ -7,7 +7,7 @@ using skat_back.utilities.mapping;
 
 namespace skat_back.features.user;
 
-public class UserService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationUser> roleManager)
+public class UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
     : IUserService
 {
     public async Task<ICollection<UserResponseDto>> GetAllUsersAsync()
