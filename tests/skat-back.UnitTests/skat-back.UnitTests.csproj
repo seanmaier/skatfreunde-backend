@@ -25,6 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\src\skat-back.csproj" />
       <ProjectReference Include="..\src\skat-back.csproj" />
     </ItemGroup>
 
