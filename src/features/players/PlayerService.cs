@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using skat_back.data;
-using skat_back.features.players.models;
+﻿using skat_back.features.players.models;
+using skat_back.Lib;
 using skat_back.utilities.mapping;
 
 namespace skat_back.Features.Players;
@@ -8,50 +7,49 @@ namespace skat_back.Features.Players;
 /// <summary>
 ///     Represents the service implementation for managing players.
 /// </summary>
-/// <param name="db">The database context</param>
-public class PlayerService(AppDbContext db) : IPlayerService
+public class PlayerService(IUnitOfWork unitOfWork) : IPlayerService
 {
     public async Task<ICollection<ResponsePlayerDto>> GetAllAsync()
     {
-        return await db.Players.Select(p => p.ToDto()).ToListAsync();
+        var players = await unitOfWork.Players.GetAllAsync();
+        return players.Select(p => p.ToResponse()).ToList();
     }
 
     public async Task<ResponsePlayerDto?> GetByIdAsync(int id)
     {
-        var player = await db.Players.FindAsync(id);
-        return player?.ToDto();
+        var user = await unitOfWork.Players.GetByIdAsync(id);
+        return user?.ToResponse();
     }
 
     public async Task<ResponsePlayerDto> CreateAsync(CreatePlayerDto dto)
     {
-        var player = dto.ToEntity();
-
-        db.Players.Add(player);
-        await db.SaveChangesAsync();
-
-        return player.ToDto(); //TODO check if fits to database
+        var newPlayer = dto.ToEntity();
+        var user = await unitOfWork.Players.CreateAsync(newPlayer);
+        await unitOfWork.SaveChangesAsync();
+        return user.ToResponse();
     }
 
     public async Task<bool> UpdateAsync(int id, UpdatePlayerDto dto)
     {
-        var existing = await db.Players.FindAsync(id);
+        var existing = await unitOfWork.Players.GetByIdAsync(id);
         if (existing == null)
             return false;
 
         existing.Name = dto.Name;
         existing.UpdatedAt = DateTime.UtcNow;
-
-        await db.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
         return true;
     }
 
     public async Task<bool> DeleteAsync(int id)
     {
-        var player = await db.Players.FindAsync(id);
+        var player = await unitOfWork.Players.GetByIdAsync(id);
+
         if (player == null)
             return false;
-        db.Players.Remove(player);
-        await db.SaveChangesAsync();
+
+        unitOfWork.Players.Delete(player);
+        await unitOfWork.SaveChangesAsync();
         return true;
     }
 }

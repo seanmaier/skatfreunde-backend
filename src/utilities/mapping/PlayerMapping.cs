@@ -1,5 +1,4 @@
-﻿using skat_back.Features.Players;
-using skat_back.features.players.models;
+﻿using skat_back.features.players.models;
 
 namespace skat_back.utilities.mapping;
 
@@ -23,7 +22,7 @@ public static class PlayerMapping
         };
     }
 
-    public static ResponsePlayerDto ToDto(this Player entity)
+    public static ResponsePlayerDto ToResponse(this Player entity)
     {
         return new ResponsePlayerDto(
             entity.Id,
