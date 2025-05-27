@@ -130,7 +130,7 @@ using (var scope = app.Services.CreateScope())
         await context.SaveChangesAsync();
     }
 
-    await DataSeeder.Seed(context, adminUser.Id.ToString());
+    //await DataSeeder.Seed(context, adminUser.Id.ToString());
 }
 
 /*using (var scope = app.Services.CreateScope())

@@ -9,7 +9,8 @@ using skat_back.features.players.models;
 
 namespace skat_back.data;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<ApplicationUser>(options)
+public class AppDbContext(DbContextOptions<AppDbContext> options)
+    : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>(options)
 {
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
@@ -21,14 +22,20 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<MatchSession>()
-            .HasMany(ms => ms.MatchRounds)
-            .WithOne(mr => mr.MatchSession)
-            .HasForeignKey(mr => mr.MatchSessionId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         modelBuilder.Entity<MatchSession>(entity =>
             entity.HasIndex(ms => ms.CalendarWeek).IsUnique());
+
+        modelBuilder.Entity<MatchSession>()
+            .HasOne(ms => ms.CreatedBy)
+            .WithMany()
+            .HasForeignKey(ms => ms.CreatedById)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<MatchRound>()
+            .HasMany(mr => mr.PlayerRoundStats)
+            .WithOne(prs => prs.MatchRound)
+            .HasForeignKey(prs => prs.MatchRoundId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Player>()
             .HasMany(p => p.PlayerRoundResults)
