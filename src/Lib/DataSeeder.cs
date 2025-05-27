@@ -1,13 +1,41 @@
 ﻿using skat_back.data;
+using skat_back.features.matchRounds.models;
+using skat_back.features.matchSessions.models;
+using skat_back.features.playerRoundStatistics.models;
+using skat_back.utilities.mapping;
 
 namespace skat_back.Lib;
 
 public static class DataSeeder
 {
-    public static void Seed(AppDbContext context)
+    public static async Task Seed(AppDbContext context, string userId)
     {
-        context.Database.EnsureCreated();
+        await context.Database.EnsureCreatedAsync();
 
+        var matchSession = new CreateMatchSessionDto(
+            userId,
+            "KW12",
+            new List<CreateMatchRoundDto>
+            {
+                new
+                (
+                    "1",
+                    "1",
+                    new List<CreatePlayerRoundStatsDto>
+                    {
+                        new
+                        (
+                            1,
+                            100,
+                            0,
+                            0
+                        )
+                    }
+                )
+            }
+        ).ToEntity();
+
+        await context.MatchSessions.AddAsync(matchSession);
         /*var player = new Player
         {
             CreatedAt = DateTime.Now,
@@ -71,6 +99,6 @@ public static class DataSeeder
 
         context.PlayerRoundStats.Add(playerRoundStats);*/
 
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }

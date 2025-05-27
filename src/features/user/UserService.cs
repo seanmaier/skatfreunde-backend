@@ -2,12 +2,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using skat_back.features.auth.models;
 using skat_back.features.user.models;
-using skat_back.utilities.exceptions;
 using skat_back.utilities.mapping;
 
 namespace skat_back.features.user;
 
-public class UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+public class UserService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
     : IUserService
 {
     public async Task<ICollection<UserResponseDto>> GetAllUsersAsync()
@@ -24,7 +23,7 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<I
 
     public async Task<UserResponseDto?> GetUserByIdAsync(string userId)
     {
-        var user = await userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        var user = await userManager.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
         if (user == null)
             return null;
 
@@ -75,7 +74,7 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<I
         if (!updateResult.Succeeded)
             throw new ApplicationException(
                 $"Failed to update user: {string.Join(", ", updateResult.Errors.Select(e => e.Description))}");
-        
+
         return true;
     }
 

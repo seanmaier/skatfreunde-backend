@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using skat_back.data;
-using skat_back.Features.MatchRounds;
 using skat_back.features.matchRounds.models;
 using skat_back.features.matchSessions.models;
-using skat_back.Features.PlayerRoundStatistics;
 using skat_back.features.playerRoundStatistics.models;
 using skat_back.utilities.mapping;
 
@@ -29,10 +27,6 @@ public class MatchSessionService(AppDbContext db)
 
     public async Task<ResponseMatchSessionDto> CreateAsync(CreateMatchSessionDto dto)
     {
-        /*var matchSession = mapper.Map<MatchSession>(dto);
-
-        db.MatchSessions.Add(matchSession);*/
-
         var session = dto.ToEntity();
 
         db.MatchSessions.Add(session);

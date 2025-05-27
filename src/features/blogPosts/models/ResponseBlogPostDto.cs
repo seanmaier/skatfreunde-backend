@@ -5,7 +5,7 @@
 /// </summary>
 public record ResponseBlogPostDto(
     int Id,
-    Guid CreatedById,
+    string CreatedById,
     string Title,
     string Text,
     string Slug,

@@ -20,7 +20,7 @@ public static class UserMapping
         {
             UserName = dto.Username,
             Email = dto.Email,
-            PasswordHash = dto.Password,
+            PasswordHash = dto.Password
         };
     }
 
@@ -28,7 +28,7 @@ public static class UserMapping
     {
         return new ApplicationUser
         {
-            Id = dto.Id,
+            Id = Guid.Parse(dto.Id),
             UserName = dto.Username,
             Email = dto.Email
         };
@@ -37,7 +37,7 @@ public static class UserMapping
     public static UserResponseDto ToResponse(this ApplicationUser user, List<string> roles)
     {
         return new UserResponseDto(
-            user.Id,
+            user.Id.ToString(),
             user.UserName!,
             user.Email!,
             roles.ToList()

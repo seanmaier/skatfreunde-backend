@@ -30,7 +30,7 @@ public class RefreshToken
 
     /*--------------------Navigation  Properties--------------------*/
 
-    [Required] [MaxLength(128)] public required string ApplicationUserId { get; set; }
+    [Required] [MaxLength(128)] public required Guid ApplicationUserId { get; set; }
 
     public ApplicationUser ApplicationUser { get; set; } = null!;
 }

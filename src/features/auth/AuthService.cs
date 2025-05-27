@@ -38,11 +38,11 @@ public class AuthService(
         }
 
         logger.LogInformation("User {User} registered successfully.", user.UserName);
-        
+
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
         var confirmationUrl = urlService.GenerateConfirmationUrl(user.Email, token);
         await emailService.SendConfirmationEmailAsync(user.Email, confirmationUrl);
-        
+
         return result;
     }
 
@@ -94,7 +94,7 @@ public class AuthService(
 
         var remembered = dto.RememberMe ? 30 : 1;
         var refreshExpiration = DateTime.UtcNow.AddDays(remembered);
-        var refreshToken = tokenService.GenerateRefreshToken(refreshExpiration, user.Id);
+        var refreshToken = tokenService.GenerateRefreshToken(refreshExpiration, user.Id.ToString());
 
         // 6. Save refresh token to database
         context.RefreshTokens.Add(refreshToken);
@@ -251,7 +251,7 @@ public class AuthService(
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.NameId, user.Id),
+            new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),

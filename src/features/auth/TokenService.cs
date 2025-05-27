@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using skat_back.features.auth.models;
-using skat_back.Lib;
 
 namespace skat_back.features.auth;
 
@@ -52,7 +51,7 @@ public class TokenService(
             CreatedByIp = ip,
             Expires = expiration,
             Token = GenerateRandomString(),
-            ApplicationUserId = userId
+            ApplicationUserId = Guid.Parse(userId)
         };
         return refreshToken;
     }
@@ -61,7 +60,7 @@ public class TokenService(
     public (string accessToken, RefreshToken refreshToken) RotateTokens(ApplicationUser user,
         RefreshToken oldRefreshToken, List<Claim> claims)
     {
-        var newRefreshToken = GenerateRefreshToken(oldRefreshToken.Expires, user.Id);
+        var newRefreshToken = GenerateRefreshToken(oldRefreshToken.Expires, user.Id.ToString());
 
         oldRefreshToken.ReplacedByToken = newRefreshToken.Token;
         RevokeToken(oldRefreshToken);

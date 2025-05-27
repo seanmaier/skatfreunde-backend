@@ -12,7 +12,7 @@ namespace skat_back.features.matchSessions.models;
 /// <param name="MatchRounds">A collection of match Rounds that happened on that day</param>
 public sealed record ResponseMatchSessionDto(
     int Id,
-    Guid CreatedByUserId,
+    string CreatedByUserId,
     string CalendarWeek,
     ICollection<ResponseMatchRoundDto> MatchRounds,
     DateTime CreatedAt,

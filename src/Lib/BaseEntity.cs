@@ -1,4 +1,4 @@
-﻿namespace skat_back.models;
+﻿namespace skat_back.Lib;
 
 public abstract class BaseEntity
 {

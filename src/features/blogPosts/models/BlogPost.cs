@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using skat_back.features.auth.models;
-using skat_back.models;
+using skat_back.Lib;
 using static skat_back.utilities.constants.ValidationConstants;
 
 namespace skat_back.features.blogPosts.models;
@@ -23,5 +23,5 @@ public class BlogPost : BaseEntity
     /*--------------------Navigation  Properties--------------------*/
 
     [Required] public required Guid CreatedById { get; set; }
-    public ApplicationUser ApplicationUser { get; set; } = null!;
+    public ApplicationUser CreatedBy { get; set; } = null!;
 }

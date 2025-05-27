@@ -1,7 +1,4 @@
-﻿using skat_back.features.blogPosts;
-using skat_back.Features.BlogPosts;
-using skat_back.features.blogPosts.models;
-using skat_back.models;
+﻿using skat_back.features.blogPosts.models;
 
 namespace skat_back.utilities.mapping;
 
@@ -37,7 +34,7 @@ public static class BlogPostMapping
     {
         return new ResponseBlogPostDto(
             entity.Id,
-            entity.CreatedById,
+            entity.CreatedById.ToString(),
             entity.Title,
             entity.Text,
             entity.Slug,

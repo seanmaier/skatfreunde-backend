@@ -5,6 +5,7 @@ using Serilog;
 using skat_back.data;
 using skat_back.features.auth.models;
 using skat_back.features.email;
+using skat_back.features.players.models;
 using skat_back.Lib;
 using skat_back.utilities.middleware;
 using skat_back.utilities.validation;
@@ -31,7 +32,7 @@ builder.Services.AddAntiforgery(options =>
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 // Configure Identity
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
@@ -41,8 +42,6 @@ builder.Services.AddAuthorization();
 builder.Services.AddCustomJwtAuthentication(builder.Configuration);
 
 builder.Services.Configure<IdentityOptions>(builder.Configuration.GetSection("Identity"));
-
-// Configure Authentication with Cookie
 
 // Configure Rate Limiting
 builder.Services.AddCustomLimiter();
@@ -86,22 +85,52 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     string[] roles = ["Admin", "Manager", "User"];
 
     foreach (var role in roles)
         if (!await roleManager.RoleExistsAsync(role))
-            await roleManager.CreateAsync(new IdentityRole(role));
+            await roleManager.CreateAsync(new ApplicationRole { Name = role });
 
-    var adminEmail = "sean.maier@gmail.com";
+    const string adminEmail = "sean.maier@gmail.com";
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
-    if (adminUser == null)
+    if (adminUser is null)
     {
         var newAdmin = new ApplicationUser { UserName = "admin", Email = adminEmail };
         var result = await userManager.CreateAsync(newAdmin, "Admin123!");
         if (result.Succeeded) await userManager.AddToRoleAsync(newAdmin, "Admin");
     }
+
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    if (!context.Players.Any())
+    {
+        var players = new List<Player>
+        {
+            new()
+            {
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                Id = 1,
+                Name = "Player1",
+                CreatedById = adminUser.Id
+            },
+            new()
+            {
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                Id = 2,
+                Name = "Player2",
+                CreatedById = adminUser.Id
+            }
+        };
+
+        context.Players.AddRange(players);
+        await context.SaveChangesAsync();
+    }
+
+    await DataSeeder.Seed(context, adminUser.Id.ToString());
 }
 
 /*using (var scope = app.Services.CreateScope())
