@@ -25,7 +25,7 @@ builder.Services.AddCustomCors();
 builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-XSRF-TOKEN";
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Set to Always in production
 });
 
 // Configure FluentValidation
@@ -85,58 +85,13 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-    string[] roles = ["Admin", "Manager", "User"];
-
-    foreach (var role in roles)
-        if (!await roleManager.RoleExistsAsync(role))
-            await roleManager.CreateAsync(new ApplicationRole { Name = role });
-
-    const string adminEmail = "sean.maier@gmail.com";
-    var adminUser = await userManager.FindByEmailAsync(adminEmail);
-    if (adminUser is null)
-    {
-        var newAdmin = new ApplicationUser { UserName = "admin", Email = adminEmail };
-        var result = await userManager.CreateAsync(newAdmin, "Admin123!");
-        if (result.Succeeded) await userManager.AddToRoleAsync(newAdmin, "Admin");
-    }
-
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-    if (!context.Players.Any())
-    {
-        var players = new List<Player>
-        {
-            new()
-            {
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                Id = 1,
-                Name = "Player1",
-                CreatedById = adminUser.Id
-            },
-            new()
-            {
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                Id = 2,
-                Name = "Player2",
-                CreatedById = adminUser.Id
-            }
-        };
-
-        context.Players.AddRange(players);
-        await context.SaveChangesAsync();
-    }
-
-    //await DataSeeder.Seed(context, adminUser.Id.ToString());
+    var services = scope.ServiceProvider;
+    var db = services.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
+    
+    await AppDbSeeder.SeedAsync(scope.ServiceProvider);
 }
 
-/*using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    DataSeeder.Seed(context);
-}*/
-
 app.Run();
+
+public partial class Program { }
