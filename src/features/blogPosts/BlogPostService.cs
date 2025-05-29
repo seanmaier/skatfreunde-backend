@@ -65,7 +65,6 @@ public class BlogPostService(AppDbContext db, ILogger logger) : IBlogPostService
             existingBlogPost.Status = dto.Status;
             existingBlogPost.MetaTitle = dto.MetaTitle;
             existingBlogPost.MetaDescription = dto.MetaDescription;
-            existingBlogPost.UpdatedAt = DateTime.UtcNow;
 
             db.BlogPosts.Update(existingBlogPost);
             await db.SaveChangesAsync();

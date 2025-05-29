@@ -6,6 +6,7 @@ using skat_back.features.matchRounds.models;
 using skat_back.features.matchSessions.models;
 using skat_back.features.playerRoundStatistics.models;
 using skat_back.features.players.models;
+using skat_back.Lib;
 
 namespace skat_back.data;
 
@@ -20,28 +21,43 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<PlayerRoundStats> PlayerRoundStats { get; set; }
     public DbSet<BlogPost> BlogPosts { get; set; }
 
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var now = DateTime.UtcNow;
+
+        foreach (var entry in ChangeTracker.Entries<BaseEntity>())
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    entry.Entity.CreatedAt = now;
+                    break;
+                case EntityState.Modified:
+                    entry.Entity.UpdatedAt = now;
+                    break;
+            }
+
+        }
+        
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<MatchSession>(entity =>
             entity.HasIndex(ms => ms.CalendarWeek).IsUnique());
 
         modelBuilder.Entity<MatchSession>()
-            .HasOne(ms => ms.CreatedBy)
-            .WithMany()
-            .HasForeignKey(ms => ms.CreatedById)
-            .OnDelete(DeleteBehavior.NoAction);
-
+            .HasMany(ms => ms.MatchRounds)
+            .WithOne(mr => mr.MatchSession)
+            .HasForeignKey(mr => mr.MatchSessionId)
+            .OnDelete(DeleteBehavior.Cascade);
+            
         modelBuilder.Entity<MatchRound>()
             .HasMany(mr => mr.PlayerRoundStats)
             .WithOne(prs => prs.MatchRound)
             .HasForeignKey(prs => prs.MatchRoundId)
-            .OnDelete(DeleteBehavior.SetNull);
-
-        modelBuilder.Entity<Player>()
-            .HasMany(p => p.PlayerRoundResults)
-            .WithOne(prr => prr.Player)
-            .HasForeignKey(prr => prr.PlayerId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Player>(entity =>
             entity.HasIndex(p => p.Name).IsUnique());

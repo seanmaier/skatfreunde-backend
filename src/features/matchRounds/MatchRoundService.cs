@@ -39,7 +39,6 @@ public class MatchRoundService(AppDbContext db) : IMatchRoundService
             return false;
 
         existingMatchRound.RoundNumber = dto.RoundNumber;
-        existingMatchRound.UpdatedAt = DateTime.UtcNow;
 
         await db.SaveChangesAsync();
         return true;

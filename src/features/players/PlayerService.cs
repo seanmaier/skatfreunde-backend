@@ -36,7 +36,6 @@ public class PlayerService(IUnitOfWork unitOfWork) : IPlayerService
             return false;
 
         existing.Name = dto.Name;
-        existing.UpdatedAt = DateTime.UtcNow;
         await unitOfWork.SaveChangesAsync();
         return true;
     }
