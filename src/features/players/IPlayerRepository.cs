@@ -1,12 +1,9 @@
 using skat_back.features.players.models;
+using skat_back.Lib;
 
-namespace skat_back.Features.Players;
+namespace skat_back.features.players;
 
-public interface IPlayerRepository
+public interface IPlayerRepository: IRepository<Player>
 {
-    Task<ICollection<Player>> GetAllAsync();
-    Task<Player?> GetByIdAsync(int id);
-
-    Task<Player> CreateAsync(Player newPlayer);
-    void Delete(Player player);
+    Task<Player?> GetByNameAsync(string name);
 }

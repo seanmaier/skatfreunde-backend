@@ -1,30 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using skat_back.data;
 using skat_back.features.players.models;
+using skat_back.Lib;
 
-namespace skat_back.Features.Players;
+namespace skat_back.features.players;
 
-public class PlayerRepository(AppDbContext context) : IPlayerRepository
+public class PlayerRepository(AppDbContext context) : Repository<Player>(context), IPlayerRepository
 {
-    public async Task<ICollection<Player>> GetAllAsync()
-    {
-        return await context.Players.ToListAsync();
-    }
+    private readonly AppDbContext _context = context;
 
-    public async Task<Player?> GetByIdAsync(int id)
+    /// <summary>
+    ///     Retrieves a player by their name.
+    /// </summary>
+    /// <param name="name">The name of the player to retrieve.</param>
+    /// <returns>The player with the specified name, or null if not found.</returns>
+    public async Task<Player?> GetByNameAsync(string name)
     {
-        var player = await context.Players.FindAsync(id);
-        return player;
-    }
-
-    public async Task<Player> CreateAsync(Player newPlayer)
-    {
-        await context.Players.AddAsync(newPlayer);
-        return newPlayer;
-    }
-
-    public void Delete(Player player)
-    {
-        context.Players.Remove(player);
+        return await _context.Players.FirstOrDefaultAsync(p => p != null && p.Name == name);
     }
 }

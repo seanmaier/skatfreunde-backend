@@ -10,6 +10,7 @@ using skat_back.features.email;
 using skat_back.Features.MatchRounds;
 using skat_back.Features.MatchSessions;
 using skat_back.Features.PlayerRoundStatistics;
+using skat_back.features.players;
 using skat_back.Features.Players;
 using skat_back.features.url;
 using skat_back.features.user;

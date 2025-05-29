@@ -1,5 +1,5 @@
 using skat_back.data;
-using skat_back.Features.Players;
+using skat_back.features.players;
 
 namespace skat_back.Lib;
 

@@ -20,6 +20,12 @@ public class PlayerService(IUnitOfWork unitOfWork) : IPlayerService
         var user = await unitOfWork.Players.GetByIdAsync(id);
         return user?.ToResponse();
     }
+    
+    public async Task<ResponsePlayerDto?> GetByNameAsync(string name)
+    {
+        var player = await unitOfWork.Players.GetByNameAsync(name);
+        return player?.ToResponse();
+    }
 
     public async Task<ResponsePlayerDto> CreateAsync(CreatePlayerDto dto)
     {
