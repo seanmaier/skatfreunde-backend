@@ -14,8 +14,8 @@ public class CreatePlayerValidator : AbstractValidator<CreatePlayerDto>
             .WithMessage("Name is required.")
             .Length(MinNameLength, MaxNameLength)
             .WithMessage($"Name must be between {MinNameLength} and {MaxNameLength} characters long.")
-            .Matches("^[a-zA-Z0-9 ]*$")
-            .WithMessage("Name must only contain letters, numbers, and spaces.");
+            .Matches("^[a-zA-Z0-9 ,]*$")
+            .WithMessage("Name must only contain letters, numbers, commas and spaces.");
 
         RuleFor(x => x.CreatedByUserId)
             .ValidateCreatedById();

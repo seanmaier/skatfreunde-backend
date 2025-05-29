@@ -21,16 +21,16 @@ public class UpdateMatchSessionValidator : AbstractValidator<UpdateMatchSessionD
         RuleFor(x => x.CalendarWeek)
             .NotEmpty()
             .WithMessage("CalendarWeek is required.")
-            .Matches(@"^KW\d{2}$")
-            .WithMessage("CalendarWeek must be in the format KWXX, where XX is a two-digit number.");
+            .Matches(@"^\d{2}$")
+            .WithMessage("CalendarWeek must be in the format XX, where XX is a two-digit number.");
 
         RuleFor(x => x.MatchRounds)
             .NotEmpty()
             .WithMessage("MatchRounds cannot be empty.")
-            .Must(matchRound => matchRound
+            /*.Must(matchRound => matchRound
                 .GroupBy(round => round.RoundNumber)
                 .All(group => group.Count() == 1))
-            .WithMessage("Each MatchRound's RoundNumber must be unique within the MatchSession.");
+            .WithMessage("Each MatchRound's RoundNumber must be unique within the MatchSession.")*/;
 
         RuleForEach(x => x.MatchRounds)
             .SetValidator(new UpdateMatchRoundValidator());
