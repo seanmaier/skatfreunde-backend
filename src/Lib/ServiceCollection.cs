@@ -32,7 +32,7 @@ public static class ServiceCollection
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUrlService, UrlService>();
-        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IUsersService, UsersService>();
         services.Configure<DataProtectionTokenProviderOptions>(options =>
         {
             options.TokenLifespan = TimeSpan.FromHours(24);
@@ -110,8 +110,6 @@ public static class ServiceCollection
                     if (!context.Request.Cookies.TryGetValue(AccessTokenKey, out var token)) return Task.CompletedTask;
 
                     context.Token = token;
-                    logger.LogInformation("Token received: {Token}", token);
-
                     return Task.CompletedTask;
                 }
             };

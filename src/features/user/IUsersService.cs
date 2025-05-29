@@ -2,7 +2,7 @@ using skat_back.features.user.models;
 
 namespace skat_back.features.user;
 
-public interface IUserService
+public interface IUsersService
 {
     Task<ICollection<UserResponseDto>> GetAllUsersAsync();
     Task<UserResponseDto?> GetUserByIdAsync(string userId);

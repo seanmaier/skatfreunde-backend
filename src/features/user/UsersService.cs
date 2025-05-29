@@ -6,8 +6,8 @@ using skat_back.utilities.mapping;
 
 namespace skat_back.features.user;
 
-public class UserService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
-    : IUserService
+public class UsersService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+    : IUsersService
 {
     public async Task<ICollection<UserResponseDto>> GetAllUsersAsync()
     {
@@ -23,7 +23,7 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
 
     public async Task<UserResponseDto?> GetUserByIdAsync(string userId)
     {
-        var user = await userManager.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+        var user = await userManager.Users.FirstOrDefaultAsync(user => user.Id == Guid.Parse(userId));
         if (user == null)
             return null;
 
