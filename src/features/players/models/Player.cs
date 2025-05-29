@@ -23,6 +23,5 @@ public class Player : BaseEntity
     [Required] public required Guid CreatedById { get; set; }
     public ApplicationUser CreatedBy { get; set; } = null!;
 
-    public ICollection<PlayerRoundStats> PlayerRoundResults { get; set; } =
-        new HashSet<PlayerRoundStats>();
+    public ICollection<PlayerRoundStats> PlayerRoundStats { get; set; }
 }

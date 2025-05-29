@@ -19,5 +19,5 @@ public class MatchSession : BaseEntity
     [Required] public required Guid CreatedById { get; set; }
     public ApplicationUser CreatedBy { get; set; } = null!;
 
-    public ICollection<MatchRound> MatchRounds { get; set; } = new HashSet<MatchRound>();
+    public ICollection<MatchRound> MatchRounds { get; set; }
 }
