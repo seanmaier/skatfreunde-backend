@@ -107,7 +107,7 @@ public class AuthService(
             throw new HttpException(500, "An internal error occurred");
         }
 
-        logger.LogInformation("User {UserId} logged in successfully.", user.Id);
+        logger.LogInformation("User {Username} logged in successfully.", user.UserName);
         return new LoginResponseDto(accessToken, refreshToken);
     }
 
