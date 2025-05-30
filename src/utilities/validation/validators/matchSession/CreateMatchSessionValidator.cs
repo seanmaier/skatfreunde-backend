@@ -9,7 +9,7 @@ public class CreateMatchSessionValidator : AbstractValidator<CreateMatchSessionD
 {
     public CreateMatchSessionValidator()
     {
-        RuleFor(x => x.CreatedByUserId)
+        RuleFor(x => x.CreatedById)
             .NotEmpty()
             .WithMessage("UserId is required")
             .Must(BeValidGuid)

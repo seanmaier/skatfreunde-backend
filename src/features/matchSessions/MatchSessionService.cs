@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using skat_back.data;
+﻿using skat_back.data;
 using skat_back.features.matchRounds.models;
 using skat_back.features.matchSessions.models;
 using skat_back.features.playerRoundStatistics.models;
+using skat_back.Lib;
 using skat_back.utilities.mapping;
 
 namespace skat_back.Features.MatchSessions;
@@ -10,32 +10,34 @@ namespace skat_back.Features.MatchSessions;
 /// <summary>
 ///     Represents the service for managing match sessions.
 /// </summary>
-/// <param name="db">The Database context</param>
-public class MatchSessionService(AppDbContext db)
+public class MatchSessionService(IUnitOfWork unitOfWork)
     : IMatchSessionService
 {
     public async Task<ICollection<ResponseMatchSessionDto>> GetAllAsync()
     {
-        return await db.MatchSessions.Select(ms => ms.ToDto()).ToListAsync();
+        var matchSessions = await unitOfWork.MatchSessions.GetAllAsync();
+        return matchSessions.Select(ms => ms.ToDto()).ToList();
     }
 
+    
     public async Task<ResponseMatchSessionDto?> GetByIdAsync(int id)
     {
-        var matchSession = await db.MatchSessions.FindAsync(id);
+        var matchSession = await unitOfWork.MatchSessions.GetByIdAsync(id);
         return matchSession?.ToDto();
     }
 
+    
     public async Task<ResponseMatchSessionDto> CreateAsync(CreateMatchSessionDto dto)
     {
         var session = dto.ToEntity();
 
-        db.MatchSessions.Add(session);
+        await unitOfWork.MatchSessions.CreateAsync(session);
 
-        await using var transaction = await db.Database.BeginTransactionAsync();
+        await using var transaction = await unitOfWork.BeginTransactionAsync();
 
         try
         {
-            await db.SaveChangesAsync();
+            await unitOfWork.SaveChangesAsync();
             await transaction.CommitAsync();
             return session.ToDto();
         }
@@ -46,57 +48,59 @@ public class MatchSessionService(AppDbContext db)
         }
     }
 
+    
     public async Task<bool> UpdateAsync(int id, UpdateMatchSessionDto dto)
     {
-        var existingMatchSession = await db.MatchSessions // TODO check logic
-            .Include(ms => ms.MatchRounds)
-            .ThenInclude(mr => mr.PlayerRoundStats)
-            .SingleOrDefaultAsync();
-
+        var existingMatchSession = await unitOfWork.MatchSessions.GetByIdAsync(id);
+        
         if (existingMatchSession == null)
             return false;
 
         var matchSession = dto.ToEntity();
-        db.Entry(existingMatchSession).CurrentValues.SetValues(matchSession);
-
+        existingMatchSession.UpdateFrom(matchSession);
+        
         UpdateRounds(existingMatchSession.MatchRounds, matchSession.MatchRounds);
 
-        await db.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
         return true;
     }
 
+    
     public async Task<bool> DeleteAsync(int id)
     {
-        var matchSession = await db.MatchSessions.FindAsync(id);
+        var matchSession = await unitOfWork.MatchSessions.GetByIdAsync(id);
         if (matchSession == null)
             return false;
-        db.MatchSessions.Remove(matchSession);
-        await db.SaveChangesAsync();
+        unitOfWork.MatchSessions.Delete(matchSession);
+        await unitOfWork.SaveChangesAsync();
         return true;
     }
 
+    
     private void UpdateRounds(ICollection<MatchRound> existingRounds, ICollection<MatchRound> updatedRounds)
     {
-        foreach (var existingRound in existingRounds)
+        for (var i = 0; i < existingRounds.Count; i++)
         {
-            var updatedRound = updatedRounds.FirstOrDefault(r => r.Id == existingRound.Id);
+            var existingRound = existingRounds.ElementAt(i);
+            var updatedRound = updatedRounds.ElementAtOrDefault(i);
             if (updatedRound == null) continue;
 
-            db.Entry(existingRound).CurrentValues.SetValues(updatedRound);
+            existingRound.UpdateFrom(updatedRound);
             UpdatePlayerStats(existingRound.PlayerRoundStats, updatedRound.PlayerRoundStats);
         }
     }
 
+    
     private void UpdatePlayerStats(ICollection<PlayerRoundStats> existingResults,
         ICollection<PlayerRoundStats> updatedResults)
     {
-        foreach (var existingResult in existingResults)
+        for (var i = 0; i < existingResults.Count; i++)
         {
-            var updatedResult = updatedResults.FirstOrDefault(r =>
-                r.MatchRoundId == existingResult.MatchRoundId && r.PlayerId == existingResult.PlayerId);
-            if (updatedResult == null) continue;
+            var existingStats = existingResults.ElementAt(i);
+            var updatedStats = updatedResults.ElementAtOrDefault(i);
+            if (updatedStats == null) continue;
 
-            db.Entry(existingResult).CurrentValues.SetValues(updatedResult);
+            existingStats.UpdateFrom(updatedStats);
         }
     }
 }

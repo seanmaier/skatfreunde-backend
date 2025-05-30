@@ -8,8 +8,9 @@ namespace skat_back.features.playerRoundStatistics.models;
 /// <summary>
 ///     Represents a player round statistics entity for the Database.
 /// </summary>
-public class PlayerRoundStats : BaseEntity
+public class PlayerRoundStats: IEntity
 {
+    public int Id { get; set; }
     [Range(0, int.MaxValue)] public required int Points { get; set; }
     public required int Won { get; set; }
     public required int Lost { get; set; }
@@ -21,4 +22,14 @@ public class PlayerRoundStats : BaseEntity
 
     [Required] public int MatchRoundId { get; set; }
     public MatchRound MatchRound { get; set; } = null!;
+    
+    /*------------------------Updater Logic------------------------*/
+    
+    public void UpdateFrom(PlayerRoundStats playerRoundStats)
+    {
+        Points = playerRoundStats.Points;
+        Won = playerRoundStats.Won;
+        Lost = playerRoundStats.Lost;
+        PlayerId = playerRoundStats.PlayerId;
+    }
 }

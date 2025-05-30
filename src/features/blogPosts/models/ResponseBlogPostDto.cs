@@ -5,7 +5,6 @@
 /// </summary>
 public record ResponseBlogPostDto(
     int Id,
-    string CreatedById,
     string Title,
     string Text,
     string Slug,
@@ -14,5 +13,7 @@ public record ResponseBlogPostDto(
     string MetaTitle,
     string MetaDescription,
     DateTime CreatedAt,
-    DateTime UpdatedAt
+    DateTime? UpdatedAt,
+    string CreatedById,
+    string? UpdatedById = null
 );

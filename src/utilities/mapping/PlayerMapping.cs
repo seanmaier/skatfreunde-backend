@@ -9,7 +9,7 @@ public static class PlayerMapping
         return new Player
         {
             Name = entity.Name,
-            CreatedById = Guid.Parse(entity.CreatedByUserId)
+            CreatedById = Guid.Parse(entity.CreatedById),
         };
     }
 
@@ -18,7 +18,7 @@ public static class PlayerMapping
         return new Player
         {
             Name = entity.Name,
-            CreatedById = Guid.Parse(entity.CreatedByUserId)
+            UpdatedById = Guid.Parse(entity.UpdatedById)
         };
     }
 
@@ -28,7 +28,9 @@ public static class PlayerMapping
             entity.Id,
             entity.Name,
             entity.CreatedAt,
-            entity.UpdatedAt
+            entity.UpdatedAt,
+            entity.CreatedById.ToString(),
+            entity.UpdatedById.ToString()
         );
     }
 }

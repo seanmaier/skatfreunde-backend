@@ -9,5 +9,7 @@ public record ResponsePlayerDto(
     int Id,
     string Name,
     DateTime CreatedAt,
-    DateTime UpdatedAt
+    DateTime? UpdatedAt,
+    string CreatedById,
+    string? UpdatedById = null
 );

@@ -58,15 +58,9 @@ public class BlogPostService(AppDbContext db, ILogger logger) : IBlogPostService
             if (existingBlogPost == null)
                 return false;
 
-            existingBlogPost.Title = dto.Title;
-            existingBlogPost.Text = dto.Text;
-            existingBlogPost.Slug = dto.Slug;
-            existingBlogPost.Summary = dto.Summary;
-            existingBlogPost.Status = dto.Status;
-            existingBlogPost.MetaTitle = dto.MetaTitle;
-            existingBlogPost.MetaDescription = dto.MetaDescription;
-
-            db.BlogPosts.Update(existingBlogPost);
+            var updatedBlogPost = dto.ToEntity();
+            existingBlogPost.UpdateFrom(updatedBlogPost);
+            
             await db.SaveChangesAsync();
 
             return true;

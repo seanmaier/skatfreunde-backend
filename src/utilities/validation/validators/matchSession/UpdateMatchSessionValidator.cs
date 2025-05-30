@@ -10,7 +10,7 @@ public class UpdateMatchSessionValidator : AbstractValidator<UpdateMatchSessionD
 {
     public UpdateMatchSessionValidator()
     {
-        RuleFor(x => x.CreatedByUserId)
+        RuleFor(x => x.UpdatedById)
             .NotEmpty()
             .WithMessage("UserId is required")
             .Must(BeValidGuid)

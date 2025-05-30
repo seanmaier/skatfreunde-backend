@@ -8,7 +8,7 @@ public class UpdateBlogPostValidator: AbstractValidator<UpdateBlogPostDto>
 {
     public UpdateBlogPostValidator()
     {
-        RuleFor(x => x.CreatedById)
+        RuleFor(x => x.UpdatedById)
             .ValidateCreatedById();
         
         RuleFor(x => x.Title)

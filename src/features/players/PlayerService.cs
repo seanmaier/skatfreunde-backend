@@ -41,7 +41,9 @@ public class PlayerService(IUnitOfWork unitOfWork) : IPlayerService
         if (existing == null)
             return false;
 
-        existing.Name = dto.Name;
+        var updated = dto.ToEntity();
+        existing.UpdateFrom(updated);
+
         await unitOfWork.SaveChangesAsync();
         return true;
     }

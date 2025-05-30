@@ -10,8 +10,6 @@ namespace skat_back.features.blogPosts.models;
 /// </summary>
 public class BlogPost : BaseEntity
 {
-    [Key] public int Id { get; set; }
-
     [MaxLength(MaxTextLength)] public required string Title { get; set; }
     [MaxLength(MaxTextLength)] public required string Text { get; set; }
     [MaxLength(MaxSlugLength)] public required string Slug { get; set; }
@@ -19,9 +17,17 @@ public class BlogPost : BaseEntity
     public BlogStatus Status { get; set; } = BlogStatus.Draft;
     [MaxLength(MaxTitleLength)] public required string MetaTitle { get; set; }
     [MaxLength(MaxDescriptionLength)] public required string MetaDescription { get; set; }
-
-    /*--------------------Navigation  Properties--------------------*/
-
-    [Required] public required Guid CreatedById { get; set; }
-    public ApplicationUser CreatedBy { get; set; } = null!;
+    
+    /*------------------------Updater Logic------------------------*/
+    public void UpdateFrom(BlogPost blogPost)
+    {
+        Title = blogPost.Title;
+        Text = blogPost.Text;
+        Slug = blogPost.Slug;
+        Summary = blogPost.Summary;
+        Status = blogPost.Status;
+        MetaTitle = blogPost.MetaTitle;
+        MetaDescription = blogPost.MetaDescription;
+        UpdatedById = blogPost.UpdatedById;
+    }
 }

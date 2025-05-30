@@ -4,25 +4,25 @@ using skat_back.Features;
 
 namespace skat_back.Lib;
 
-public class Repository<T>(AppDbContext context) : IRepository<T> where T: class
+public class Repository<T>(AppDbContext context) : IRepository<T> where T: class, IEntity
 {
-    public async Task<ICollection<T>> GetAllAsync()
+    public virtual async Task<ICollection<T>> GetAllAsync()
     {
         return await context.Set<T>().ToListAsync();
     }
 
-    public async Task<T?> GetByIdAsync(int id)
+    public virtual async Task<T?> GetByIdAsync(int id)
     {
-        var player = await context.Set<T>().FindAsync(id);
-        return player;
+        var entity = await context.Set<T>().FindAsync(id);
+        return entity;
     }
 
-    public async Task<T> CreateAsync(T newEntity)
+    public virtual async Task<T> CreateAsync(T newEntity)
     {
         await context.Set<T>().AddAsync(newEntity);
         return newEntity;
     }
-
+    
     public void Delete(T entity)
     {
         context.Set<T>().Remove(entity);

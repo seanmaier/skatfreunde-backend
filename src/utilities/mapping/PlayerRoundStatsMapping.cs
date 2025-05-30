@@ -31,12 +31,9 @@ public static class PlayerRoundStatsMapping
         return new ResponsePlayerRoundStatsDto
         (
             entity.PlayerId,
-            entity.MatchRoundId,
             entity.Points,
             entity.Won,
-            entity.Lost,
-            entity.CreatedAt,
-            entity.UpdatedAt
+            entity.Lost
         );
     }
 }

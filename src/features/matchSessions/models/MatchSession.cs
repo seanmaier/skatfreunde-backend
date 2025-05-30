@@ -10,14 +10,16 @@ namespace skat_back.features.matchSessions.models;
 /// </summary>
 public class MatchSession : BaseEntity
 {
-    [Key] public int Id { get; set; }
-
     [MaxLength(4)] public required string CalendarWeek { get; set; }
 
     /*--------------------Navigation  Properties--------------------*/
 
-    [Required] public required Guid CreatedById { get; set; }
-    public ApplicationUser CreatedBy { get; set; } = null!;
-
-    public ICollection<MatchRound> MatchRounds { get; set; }
+    public ICollection<MatchRound> MatchRounds { get; set; } = new HashSet<MatchRound>();
+    
+    /*------------------------Updater Logic------------------------*/
+    public void UpdateFrom(MatchSession matchSession)
+    {
+        CalendarWeek = matchSession.CalendarWeek;
+        UpdatedById = matchSession.UpdatedById;
+    }
 }

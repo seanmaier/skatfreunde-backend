@@ -11,8 +11,6 @@ namespace skat_back.features.players.models;
 /// </summary>
 public class Player : BaseEntity
 {
-    [Key] public int Id { get; set; }
-
     [Required]
     [MinLength(MinNameLength)]
     [MaxLength(MaxNameLength)]
@@ -20,8 +18,13 @@ public class Player : BaseEntity
 
     /*--------------------Navigation  Properties--------------------*/
 
-    [Required] public required Guid CreatedById { get; set; }
-    public ApplicationUser CreatedBy { get; set; } = null!;
-
-    public ICollection<PlayerRoundStats> PlayerRoundStats { get; set; }
+    public ICollection<PlayerRoundStats> PlayerRoundStats { get; set; } = new HashSet<PlayerRoundStats>();
+    
+    /*------------------------Updater Logic------------------------*/
+    
+    public void UpdateFrom(Player player)
+    {
+        Name = player.Name;
+        UpdatedById = player.UpdatedById;
+    }
 }

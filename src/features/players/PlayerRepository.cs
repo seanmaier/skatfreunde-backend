@@ -16,6 +16,6 @@ public class PlayerRepository(AppDbContext context) : Repository<Player>(context
     /// <returns>The player with the specified name, or null if not found.</returns>
     public async Task<Player?> GetByNameAsync(string name)
     {
-        return await _context.Players.FirstOrDefaultAsync(p => p != null && p.Name == name);
+        return await _context.Players.FirstOrDefaultAsync(p => p.Name == name);
     }
 }

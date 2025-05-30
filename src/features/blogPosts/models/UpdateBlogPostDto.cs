@@ -5,7 +5,7 @@
 /// </summary>
 public record UpdateBlogPostDto(
     int Id,
-    string CreatedById,
+    string UpdatedById,
     string Title,
     string Text,
     string Slug,

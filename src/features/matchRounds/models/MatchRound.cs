@@ -10,7 +10,7 @@ namespace skat_back.features.matchRounds.models;
 /// <summary>
 ///     Represents a match round entity for the Database.
 /// </summary>
-public class MatchRound : BaseEntity
+public class MatchRound : IEntity
 {
     [Key] public int Id { get; set; }
 
@@ -25,4 +25,12 @@ public class MatchRound : BaseEntity
     public MatchSession MatchSession { get; set; } = null!;
 
     public ICollection<PlayerRoundStats> PlayerRoundStats { get; set; } = new HashSet<PlayerRoundStats>();
+    
+    /*------------------------Updater Logic------------------------*/
+    
+    public void UpdateFrom(MatchRound matchRound)
+    {
+        RoundNumber = matchRound.RoundNumber;
+        Table = matchRound.Table;
+    }
 }

@@ -13,7 +13,7 @@ public static class BlogPostMapping
             Slug = entity.Slug,
             MetaTitle = entity.MetaTitle,
             MetaDescription = entity.MetaDescription,
-            CreatedById = Guid.Parse(entity.CreatedById)
+            CreatedById = Guid.Parse(entity.CreatedById),
         };
     }
 
@@ -21,12 +21,12 @@ public static class BlogPostMapping
     {
         return new BlogPost
         {
-            CreatedById = Guid.Parse(entity.CreatedById),
+            UpdatedById = Guid.Parse(entity.UpdatedById),
             Title = entity.Title,
             Text = entity.Text,
             Slug = entity.Slug,
             MetaTitle = entity.MetaTitle,
-            MetaDescription = entity.MetaDescription
+            MetaDescription = entity.MetaDescription,
         };
     }
 
@@ -34,7 +34,6 @@ public static class BlogPostMapping
     {
         return new ResponseBlogPostDto(
             entity.Id,
-            entity.CreatedById.ToString(),
             entity.Title,
             entity.Text,
             entity.Slug,
@@ -43,7 +42,9 @@ public static class BlogPostMapping
             entity.MetaTitle,
             entity.MetaDescription,
             entity.CreatedAt,
-            entity.UpdatedAt
+            entity.UpdatedAt,
+            entity.CreatedById.ToString(),
+            entity.UpdatedById.ToString()
         );
     }
 }

@@ -29,12 +29,9 @@ public static class MatchRoundMapping
     {
         return new ResponseMatchRoundDto(
             entity.Id,
-            entity.MatchSessionId,
             entity.RoundNumber,
             entity.Table,
-            entity.PlayerRoundStats.Select(x => x.ToDto()).ToList(),
-            entity.CreatedAt,
-            entity.UpdatedAt
+            entity.PlayerRoundStats.Select(x => x.ToDto()).ToList()
         );
     }
 }

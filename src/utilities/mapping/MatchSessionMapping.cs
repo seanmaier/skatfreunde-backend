@@ -8,10 +8,8 @@ public static class MatchSessionMapping
     {
         return new MatchSession
         {
-            CreatedAt = default,
-            UpdatedAt = default,
             CalendarWeek = dto.CalendarWeek,
-            CreatedById = Guid.Parse(dto.CreatedByUserId),
+            CreatedById = Guid.Parse(dto.CreatedById),
             MatchRounds = dto.MatchRounds.Select(x => x.ToEntity()).ToList()
         };
     }
@@ -21,7 +19,7 @@ public static class MatchSessionMapping
         return new MatchSession
         {
             CalendarWeek = dto.CalendarWeek,
-            CreatedById = Guid.Parse(dto.CreatedByUserId),
+            UpdatedById = Guid.Parse(dto.UpdatedById),
             MatchRounds = dto.MatchRounds.Select(x => x.ToEntity()).ToList()
         };
     }
@@ -31,11 +29,12 @@ public static class MatchSessionMapping
         return new ResponseMatchSessionDto
         (
             entity.Id,
-            entity.CreatedById.ToString(),
             entity.CalendarWeek,
             entity.MatchRounds.Select(x => x.ToDto()).ToList(),
             entity.CreatedAt,
-            entity.UpdatedAt
+            entity.UpdatedAt,
+            entity.CreatedById.ToString(),
+            entity.UpdatedById.ToString()
         );
     }
 }

@@ -18,7 +18,7 @@ public class UpdatePlayerValidator : AbstractValidator<UpdatePlayerDto>
             .Matches("^[a-zA-Z0-9 ,]*$")
             .WithMessage("Name must only contain letters, numbers, commas and spaces.");
 
-        RuleFor(x => x.CreatedByUserId)
+        RuleFor(x => x.UpdatedById)
             .ValidateCreatedById();
     }
 }

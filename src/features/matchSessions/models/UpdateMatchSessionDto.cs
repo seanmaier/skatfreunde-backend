@@ -6,11 +6,11 @@ namespace skat_back.features.matchSessions.models;
 /// <summary>
 ///     Represents the data transfer object (DTO) for updating a match session.
 /// </summary>
-/// <param name="CreatedByUserId">The User who created the Match</param>
+/// <param name="UpdatedById">The User who created the Match</param>
 /// <param name="CalendarWeek">The Week the Match happened</param>
 /// <param name="MatchRounds">A collection of matches that happened that day</param>
 public sealed record UpdateMatchSessionDto(
-    string CreatedByUserId,
+    string UpdatedById,
     string CalendarWeek,
     ICollection<UpdateMatchRoundDto> MatchRounds
 );
