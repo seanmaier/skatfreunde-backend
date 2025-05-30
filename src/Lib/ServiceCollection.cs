@@ -22,8 +22,6 @@ public static class ServiceCollection
 {
     public static void ConfigureServices(this IServiceCollection services)
     {
-        services.AddScoped<IMatchRoundService, MatchRoundService>();
-        services.AddScoped<IPlayerRoundStatsService, PlayerRoundStatsService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<IBlogPostService, BlogPostService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
