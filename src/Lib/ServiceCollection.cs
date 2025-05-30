@@ -10,6 +10,7 @@ using skat_back.features.email;
 using skat_back.features.matches.matchSessions;
 using skat_back.features.players;
 using skat_back.Features.Players;
+using skat_back.features.statistics;
 using skat_back.features.url;
 using skat_back.features.user;
 using static skat_back.utilities.constants.GeneralConstants;
@@ -28,6 +29,7 @@ public static class ServiceCollection
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IStatisticsService, StatisticsService>();
         services.AddScoped<IUrlService, UrlService>();
         services.AddScoped<IUsersService, UsersService>();
         services.Configure<DataProtectionTokenProviderOptions>(options =>
