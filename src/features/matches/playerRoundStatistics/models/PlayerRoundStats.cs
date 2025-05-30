@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using skat_back.features.matchRounds.models;
+using skat_back.features.matches.matchRounds.models;
 using skat_back.features.players.models;
 using skat_back.Lib;
 
@@ -8,9 +8,8 @@ namespace skat_back.features.playerRoundStatistics.models;
 /// <summary>
 ///     Represents a player round statistics entity for the Database.
 /// </summary>
-public class PlayerRoundStats: IEntity
+public class PlayerRoundStats : IEntity
 {
-    public int Id { get; set; }
     [Range(0, int.MaxValue)] public required int Points { get; set; }
     public required int Won { get; set; }
     public required int Lost { get; set; }
@@ -22,9 +21,10 @@ public class PlayerRoundStats: IEntity
 
     [Required] public int MatchRoundId { get; set; }
     public MatchRound MatchRound { get; set; } = null!;
-    
+    public int Id { get; set; }
+
     /*------------------------Updater Logic------------------------*/
-    
+
     public void UpdateFrom(PlayerRoundStats playerRoundStats)
     {
         Points = playerRoundStats.Points;

@@ -1,4 +1,4 @@
-﻿namespace skat_back.features.playerRoundStatistics.models;
+﻿namespace skat_back.features.matches.playerRoundStatistics.models;
 
 /// <summary>
 ///     Represents a data transfer object (DTO) for creating player round statistics.

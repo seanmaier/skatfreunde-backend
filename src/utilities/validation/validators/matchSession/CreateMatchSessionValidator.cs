@@ -1,5 +1,5 @@
 using FluentValidation;
-using skat_back.features.matchSessions.models;
+using skat_back.features.matches.matchSessions.models;
 using skat_back.utilities.validation.validators.matchRound;
 using static skat_back.utilities.constants.TestingConstants;
 

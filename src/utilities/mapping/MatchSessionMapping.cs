@@ -1,4 +1,5 @@
-﻿using skat_back.features.matchSessions.models;
+﻿using skat_back.features.matches.matchSessions.models;
+using skat_back.features.matchSessions.models;
 
 namespace skat_back.utilities.mapping;
 

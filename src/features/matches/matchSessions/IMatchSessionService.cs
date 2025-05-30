@@ -1,7 +1,8 @@
-﻿using skat_back.features.matchSessions.models;
+﻿using skat_back.features.matches.matchSessions.models;
+using skat_back.features.matchSessions.models;
 using skat_back.Lib;
 
-namespace skat_back.Features.MatchSessions;
+namespace skat_back.features.matches.matchSessions;
 
 /// <summary>
 ///     Represents the service interface for managing match sessions.

@@ -1,11 +1,11 @@
-﻿using skat_back.data;
-using skat_back.features.matchRounds.models;
+﻿using skat_back.features.matches.matchRounds.models;
+using skat_back.features.matches.matchSessions.models;
 using skat_back.features.matchSessions.models;
 using skat_back.features.playerRoundStatistics.models;
 using skat_back.Lib;
 using skat_back.utilities.mapping;
 
-namespace skat_back.Features.MatchSessions;
+namespace skat_back.features.matches.matchSessions;
 
 /// <summary>
 ///     Represents the service for managing match sessions.
@@ -19,14 +19,14 @@ public class MatchSessionService(IUnitOfWork unitOfWork)
         return matchSessions.Select(ms => ms.ToDto()).ToList();
     }
 
-    
+
     public async Task<ResponseMatchSessionDto?> GetByIdAsync(int id)
     {
         var matchSession = await unitOfWork.MatchSessions.GetByIdAsync(id);
         return matchSession?.ToDto();
     }
 
-    
+
     public async Task<ResponseMatchSessionDto> CreateAsync(CreateMatchSessionDto dto)
     {
         var session = dto.ToEntity();
@@ -48,24 +48,24 @@ public class MatchSessionService(IUnitOfWork unitOfWork)
         }
     }
 
-    
+
     public async Task<bool> UpdateAsync(int id, UpdateMatchSessionDto dto)
     {
         var existingMatchSession = await unitOfWork.MatchSessions.GetByIdAsync(id);
-        
+
         if (existingMatchSession == null)
             return false;
 
         var matchSession = dto.ToEntity();
         existingMatchSession.UpdateFrom(matchSession);
-        
+
         UpdateRounds(existingMatchSession.MatchRounds, matchSession.MatchRounds);
 
         await unitOfWork.SaveChangesAsync();
         return true;
     }
 
-    
+
     public async Task<bool> DeleteAsync(int id)
     {
         var matchSession = await unitOfWork.MatchSessions.GetByIdAsync(id);
@@ -76,7 +76,7 @@ public class MatchSessionService(IUnitOfWork unitOfWork)
         return true;
     }
 
-    
+
     private void UpdateRounds(ICollection<MatchRound> existingRounds, ICollection<MatchRound> updatedRounds)
     {
         for (var i = 0; i < existingRounds.Count; i++)
@@ -90,7 +90,7 @@ public class MatchSessionService(IUnitOfWork unitOfWork)
         }
     }
 
-    
+
     private void UpdatePlayerStats(ICollection<PlayerRoundStats> existingResults,
         ICollection<PlayerRoundStats> updatedResults)
     {

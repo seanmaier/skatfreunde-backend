@@ -1,5 +1,5 @@
 using FluentValidation;
-using skat_back.features.playerRoundStatistics.models;
+using skat_back.features.matches.playerRoundStatistics.models;
 
 namespace skat_back.utilities.validation.validators.playerRoundStats;
 

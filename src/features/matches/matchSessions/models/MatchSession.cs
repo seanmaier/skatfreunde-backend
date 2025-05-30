@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using skat_back.features.auth.models;
-using skat_back.features.matchRounds.models;
+using skat_back.features.matches.matchRounds.models;
 using skat_back.Lib;
 
-namespace skat_back.features.matchSessions.models;
+namespace skat_back.features.matches.matchSessions.models;
 
 /// <summary>
 ///     Represents a match session entity for the Database.
@@ -15,7 +14,7 @@ public class MatchSession : BaseEntity
     /*--------------------Navigation  Properties--------------------*/
 
     public ICollection<MatchRound> MatchRounds { get; set; } = new HashSet<MatchRound>();
-    
+
     /*------------------------Updater Logic------------------------*/
     public void UpdateFrom(MatchSession matchSession)
     {

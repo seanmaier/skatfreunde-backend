@@ -1,4 +1,4 @@
-﻿using skat_back.Features.MatchRounds;
+﻿using skat_back.features.matches.matchRounds.models;
 using skat_back.features.matchRounds.models;
 
 namespace skat_back.utilities.mapping;
