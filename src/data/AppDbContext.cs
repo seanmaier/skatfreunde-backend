@@ -62,9 +62,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         modelBuilder.Entity<Player>(entity =>
             entity.HasIndex(p => p.Name).IsUnique());
 
-        modelBuilder.Entity<PlayerRoundStats>()
-            .HasKey(prr => new { prr.MatchRoundId, prr.PlayerId });
-
         // ===========BlogPosts===========
         modelBuilder.Entity<BlogPost>()
             .HasIndex(b => b.Slug)
