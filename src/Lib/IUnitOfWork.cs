@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore.Storage;
-using skat_back.Features.MatchRounds;
-using skat_back.Features.MatchSessions;
-using skat_back.Features.PlayerRoundStatistics;
+using skat_back.Features.BlogPosts;
+using skat_back.features.matches.matchRounds;
+using skat_back.features.matches.matchSessions;
+using skat_back.features.matches.playerRoundStatistics;
 using skat_back.features.players;
 
 namespace skat_back.Lib;
@@ -12,6 +13,7 @@ public interface IUnitOfWork : IDisposable
     IMatchSessionRepository MatchSessions { get; }
     IMatchRoundRepository MatchRounds { get; }
     IPlayerRoundStatsRepository PlayerRoundStats { get; }
+    IBlogPostRepository BlogPosts { get; }
     Task<IDbContextTransaction> BeginTransactionAsync();
     Task<int> SaveChangesAsync();
 }

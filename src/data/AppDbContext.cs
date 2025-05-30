@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using skat_back.features.auth.models;
 using skat_back.features.blogPosts.models;
-using skat_back.features.matchRounds.models;
-using skat_back.features.matchSessions.models;
+using skat_back.features.matches.matchRounds.models;
+using skat_back.features.matches.matchSessions.models;
 using skat_back.features.playerRoundStatistics.models;
 using skat_back.features.players.models;
 using skat_back.Lib;
@@ -26,7 +26,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         var now = DateTime.UtcNow;
 
         foreach (var entry in ChangeTracker.Entries<BaseEntity>())
-        {
             switch (entry.State)
             {
                 case EntityState.Added:
@@ -37,8 +36,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
                     break;
             }
 
-        }
-        
         return await base.SaveChangesAsync(cancellationToken);
     }
 
@@ -52,7 +49,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .WithOne(mr => mr.MatchSession)
             .HasForeignKey(mr => mr.MatchSessionId)
             .OnDelete(DeleteBehavior.Cascade);
-            
+
         modelBuilder.Entity<MatchRound>()
             .HasMany(mr => mr.PlayerRoundStats)
             .WithOne(prs => prs.MatchRound)

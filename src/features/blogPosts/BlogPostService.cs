@@ -1,95 +1,60 @@
-﻿using Microsoft.EntityFrameworkCore;
-using skat_back.data;
-using skat_back.features.blogPosts;
-
-using skat_back.features.blogPosts.models;
+﻿using skat_back.features.blogPosts.models;
+using skat_back.Lib;
 using skat_back.utilities.mapping;
-using ILogger = Serilog.ILogger;
 
 namespace skat_back.Features.BlogPosts;
 
 /// <summary>
 ///     Represents the service for managing blog posts.
 /// </summary>
-/// <param name="db">The Database context</param>
-/// <param name="logger">The injected Logger</param>
-public class BlogPostService(AppDbContext db, ILogger logger) : IBlogPostService
+public class BlogPostService(IUnitOfWork unitOfWork) : IBlogPostService
 {
     public async Task<ICollection<ResponseBlogPostDto>> GetAllAsync()
     {
-        logger.Information("Fetching all blog posts");
-        return await db.BlogPosts.Select(bp => bp.ToDto()).ToListAsync();
+        var blogPosts = await unitOfWork.BlogPosts.GetAllAsync();
+        return blogPosts.Select(b => b.ToDto()).ToList();
     }
 
     public async Task<ResponseBlogPostDto?> GetByIdAsync(int id)
     {
-        logger.Information("Fetching blog post with ID: {Id}", id);
-        var blogPost = await db.BlogPosts.FindAsync(id);
+        var blogPost = await unitOfWork.BlogPosts.GetByIdAsync(id);
         return blogPost?.ToDto();
     }
 
     public async Task<ResponseBlogPostDto> CreateAsync(CreateBlogPostDto dto)
     {
-        logger.Information("Creating blog post: {@BlogPost}", dto);
+        var blogPost = dto.ToEntity();
 
-        try
-        {
-            var blogPost = dto.ToEntity();
+        await unitOfWork.BlogPosts.CreateAsync(blogPost);
 
-            db.BlogPosts.Add(blogPost);
-            await db.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
 
-            return blogPost.ToDto();
-        }
-        catch (Exception ex)
-        {
-            logger.Error(ex, "Error creating blog post: {@BlogPost}", dto);
-            throw;
-        }
+        return blogPost.ToDto();
     }
 
     public async Task<bool> UpdateAsync(int id, UpdateBlogPostDto dto)
     {
-        logger.Information("Updating blog post with ID: {Id}", id);
+        var existing = await unitOfWork.BlogPosts.GetByIdAsync(id);
+        if (existing == null)
+            return false;
 
-        try
-        {
-            var existingBlogPost = await db.BlogPosts.FindAsync(id);
-            if (existingBlogPost == null)
-                return false;
+        var updatedBlogPost = dto.ToEntity();
+        existing.UpdateFrom(updatedBlogPost);
 
-            var updatedBlogPost = dto.ToEntity();
-            existingBlogPost.UpdateFrom(updatedBlogPost);
-            
-            await db.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
 
-            return true;
-        }
-        catch (Exception ex)
-        {
-            logger.Error(ex, "Error updating blog post with ID: {Id}", id);
-            throw;
-        }
+        return true;
     }
 
     public async Task<bool> DeleteAsync(int id)
     {
-        logger.Information("Deleting blog post with ID: {Id}", id);
-        try
-        {
-            var blogPost = await db.BlogPosts.FindAsync(id);
-            if (blogPost == null)
-                return false;
+        var blogPost = await unitOfWork.BlogPosts.GetByIdAsync(id);
+        if (blogPost == null)
+            return false;
 
-            db.BlogPosts.Remove(blogPost);
-            await db.SaveChangesAsync();
+        unitOfWork.BlogPosts.Delete(blogPost);
+        await unitOfWork.SaveChangesAsync();
 
-            return true;
-        }
-        catch (Exception ex)
-        {
-            logger.Error(ex, "Error deleting blog post with ID: {Id}", id);
-            throw;
-        }
+        return true;
     }
 }
