@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using skat_back.data;
 using skat_back.features.statistics.models;
 using skat_back.Lib;
@@ -17,9 +16,9 @@ public class StatisticsService(AppDbContext context, ILogger<StatisticsService> 
             .Select(g => new AnnualPlayerData(
                 g.Key.Name,
                 g.Key.PlayerId,
-                g.Count(),
+                g.Select(prs => prs.MatchRound.MatchSession.CalendarWeek).Distinct().Count(),
                 g.Sum(prs => prs.Points),
-                (int)g.Average(prs => prs.Points),
+                g.Sum(prs => prs.Points) / g.Select(prs => prs.MatchRound.MatchSession.CalendarWeek).Distinct().Count(),
                 g.Sum(prs => prs.Points) -
                 g.Count() * 1000, // Assuming 1000 is the average points per game // TODO check logic
                 g.Sum(prs => prs.Won),

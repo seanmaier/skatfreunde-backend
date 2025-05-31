@@ -13,7 +13,9 @@ public class StatisticsRepository(AppDbContext context) : IStatisticsRepository
         var playerStats = await context.PlayerRoundStats
             .Where(prs => prs.MatchRound.MatchSession.CreatedAt >= startOfTheYear)
             .Include(playerRoundStats => playerRoundStats.Player)
-            .ToListAsync(); 
+            .Include(playerRoundStats => playerRoundStats.MatchRound)
+            .ThenInclude(matchRound => matchRound.MatchSession)
+            .ToListAsync();
 
         return playerStats;
     }
