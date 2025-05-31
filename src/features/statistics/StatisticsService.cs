@@ -10,13 +10,7 @@ public class StatisticsService(AppDbContext context, ILogger<StatisticsService> 
 {
     public async Task<AnnualDataResponseDto> GetAnnualData(int year)
     {
-        var players = await context.Players.ToListAsync();
-
-        var startOfTheYear = new DateTime(year, 01, 01);
-
-        var playerStats = await context.PlayerRoundStats
-            .Where(prs => prs.MatchRound.MatchSession.CreatedAt >= startOfTheYear)
-            .ToListAsync(); // Fetch data from the database
+        var playerStats = await unitOfWork.Statistics.GetAnnualPlayerData(year);
 
         var annualDataQuery = playerStats
             .GroupBy(prs => new { prs.PlayerId, prs.Player.Name })
@@ -28,15 +22,13 @@ public class StatisticsService(AppDbContext context, ILogger<StatisticsService> 
                 (int)g.Average(prs => prs.Points),
                 g.Sum(prs => prs.Points) -
                 g.Count() * 1000, // Assuming 1000 is the average points per game // TODO check logic
-                g.Sum(prs => prs.Won), // Count of won games
-                g.Sum(prs => prs.Lost) // Count of lost games
+                g.Sum(prs => prs.Won),
+                g.Sum(prs => prs.Lost)
             ))
             .OrderByDescending(apd => apd.AveragePoints)
-            .ToList(); // Perform grouping and projection in memory
+            .ToList();
 
-        var matchDay = await context.MatchSessions
-            .Where(matchSessions => matchSessions.CreatedAt >= startOfTheYear)
-            .CountAsync();
+        var matchDay = await unitOfWork.Statistics.GetYearMatchDay(year);
         logger.LogInformation("Fetched {Count} player data records for annual statistics.", annualDataQuery.Count);
 
         var annualDataResponse = new AnnualDataResponseDto

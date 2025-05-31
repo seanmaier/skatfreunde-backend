@@ -6,6 +6,7 @@ using skat_back.features.matches.matchSessions;
 using skat_back.features.matches.playerRoundStatistics;
 using skat_back.Features.PlayerRoundStatistics;
 using skat_back.features.players;
+using skat_back.features.statistics;
 
 namespace skat_back.Lib;
 
@@ -16,6 +17,7 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
     private IMatchSessionRepository? _matchSessionRepository;
     private IPlayerRoundStatsRepository? _playerRoundStatsRepository;
     private IPlayerRepository? _players;
+    private IStatisticsRepository? _statisticsRepository;
 
     public IPlayerRepository Players => _players ??= new PlayerRepository(context);
     public IMatchSessionRepository MatchSessions => _matchSessionRepository ??= new MatchSessionRepository(context);
@@ -25,6 +27,9 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
         _playerRoundStatsRepository ??= new PlayerRoundStatsRepository(context);
 
     public IBlogPostRepository BlogPosts => _blogPostRepository ??= new BlogPostRepository(context);
+
+    public IStatisticsRepository Statistics =>
+        _statisticsRepository ??= new StatisticsRepository(context);
 
     public void Dispose()
     {

@@ -30,6 +30,7 @@ public static class ServiceCollection
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IStatisticsService, StatisticsService>();
+        services.AddScoped<IStatisticsRepository, StatisticsRepository>();
         services.AddScoped<IUrlService, UrlService>();
         services.AddScoped<IUsersService, UsersService>();
         services.Configure<DataProtectionTokenProviderOptions>(options =>
