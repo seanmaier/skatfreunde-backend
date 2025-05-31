@@ -53,7 +53,7 @@ public class StatisticsService(AppDbContext context, ILogger<StatisticsService> 
                 .GroupBy(prs => new { prs.PlayerId, prs.Player.Name })
                 .Select(g => new PlayerMatchDayDataDto(
                     g.Key.Name,
-                    g.Key.PlayerId, // TODO matchShare
+                    -1, // TODO matchShare
                     g.Sum(rs => rs.Points),
                     g.Select(prs => new SeriesDto(prs.Points, prs.Won, prs.Lost)).ToList()
                 ))
