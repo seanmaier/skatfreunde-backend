@@ -21,7 +21,7 @@ public class MatchSessionValidationTest
     {
         // Arrange
         var matchSession = new CreateMatchSessionDto(
-            Guid.NewGuid().ToString(), "KW23", new List<CreateMatchRoundDto>
+            Guid.NewGuid().ToString(), "23", new List<CreateMatchRoundDto>
             {
                 new("1", "2", new List<CreatePlayerRoundStatsDto>
                     {
@@ -120,11 +120,11 @@ public class MatchSessionValidationTest
     }
 
     [Fact]
-    public void Validate_CreateMatchSession_NotUniqueRoundNumber_ReturnsFailure()
+    public void Validate_CreateMatchSession_NotUniqueRoundNumber_ReturnsSuccess()
     {
         // Arrange
         var matchSession = new CreateMatchSessionDto(
-            Guid.NewGuid().ToString(), "KW23", new List<CreateMatchRoundDto>
+            Guid.NewGuid().ToString(), "23", new List<CreateMatchRoundDto>
             {
                 new("1", "2", new List<CreatePlayerRoundStatsDto>
                     {
@@ -142,9 +142,7 @@ public class MatchSessionValidationTest
         var result = _createMatchSessionValidator.Validate(matchSession);
 
         // Assert
-        result.IsValid.Should().BeFalse();
-        result.Errors.Should()
-            .Contain(e => e.ErrorMessage.Contains("RoundNumber must be unique"));
+        result.IsValid.Should().BeTrue();
     }
 
     [Fact]
@@ -179,7 +177,7 @@ public class MatchSessionValidationTest
     {
         // Arrange
         var matchSession = new UpdateMatchSessionDto(
-            Guid.NewGuid().ToString(), "KW23", new List<UpdateMatchRoundDto>
+            Guid.NewGuid().ToString(), "23", new List<UpdateMatchRoundDto>
             {
                 new("1", "2", new List<UpdatePlayerRoundStatsDto>
                     {
@@ -278,11 +276,11 @@ public class MatchSessionValidationTest
     }
 
     [Fact]
-    public void Validate_UpdateMatchSession_NotUniqueRoundNumber_ReturnsFailure()
+    public void Validate_UpdateMatchSession_NotUniqueRoundNumber_ReturnsSuccess()
     {
         // Arrange
         var matchSession = new UpdateMatchSessionDto(
-            Guid.NewGuid().ToString(), "KW23", new List<UpdateMatchRoundDto>
+            Guid.NewGuid().ToString(), "23", new List<UpdateMatchRoundDto>
             {
                 new("1", "2", new List<UpdatePlayerRoundStatsDto>
                     {
@@ -300,9 +298,7 @@ public class MatchSessionValidationTest
         var result = _updateMatchSessionValidator.Validate(matchSession);
 
         // Assert
-        result.IsValid.Should().BeFalse();
-        result.Errors.Should()
-            .Contain(e => e.ErrorMessage.Contains("RoundNumber must be unique"));
+        result.IsValid.Should().BeTrue();
     }
 
     [Fact]

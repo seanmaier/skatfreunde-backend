@@ -1,9 +1,9 @@
 using FakeItEasy;
 using FluentAssertions;
+using skat_back.features.players;
 using skat_back.Features.Players;
 using skat_back.features.players.models;
 using skat_back.Lib;
-using skat_back.utilities.mapping;
 
 namespace skat_back.Tests.services;
 
@@ -36,7 +36,9 @@ public class PlayerServiceTests
             fakePlayers[0].Id,
             fakePlayers[0].Name,
             fakePlayers[0].CreatedAt,
-            fakePlayers[0].UpdatedAt
+            fakePlayers[0].UpdatedAt,
+            fakePlayers[0].CreatedById.ToString(),
+            ""
         ));
 
         A.CallTo(() => playerRepo.GetAllAsync()).MustHaveHappenedOnceExactly();
@@ -73,23 +75,23 @@ public class PlayerServiceTests
         // Arrange
         var createDto = new CreatePlayerDto(
             Name: "NewPlayer",
-            CreatedByUserId: Guid.NewGuid().ToString());
+            CreatedById: Guid.NewGuid().ToString());
 
         var expectedPlayer = new Player
         {
             Name = createDto.Name,
-            CreatedById = Guid.Parse(createDto.CreatedByUserId),
+            CreatedById = Guid.Parse(createDto.CreatedById)
         };
-        
+
         var playerRepo = A.Fake<IPlayerRepository>();
         A.CallTo(() => playerRepo.CreateAsync(A<Player>._)).Returns(Task.FromResult(expectedPlayer));
-        
+
         var unitOfWork = A.Fake<IUnitOfWork>();
         A.CallTo(() => unitOfWork.Players).Returns(playerRepo);
         A.CallTo(() => unitOfWork.SaveChangesAsync()).Returns(Task.FromResult(1));
-        
+
         var service = new PlayerService(unitOfWork);
-        
+
         // Act
         var result = await service.CreateAsync(createDto);
 
@@ -100,31 +102,31 @@ public class PlayerServiceTests
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync()).MustHaveHappenedOnceExactly();
     }
-    
+
     [Fact]
     public async Task? PlayerService_Update_ReturnsTrue()
     {
         // Arrange
         var updateDto = new UpdatePlayerDto(
             Name: "UpdatedPlayer",
-            CreatedByUserId: Guid.NewGuid().ToString());
+            UpdatedById: Guid.NewGuid().ToString());
 
         var existingPlayer = new Player
         {
             Id = 1,
             Name = "OldPlayer",
-            CreatedById = Guid.Parse(updateDto.CreatedByUserId),
+            CreatedById = Guid.Parse(updateDto.UpdatedById),
             UpdatedAt = DateTime.UtcNow
         };
 
         var playerRepo = A.Fake<IPlayerRepository>();
-        A.CallTo(() => playerRepo.GetByIdAsync(1)).Returns(Task.FromResult(existingPlayer));
-        
+        A.CallTo(() => playerRepo.GetByIdAsync(1))!.Returns(Task.FromResult(existingPlayer));
+
         var unitOfWork = A.Fake<IUnitOfWork>();
         A.CallTo(() => unitOfWork.Players).Returns(playerRepo);
-        
+
         var service = new PlayerService(unitOfWork);
-        
+
         // Act
         var result = await service.UpdateAsync(1, updateDto);
 
@@ -132,7 +134,7 @@ public class PlayerServiceTests
         result.Should().BeTrue();
         existingPlayer.Name.Should().Be("UpdatedPlayer");
         existingPlayer.UpdatedAt.Should().BeAfter(DateTime.UtcNow.AddSeconds(-1));
-        
+
         A.CallTo(() => playerRepo.GetByIdAsync(1)).MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync()).MustHaveHappenedOnceExactly();
     }
@@ -147,21 +149,21 @@ public class PlayerServiceTests
             Name = "PlayerToDelete",
             CreatedById = Guid.NewGuid()
         };
-        
+
         var playerRepo = A.Fake<IPlayerRepository>();
-        A.CallTo(() => playerRepo.GetByIdAsync(1)).Returns(Task.FromResult(existingPlayer));
-        
+        A.CallTo(() => playerRepo.GetByIdAsync(1))!.Returns(Task.FromResult(existingPlayer));
+
         var unitOfWork = A.Fake<IUnitOfWork>();
         A.CallTo(() => unitOfWork.Players).Returns(playerRepo);
-        
+
         var service = new PlayerService(unitOfWork);
-        
+
         // Act
-        
+
         var result = await service.DeleteAsync(1);
-        
+
         // Assert
-        
+
         result.Should().BeTrue();
         A.CallTo(() => playerRepo.GetByIdAsync(1)).MustHaveHappenedOnceExactly();
         A.CallTo(() => playerRepo.Delete(existingPlayer)).MustHaveHappenedOnceExactly();

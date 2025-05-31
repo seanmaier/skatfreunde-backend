@@ -25,7 +25,7 @@ public static class MatchRoundMapping
         };
     }
 
-    public static ResponseMatchRoundDto ToDto(this MatchRound entity)
+    public static ResponseMatchRoundDto ToResponse(this MatchRound entity)
     {
         return new ResponseMatchRoundDto(
             entity.Id,

@@ -20,7 +20,7 @@ public class CreatePrsValidator : AbstractValidator<CreatePlayerRoundStatsDto>
             .WithMessage("Points must be less than 10.000");
 
         RuleFor(x => x)
-            .Must(dto => dto.Lost + dto.Won >= 0 && dto.Lost + dto.Won < 50)
+            .Must(dto => dto.Lost + dto.Won > 0 && dto.Lost + dto.Won < 50)
             .WithMessage("The sum of won and lost games must be greater than 0 and less than 50.");
     }
 }

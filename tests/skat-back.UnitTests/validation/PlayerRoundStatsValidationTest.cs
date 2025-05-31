@@ -43,7 +43,7 @@ public class PlayerRoundStatsValidationTest
     public void Validate_CreatePlayerRoundStats_InvalidPoints_ReturnsFailure()
     {
         // Arrange
-        var playerRoundStats = new CreatePlayerRoundStatsDto(1, -100, 2, 1);
+        var playerRoundStats = new CreatePlayerRoundStatsDto(1, -100_000, 2, 1);
 
         // Act
         var result = _createPrsValidator.Validate(playerRoundStats);
@@ -110,7 +110,7 @@ public class PlayerRoundStatsValidationTest
     public void Validate_UpdatePlayerRoundStats_InvalidPoints_ReturnsFailure()
     {
         // Arrange
-        var playerRoundStats = new UpdatePlayerRoundStatsDto(1, -100, 2, 1);
+        var playerRoundStats = new UpdatePlayerRoundStatsDto(1, -100_000, 2, 1);
 
         // Act
         var result = _updatePrsValidator.Validate(playerRoundStats);

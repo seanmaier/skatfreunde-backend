@@ -31,7 +31,7 @@ public static class MatchSessionMapping
         (
             entity.Id,
             entity.CalendarWeek,
-            entity.MatchRounds.Select(x => x.ToDto()).ToList(),
+            entity.MatchRounds.Select(x => x.ToResponse()).ToList(),
             entity.CreatedAt,
             entity.UpdatedAt,
             entity.CreatedById.ToString(),
