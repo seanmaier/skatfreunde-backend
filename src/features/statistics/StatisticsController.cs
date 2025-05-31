@@ -6,23 +6,22 @@ namespace skat_back.features.statistics;
 [Route("api/[controller]")]
 public class StatisticsController(IStatisticsService statisticsService) : ControllerBase
 {
-    [HttpGet("gameShare")]
-    public IActionResult GetGameShare()
-    {
-        // Placeholder for actual game share logic
-        return new JsonResult(new { message = "Game share statistics are not yet implemented." });
-    }
-    
     [HttpGet("annualData/{year:int}")]
     public async Task<IActionResult> GetAnnualData(int year)
     {
         if (year < 2000 || year > DateTime.Now.Year)
-        {
-            return BadRequest("Year must be between 2000 and the current year.");
-        }
+            return BadRequest("Year must be between 2000 and the current year."); // TODO add validator
 
         var annualData = await statisticsService.GetAnnualData(year);
 
         return Ok(annualData);
+    }
+
+    [HttpGet("matchSessions/{calendarWeek}")]
+    public async Task<IActionResult> GetMatchSession(string calendarWeek)
+    {
+        var matchSession = await statisticsService.GetMatchSession(calendarWeek);
+
+        return Ok(matchSession);
     }
 }

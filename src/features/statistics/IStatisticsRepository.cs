@@ -6,4 +6,5 @@ public interface IStatisticsRepository
 {
     Task<ICollection<PlayerRoundStats>> GetAnnualPlayerData(int year);
     Task<int> GetYearMatchDay(int year);
+    Task<ICollection<PlayerRoundStats>> GetMatchSession(string calendarWeek);
 }

@@ -28,4 +28,14 @@ public class StatisticsRepository(AppDbContext context) : IStatisticsRepository
             .Where(m => m.MatchSession.CreatedAt >= startOfTheYear)
             .CountAsync();
     }
+
+    public async Task<ICollection<PlayerRoundStats>> GetMatchSession(string calendarWeek)
+    {
+        return await context.PlayerRoundStats
+            .Where(prs => prs.MatchRound.MatchSession.CalendarWeek == calendarWeek)
+            .Include(playerRoundStats => playerRoundStats.Player)
+            .Include(playerRoundStats => playerRoundStats.MatchRound)
+            .ThenInclude(matchRound => matchRound.MatchSession)
+            .ToListAsync();
+    }
 }

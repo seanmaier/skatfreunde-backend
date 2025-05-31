@@ -35,11 +35,31 @@ public class StatisticsService(AppDbContext context, ILogger<StatisticsService> 
             annualDataQuery.ToArray(),
             [], // Assuming no guest data is available
             matchDay.ToString(),
-            DateTime.Now
+            DateTime.Now // TODO use a more appropriate date this is a filler
         );
 
         logger.LogInformation("Annual data response created for year {Year}.", year);
 
         return annualDataResponse;
+    }
+
+    public async Task<MatchSessionDto> GetMatchSession(string calendarWeek)
+    {
+        var playerStats = await unitOfWork.Statistics.GetMatchSession(calendarWeek);
+        var matchSession = new MatchSessionDto(
+            playerStats.First().MatchRound.MatchSession.CalendarWeek,
+            playerStats.First().MatchRound.MatchSession.UpdatedAt ?? playerStats.First().MatchRound.MatchSession.CreatedAt,
+            playerStats
+                .GroupBy(prs => new { prs.PlayerId, prs.Player.Name })
+                .Select(g => new PlayerMatchDayDataDto(
+                    g.Key.Name,
+                    g.Key.PlayerId, // TODO matchShare
+                    g.Sum(rs => rs.Points),
+                    g.Select(prs => new SeriesDto(prs.Points, prs.Won, prs.Lost)).ToList()
+                ))
+                .ToList()
+        );
+
+        return matchSession;
     }
 }
