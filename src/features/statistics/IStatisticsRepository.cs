@@ -4,7 +4,7 @@ namespace skat_back.features.statistics;
 
 public interface IStatisticsRepository
 {
-    Task<ICollection<PlayerRoundStats>> GetAnnualPlayerData(int year);
-    Task<int> GetYearMatchDay(int year);
-    Task<ICollection<PlayerRoundStats>> GetMatchSession(DateTime weekStart);
+    Task<ICollection<PlayerRoundStats>?> GetAnnualPlayerData(DateTime startOfTheYear);
+    Task<int> GetYearMatchDay(DateTime year);
+    Task<ICollection<PlayerRoundStats>?> GetMatchSessionAsync(DateTime weekStart, DateTime weekEnd);
 }

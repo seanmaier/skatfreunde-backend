@@ -6,9 +6,56 @@ namespace skat_back.features.statistics;
 public class StatisticsService(ILogger<StatisticsService> logger, IUnitOfWork unitOfWork)
     : IStatisticsService
 {
-    public async Task<AnnualDataResponseDto> GetAnnualData(int year)
+    public async Task<MatchSessionDto?> GetMatchSession(MatchSessionQuery query)
     {
-        var playerStats = await unitOfWork.Statistics.GetAnnualPlayerData(year);
+        var weekStart = query.WeekStart.Date;
+        var weekEnd = weekStart.Date.AddDays(7);
+
+        var playerStats = await unitOfWork.Statistics.GetMatchSessionAsync(weekStart, weekEnd);
+
+        if (playerStats == null)
+        {
+            logger.LogWarning("No player statistics found for the week starting {WeekStart}.", weekStart);
+            return null;
+        }
+
+        var matchSession = new MatchSessionDto(
+            playerStats.First().MatchRound.MatchSession.PlayedAt.ToString("O"),
+            playerStats.First().MatchRound.MatchSession.CreatedAt,
+            playerStats
+                .GroupBy(prs => new { prs.PlayerId, prs.Player.Name })
+                .Select(g =>
+                {
+                    var matchShare =
+                        (float)g.Sum(rs => rs.Won + rs.Lost) /
+                        playerStats.Sum(rs => rs.Won + rs.Lost); // TODO matchShare
+                    var series = g.Select(prs => new SeriesDto(prs.Points, prs.Won, prs.Lost)).ToList();
+
+                    return new PlayerMatchDayDataDto(
+                        g.Key.Name,
+                        matchShare,
+                        g.Sum(rs => rs.Points),
+                        series
+                    );
+                })
+                .ToList()
+        );
+
+        return matchSession;
+    }
+
+
+    public async Task<AnnualDataResponseDto?> GetAnnualData(AnnualDataQuery query)
+    {
+        var startOfTheYear = new DateTime(query.RequestYear.Year, 1, 1);
+
+        var playerStats = await unitOfWork.Statistics.GetAnnualPlayerData(startOfTheYear);
+
+        if (playerStats is null)
+        {
+            logger.LogWarning("No player statistics found for the year {Year}.", query.RequestYear.Year);
+            return null;
+        }
 
         var latestCalendarWeek = playerStats.Select(prs => prs.MatchRound.MatchSession.PlayedAt).Max();
 
@@ -38,7 +85,7 @@ public class StatisticsService(ILogger<StatisticsService> logger, IUnitOfWork un
             .OrderByDescending(apd => apd.AveragePoints)
             .ToList();
 
-        var matchDay = await unitOfWork.Statistics.GetYearMatchDay(year);
+        var matchDay = await unitOfWork.Statistics.GetYearMatchDay(startOfTheYear);
         logger.LogInformation("Fetched {Count} player data records for annual statistics.", annualDataQuery.Count);
 
         var annualDataResponse = new AnnualDataResponseDto
@@ -49,36 +96,8 @@ public class StatisticsService(ILogger<StatisticsService> logger, IUnitOfWork un
             latestCalendarWeek.ToString("O")
         );
 
-        logger.LogInformation("Annual data response created for year {Year}.", year);
+        logger.LogInformation("Annual data response created for year {Year}.", startOfTheYear);
 
         return annualDataResponse;
-    }
-
-    public async Task<MatchSessionDto> GetMatchSession(DateTime weekStart)
-    {
-        var playerStats = await unitOfWork.Statistics.GetMatchSession(weekStart);
-        var matchSession = new MatchSessionDto(
-            playerStats.First().MatchRound.MatchSession.PlayedAt.ToString("O"),
-            playerStats.First().MatchRound.MatchSession.CreatedAt,
-            playerStats
-                .GroupBy(prs => new { prs.PlayerId, prs.Player.Name })
-                .Select(g =>
-                {
-                    var matchShare =
-                        (float)g.Sum(rs => rs.Won + rs.Lost) /
-                        playerStats.Sum(rs => rs.Won + rs.Lost); // TODO matchShare
-                    var series = g.Select(prs => new SeriesDto(prs.Points, prs.Won, prs.Lost)).ToList();
-
-                    return new PlayerMatchDayDataDto(
-                        g.Key.Name,
-                        matchShare,
-                        g.Sum(rs => rs.Points),
-                        series
-                    );
-                })
-                .ToList()
-        );
-
-        return matchSession;
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using skat_back.features.statistics.models;
 
 namespace skat_back.features.statistics;
 
@@ -6,21 +7,24 @@ namespace skat_back.features.statistics;
 [Route("api/[controller]")]
 public class StatisticsController(IStatisticsService statisticsService) : ControllerBase
 {
-    [HttpGet("annualData/{year:int}")]
-    public async Task<IActionResult> GetAnnualData(int year)
+    [HttpGet("annualData")]
+    public async Task<IActionResult> GetAnnualData([FromQuery] AnnualDataQuery query)
     {
-        if (year < 2000 || year > DateTime.Now.Year)
-            return BadRequest("Year must be between 2000 and the current year."); // TODO add validator
+        var annualData = await statisticsService.GetAnnualData(query);
 
-        var annualData = await statisticsService.GetAnnualData(year);
+        if (annualData is null)
+            return NotFound($"No annual data found for the specified year {query.RequestYear.Year.ToString()}.");
 
         return Ok(annualData);
     }
 
     [HttpGet("matchSessions")]
-    public async Task<IActionResult> GetMatchSession([FromQuery] DateTime weekStart)
+    public async Task<IActionResult> GetMatchSession([FromQuery] MatchSessionQuery query)
     {
-        var matchSession = await statisticsService.GetMatchSession(weekStart);
+        var matchSession = await statisticsService.GetMatchSession(query);
+
+        if (matchSession is null)
+            return NotFound($"No match session data found for the specified date {query.WeekStart:d}.");
 
         return Ok(matchSession);
     }

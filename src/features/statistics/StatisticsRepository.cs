@@ -6,39 +6,35 @@ namespace skat_back.features.statistics;
 
 public class StatisticsRepository(AppDbContext context) : IStatisticsRepository
 {
-    public async Task<ICollection<PlayerRoundStats>> GetAnnualPlayerData(int year)
+    public async Task<ICollection<PlayerRoundStats>?> GetAnnualPlayerData(DateTime startOfTheYear)
     {
-        var startOfTheYear = new DateTime(year, 01, 01);
-
         var playerStats = await context.PlayerRoundStats
-            .Where(prs => prs.MatchRound.MatchSession.CreatedAt >= startOfTheYear)
+            .Where(prs => prs.MatchRound.MatchSession.PlayedAt >= startOfTheYear)
             .Include(playerRoundStats => playerRoundStats.Player)
             .Include(playerRoundStats => playerRoundStats.MatchRound)
             .ThenInclude(matchRound => matchRound.MatchSession)
             .ToListAsync();
 
-        return playerStats;
+        return playerStats.Count != 0 ? playerStats : null;
     }
 
-    public async Task<int> GetYearMatchDay(int year)
+    public async Task<int> GetYearMatchDay(DateTime startOfTheYear)
     {
-        var startOfTheYear = new DateTime(year, 01, 01);
-
         return await context.MatchRounds
             .Where(m => m.MatchSession.CreatedAt >= startOfTheYear)
             .CountAsync();
     }
 
-    public async Task<ICollection<PlayerRoundStats>> GetMatchSession(DateTime weekStart)
+    public async Task<ICollection<PlayerRoundStats>?> GetMatchSessionAsync(DateTime weekStart, DateTime weekEnd)
     {
-        var end = weekStart.Date.AddDays(7);
-
-        return await context.PlayerRoundStats
-            .Where(prs => prs.MatchRound.MatchSession.PlayedAt >= weekStart.Date &&
-                          prs.MatchRound.MatchSession.PlayedAt < end)
+        var playerStats = await context.PlayerRoundStats
+            .Where(prs => prs.MatchRound.MatchSession.PlayedAt >= weekStart &&
+                          prs.MatchRound.MatchSession.PlayedAt < weekEnd)
             .Include(prs => prs.Player)
             .Include(prs => prs.MatchRound)
             .ThenInclude(mr => mr.MatchSession)
             .ToListAsync();
+
+        return playerStats.Count != 0 ? playerStats : null;
     }
 }
