@@ -7,6 +7,7 @@
         <RootNamespace>skat_back</RootNamespace>
         <UserSecretsId>9bd3969e-3b6f-4b58-bdc8-e5f62a950202</UserSecretsId>
         <PreserveCompilationContext>true</PreserveCompilationContext>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -32,6 +33,12 @@
     <ItemGroup>
         <Folder Include="features\matches\" />
         <Folder Include="wwwroot\img\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>
