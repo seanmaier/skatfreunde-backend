@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using skat_back.features.matches.matchSessions.models;
-using skat_back.features.matchSessions.models;
-using skat_back.features.playerRoundStatistics.models;
+using skat_back.features.matches.playerRoundStatistics.models;
 using skat_back.Lib;
 using static skat_back.utilities.constants.ValidationConstants;
 

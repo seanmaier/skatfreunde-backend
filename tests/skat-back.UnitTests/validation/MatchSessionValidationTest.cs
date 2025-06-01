@@ -3,7 +3,6 @@ using skat_back.features.matches.matchRounds.models;
 using skat_back.features.matches.matchSessions.models;
 using skat_back.features.matches.playerRoundStatistics.models;
 using skat_back.features.matchRounds.models;
-using skat_back.features.matchSessions.models;
 using skat_back.features.playerRoundStatistics.models;
 using skat_back.utilities.validation.validators.matchSession;
 

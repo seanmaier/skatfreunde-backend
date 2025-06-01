@@ -3,7 +3,7 @@ using skat_back.features.matches.matchRounds.models;
 using skat_back.features.players.models;
 using skat_back.Lib;
 
-namespace skat_back.features.playerRoundStatistics.models;
+namespace skat_back.features.matches.playerRoundStatistics.models;
 
 /// <summary>
 ///     Represents a player round statistics entity for the Database.

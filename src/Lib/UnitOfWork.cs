@@ -4,7 +4,6 @@ using skat_back.Features.BlogPosts;
 using skat_back.features.matches.matchRounds;
 using skat_back.features.matches.matchSessions;
 using skat_back.features.matches.playerRoundStatistics;
-using skat_back.Features.PlayerRoundStatistics;
 using skat_back.features.players;
 using skat_back.features.statistics;
 
