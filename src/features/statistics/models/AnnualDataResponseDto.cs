@@ -4,5 +4,5 @@ public record AnnualDataResponseDto(
     AnnualPlayerData[] PlayersData,
     GuestData[] GuestsData,
     string MatchDay,
-    DateTime LastUpdated
+    string LastUpdated
 );

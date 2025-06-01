@@ -17,10 +17,10 @@ public class StatisticsController(IStatisticsService statisticsService) : Contro
         return Ok(annualData);
     }
 
-    [HttpGet("matchSessions/{calendarWeek}")]
-    public async Task<IActionResult> GetMatchSession(string calendarWeek)
+    [HttpGet("matchSessions")]
+    public async Task<IActionResult> GetMatchSession([FromQuery] DateTime weekStart)
     {
-        var matchSession = await statisticsService.GetMatchSession(calendarWeek);
+        var matchSession = await statisticsService.GetMatchSession(weekStart);
 
         return Ok(matchSession);
     }

@@ -5,5 +5,5 @@ namespace skat_back.features.statistics;
 public interface IStatisticsService
 {
     Task<AnnualDataResponseDto> GetAnnualData(int year);
-    Task<MatchSessionDto> GetMatchSession(string calendarWeek);
+    Task<MatchSessionDto> GetMatchSession(DateTime weekStart);
 }

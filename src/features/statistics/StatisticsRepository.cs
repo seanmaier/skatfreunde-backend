@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using skat_back.data;
-using skat_back.features.playerRoundStatistics.models;
+using skat_back.features.matches.playerRoundStatistics.models;
 
 namespace skat_back.features.statistics;
 
@@ -29,13 +29,16 @@ public class StatisticsRepository(AppDbContext context) : IStatisticsRepository
             .CountAsync();
     }
 
-    public async Task<ICollection<PlayerRoundStats>> GetMatchSession(string calendarWeek)
+    public async Task<ICollection<PlayerRoundStats>> GetMatchSession(DateTime weekStart)
     {
+        var end = weekStart.Date.AddDays(7);
+
         return await context.PlayerRoundStats
-            .Where(prs => prs.MatchRound.MatchSession.CalendarWeek == calendarWeek)
-            .Include(playerRoundStats => playerRoundStats.Player)
-            .Include(playerRoundStats => playerRoundStats.MatchRound)
-            .ThenInclude(matchRound => matchRound.MatchSession)
+            .Where(prs => prs.MatchRound.MatchSession.PlayedAt >= weekStart.Date &&
+                          prs.MatchRound.MatchSession.PlayedAt < end)
+            .Include(prs => prs.Player)
+            .Include(prs => prs.MatchRound)
+            .ThenInclude(mr => mr.MatchSession)
             .ToListAsync();
     }
 }
