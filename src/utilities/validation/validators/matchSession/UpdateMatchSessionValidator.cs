@@ -1,5 +1,5 @@
 using FluentValidation;
-using skat_back.features.matchSessions.models;
+using skat_back.features.matches.matchSessions.models;
 using skat_back.utilities.validation.validators.matchRound;
 using static skat_back.utilities.constants.TestingConstants;
 
@@ -18,11 +18,11 @@ public class UpdateMatchSessionValidator : AbstractValidator<UpdateMatchSessionD
             .Must(guid => guid != TestUserId)
             .WithMessage("UserId must not be an empty GUID.");
 
-        RuleFor(x => x.CalendarWeek)
+        RuleFor(x => x.PlayedAt)
             .NotEmpty()
-            .WithMessage("CalendarWeek is required.")
-            .Matches(@"^\d{2}$")
-            .WithMessage("CalendarWeek must be in the format XX, where XX is a two-digit number.");
+            .WithMessage("PlayedAt is required.")
+            .Matches(@"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$")
+            .WithMessage("PlayedAt must be a valid ISO 8601 time string.");
 
         RuleFor(x => x.MatchRounds)
             .NotEmpty()

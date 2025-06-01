@@ -4,7 +4,7 @@ using skat_back.features.auth.models;
 using skat_back.features.blogPosts.models;
 using skat_back.features.matches.matchRounds.models;
 using skat_back.features.matches.matchSessions.models;
-using skat_back.features.playerRoundStatistics.models;
+using skat_back.features.matches.playerRoundStatistics.models;
 using skat_back.features.players.models;
 using skat_back.Lib;
 
@@ -42,7 +42,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<MatchSession>(entity =>
-            entity.HasIndex(ms => ms.CalendarWeek).IsUnique());
+            entity.HasIndex(ms => ms.PlayedAt).IsUnique());
 
         modelBuilder.Entity<MatchSession>()
             .HasMany(ms => ms.MatchRounds)

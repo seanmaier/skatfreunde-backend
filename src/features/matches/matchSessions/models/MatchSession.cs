@@ -9,7 +9,7 @@ namespace skat_back.features.matches.matchSessions.models;
 /// </summary>
 public class MatchSession : BaseEntity
 {
-    [MaxLength(4)] public required string CalendarWeek { get; set; }
+    [MaxLength(4)] public required DateTime PlayedAt { get; set; }
 
     /*--------------------Navigation  Properties--------------------*/
 
@@ -18,7 +18,7 @@ public class MatchSession : BaseEntity
     /*------------------------Updater Logic------------------------*/
     public void UpdateFrom(MatchSession matchSession)
     {
-        CalendarWeek = matchSession.CalendarWeek;
+        PlayedAt = matchSession.PlayedAt;
         UpdatedById = matchSession.UpdatedById;
     }
 }

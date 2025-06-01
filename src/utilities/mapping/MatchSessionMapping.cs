@@ -1,5 +1,4 @@
 ﻿using skat_back.features.matches.matchSessions.models;
-using skat_back.features.matchSessions.models;
 
 namespace skat_back.utilities.mapping;
 
@@ -9,7 +8,7 @@ public static class MatchSessionMapping
     {
         return new MatchSession
         {
-            CalendarWeek = dto.CalendarWeek,
+            PlayedAt = DateTime.Parse(dto.PlayedAt),
             CreatedById = Guid.Parse(dto.CreatedById),
             MatchRounds = dto.MatchRounds.Select(x => x.ToEntity()).ToList()
         };
@@ -19,7 +18,7 @@ public static class MatchSessionMapping
     {
         return new MatchSession
         {
-            CalendarWeek = dto.CalendarWeek,
+            PlayedAt = DateTime.Parse(dto.PlayedAt),
             UpdatedById = Guid.Parse(dto.UpdatedById),
             MatchRounds = dto.MatchRounds.Select(x => x.ToEntity()).ToList()
         };
@@ -30,7 +29,7 @@ public static class MatchSessionMapping
         return new ResponseMatchSessionDto
         (
             entity.Id,
-            entity.CalendarWeek,
+            entity.PlayedAt.ToString("O"),
             entity.MatchRounds.Select(x => x.ToResponse()).ToList(),
             entity.CreatedAt,
             entity.UpdatedAt,
