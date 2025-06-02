@@ -1,0 +1,29 @@
+﻿services:
+  #skat-back:
+  #  image: skat-back
+  #  build:
+  #    context: ./src
+  #    dockerfile: src/Dockerfile
+  #  ports:
+  #    - "5000:80"
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #  depends_on:
+  #    - skat-db
+  
+  skat-db:
+    image: postgres:17
+    container_name: skat-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "TestPassword123!"
+      POSTGRES_DB: "skat.db"
+    networks:
+      - skat-net
+    ports:
+      - "5432:5432"
+
+networks:
+  skat-net:
+    driver: bridge
