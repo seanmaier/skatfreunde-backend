@@ -57,7 +57,7 @@ public class PlayerControllerTest
     {
         // Arrange
         var createPlayerDto = new CreatePlayerDto(Guid.NewGuid().ToString(), "Test Player");
-        var createdPlayer = new ResponsePlayerDto(1, "Test Player", DateTime.Now, DateTime.Now,
+        var createdPlayer = new ResponsePlayerDto(1, "Test Player", DateTime.UtcNow, DateTime.UtcNow,
             Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
 
         A.CallTo(() => _service.CreateAsync(createPlayerDto)).Returns(Task.FromResult(createdPlayer));

@@ -5,7 +5,6 @@ using Serilog;
 using skat_back.data;
 using skat_back.features.auth.models;
 using skat_back.features.email;
-using skat_back.features.players.models;
 using skat_back.Lib;
 using skat_back.utilities.middleware;
 using skat_back.utilities.validation;
@@ -50,8 +49,8 @@ builder.Services.AddCustomLimiter();
 builder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) =>
     loggerConfiguration.ReadFrom.Configuration(hostBuilderContext.Configuration));
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContextPool<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configure EmailSettings
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -88,10 +87,14 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var db = services.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
-    
+
     await AppDbSeeder.SeedAsync(scope.ServiceProvider);
 }
 
 app.Run();
 
-public partial class Program { }
+
+// For testing purposes, we can keep this empty class
+public partial class Program
+{
+}
