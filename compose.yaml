@@ -1,15 +1,21 @@
 ﻿services:
-  #skat-back:
-  #  image: skat-back
-  #  build:
-  #    context: ./src
-  #    dockerfile: src/Dockerfile
-  #  ports:
-  #    - "5000:80"
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #  depends_on:
-  #    - skat-db
+  skat-back:
+    networks:
+      - skat-net
+    image: skat-back
+    build:
+      context: ./src
+      dockerfile: src/Dockerfile
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ADMIN_PASSWORD=TestPassword123!
+      - ADMIN_USERNAME=admin
+      - ADMIN_EMAIL=admin@skatfreunde.de
+      - ConnectionStrings__DefaultConnection=Host=skat-db;Port=5432;Database=skat.db;Username=postgres;Password=TestPassword123!
+    depends_on:
+      - skat-db
   
   skat-db:
     image: postgres:17

@@ -8,7 +8,7 @@ public static class MatchSessionMapping
     {
         return new MatchSession
         {
-            PlayedAt = DateTime.Parse(dto.PlayedAt),
+            PlayedAt = DateTime.Parse(dto.PlayedAt).ToUniversalTime(),
             CreatedById = Guid.Parse(dto.CreatedById),
             MatchRounds = dto.MatchRounds.Select(x => x.ToEntity()).ToList()
         };
@@ -18,7 +18,7 @@ public static class MatchSessionMapping
     {
         return new MatchSession
         {
-            PlayedAt = DateTime.Parse(dto.PlayedAt),
+            PlayedAt = DateTime.Parse(dto.PlayedAt).ToUniversalTime(),
             UpdatedById = Guid.Parse(dto.UpdatedById),
             MatchRounds = dto.MatchRounds.Select(x => x.ToEntity()).ToList()
         };
