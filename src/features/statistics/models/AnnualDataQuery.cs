@@ -4,7 +4,7 @@ public record AnnualDataQuery(
     DateTime RequestYear
 )
 {
-    public AnnualDataQuery() : this(DateTime.Now)
+    public AnnualDataQuery() : this(DateTime.UtcNow)
     {
     }
 }

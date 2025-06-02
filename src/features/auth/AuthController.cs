@@ -106,16 +106,16 @@ public class AuthController(
         HttpContext.Response.Cookies.Append(AccessTokenKey, accessToken, new CookieOptions
         {
             HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Lax,
-            Expires = DateTime.Now.AddMinutes(TokenExpirationTime)
+            Secure = false, // TODO: Set to true in production
+            SameSite = SameSiteMode.None, // TODO: Set to Lax in production
+            Expires = DateTime.UtcNow.AddMinutes(TokenExpirationTime)
         });
 
         HttpContext.Response.Cookies.Append(RefreshTokenKey, refreshToken, new CookieOptions
         {
             HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Lax,
+            Secure = false, // TODO: Set to true in production
+            SameSite = SameSiteMode.None, // TODO: Set to Lax in production
             Expires = refreshTokenExpiration
         });
     }

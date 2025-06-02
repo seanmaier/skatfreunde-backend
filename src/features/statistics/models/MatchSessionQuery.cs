@@ -4,7 +4,7 @@ public record MatchSessionQuery(
     DateTime WeekStart
 )
 {
-    public MatchSessionQuery() : this(DateTime.Now)
+    public MatchSessionQuery() : this(DateTime.UtcNow)
     {
     }
 }

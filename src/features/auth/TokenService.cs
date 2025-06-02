@@ -28,7 +28,7 @@ public class TokenService(
             configuration["Jwt:Issuer"],
             configuration["Jwt:Audience"],
             claims,
-            expires: DateTime.Now.AddMinutes(expireMinutes),
+            expires: DateTime.UtcNow.AddMinutes(expireMinutes),
             signingCredentials: credentials);
 
         logger.LogInformation("JWT Token created");
@@ -47,7 +47,7 @@ public class TokenService(
         {
             Id = Guid.NewGuid(),
             UserAgent = userAgent,
-            Created = DateTime.Now,
+            Created = DateTime.UtcNow,
             CreatedByIp = ip,
             Expires = expiration,
             Token = GenerateRandomString(),
