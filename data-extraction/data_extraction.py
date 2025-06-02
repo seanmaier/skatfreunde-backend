@@ -1,6 +1,7 @@
 import pandas as pd
-from skat_connection import login, logout, get_players, get_me, send_player, update_player, post_match_session
+from skat_connection import login, logout, get_players, send_player, update_player, post_match_session, get_me
 import json
+import datetime
 
 # 1. Check for existing players in the backend
 # 2. Filter for non existing players
@@ -8,6 +9,9 @@ import json
 # 4. Fetch all players from the backend
 # 5. Prepare the payload with player stats and the player IDs
 # 6. Send the payload to the backend
+
+
+# TODO IMPORTANT: COOKIE WILL NOT BE SEND IF COOKIE IS SET TO SECURE
 
 pathToExcel = "skatfreunde-data.xlsx"
 df = pd.read_excel(pathToExcel)
@@ -19,12 +23,19 @@ print(df)
 NEW_DATABASE = False
 
 user_id = ""
+YEAR_OF_DATA = 2023
 
 
 # -------------------Helper Functions-------------------
 
 def extract_match_session(row, players, created_by_user_id):
-    calendar_week = str(row["MatchDay"]).zfill(2)
+    # Get the calendar week as integer
+    calendar_week = int(row["MatchDay"])
+
+    # Calculate the Wednesday of the given calendar week
+    # ISO weeks: Monday is 1, Sunday is 7
+    wednesday = datetime.datetime.strptime(f'{YEAR_OF_DATA}-W{calendar_week}-3', "%G-W%V-%u")
+    calendar_week = wednesday.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
     match_rounds = []
     col_idx = 1  # Start after MatchDay
 
@@ -115,8 +126,8 @@ def extract_match_session(row, players, created_by_user_id):
         col_idx += 9  # Move to next player block
 
     return {
-        "CreatedByUserId": created_by_user_id,
-        "CalendarWeek": calendar_week,
+        "CreatedById": created_by_user_id,
+        "PlayedAt": calendar_week,
         "MatchRounds": match_rounds
     }
 
@@ -179,11 +190,12 @@ if __name__ == "__main__":
 
             # Example for a specific row (e.g., row 9)
             """
-            dataset = extract_match_session(df.iloc[9], existing_players, user_id)
+            dataset = extract_match_session(df.iloc[1], existing_players, user_id)
             print("Extracted dataset")
             print(json.dumps(dataset, indent=4, ensure_ascii=False))
             post_match_session(dataset)
             """
+
 
 
     except Exception as e:

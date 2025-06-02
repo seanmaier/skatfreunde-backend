@@ -8,18 +8,18 @@ LOGIN_ENDPOINT = "/api/auth/login"
 PROTECTED_ENDPOINT = "/api/Players"
 
 CREDENTIALS = {
-    "loginInput": os.environ.get("SKAT_LOGIN"),
-    "password": os.environ.get("SKAT_PASSWORD"),
+    "loginInput": os.environ.get("ADMIN_EMAIL", "admin"),
+    "password": os.environ.get("ADMIN_PASSWORD", "Admin123!"),
     "rememberMe": False
 }
 
 session = requests.Session()
 
-def debug_cookies(session, url):
+def debug_cookies(session: requests.Session, url: str):
     """Helper to debug cookie handling"""
     parsed = urlparse(url)
     print(f"\n[Debug] Cookies being sent to {parsed.netloc}:")
-    cookies = session.cookies.get_dict(domain=parsed.hostname)  # Use hostname instead of netloc
+    cookies = session.cookies.get_dict()  # Get all cookies
     if not cookies:
         print("  No cookies will be sent!")
     for name, value in cookies.items():
@@ -27,29 +27,29 @@ def debug_cookies(session, url):
 
 def login():
     # Create a session
-    
+
     # Configure session headers
     session.headers.update({
         "Content-Type": "application/json",
         "Accept": "application/json"
     })
-    
+
     # 1. Login request
     login_url = f"{BASE_URL}{LOGIN_ENDPOINT}"
     print(f"Making login request to {login_url}")
-    
+
     try:
         login_response = session.post(login_url, json=CREDENTIALS)
-        
+
         # Check login response
         print(f"\nLogin Response: {login_response.status_code}")
         print("Set-Cookie headers:")
         for header in login_response.headers.get('Set-Cookie', '').split(','):
             print(f"  {header.strip()}")
-        
+
         # 2. Debug cookie storage
         debug_cookies(session, BASE_URL + PROTECTED_ENDPOINT)
-        
+
     except requests.exceptions.SSLError as e:
         print(f"\nSSL Error: {e}")
         print("Tip: If using self-signed cert, try session.verify = False (insecure!)")
@@ -89,7 +89,7 @@ def get_players():
 def send_player(userId, playerName):
 
     player = {
-        "CreatedByUserId": userId,
+        "CreatedById": userId,
         "Name": playerName,
     }
 
@@ -126,7 +126,7 @@ def update_player(userId, playerName):
     playerId = 12  # Replace with actual player ID
 
     player = {
-        "CreatedByUserId": userId,
+        "CreatedById": userId,
         "Name": playerName,
     }
 
@@ -153,7 +153,7 @@ def get_me():
             print("Current user data:", response.json())
             return response.json()
         else:
-            print("Failed to fetch current user data:", response.text)
+            print("Failed to fetch current user data:", response.status_code, response.text)
             return None
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
