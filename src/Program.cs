@@ -86,7 +86,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var db = services.GetRequiredService<AppDbContext>();
-    db.Database.EnsureCreated();
+    db.Database.Migrate();
 
     await AppDbSeeder.SeedAsync(scope.ServiceProvider);
 }

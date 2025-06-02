@@ -29,7 +29,12 @@
       - skat-net
     ports:
       - "5432:5432"
+    volumes:
+      - skat-data:/var/lib/postgresql/data
 
 networks:
   skat-net:
     driver: bridge
+    
+volumes:
+  skat-data:
