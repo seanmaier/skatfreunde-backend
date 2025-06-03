@@ -25,9 +25,9 @@ public class BaseController<TResponse, TCreate, TUpdate, TId, TService>(TService
     private TService _service = service;
 
     [HttpGet]
-    public virtual async Task<IActionResult> GetAll()
+    public virtual async Task<IActionResult> GetAll([FromQuery] PaginationParameters parameters)
     {
-        var items = await _service.GetAllAsync();
+        var items = await _service.GetAllAsync(parameters);
         return Ok(items);
     }
 

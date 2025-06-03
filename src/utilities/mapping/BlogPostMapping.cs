@@ -1,4 +1,5 @@
 ﻿using skat_back.features.blogPosts.models;
+using skat_back.Lib;
 
 namespace skat_back.utilities.mapping;
 
@@ -30,7 +31,17 @@ public static class BlogPostMapping
         };
     }
 
-    public static ResponseBlogPostDto ToDto(this BlogPost entity)
+    public static PagedResult<ResponseBlogPostDto> ToPagedResult(this PagedResult<BlogPost> pagedResult)
+    {
+        return new PagedResult<ResponseBlogPostDto>(
+            pagedResult.Data.Select(x => x.ToResponse()).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount
+        );
+    }
+    
+    public static ResponseBlogPostDto ToResponse(this BlogPost entity)
     {
         return new ResponseBlogPostDto(
             entity.Id,

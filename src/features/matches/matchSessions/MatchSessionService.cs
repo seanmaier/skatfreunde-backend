@@ -12,17 +12,17 @@ namespace skat_back.features.matches.matchSessions;
 public class MatchSessionService(IUnitOfWork unitOfWork)
     : IMatchSessionService
 {
-    public async Task<ICollection<ResponseMatchSessionDto>> GetAllAsync()
+    public async Task<PagedResult<ResponseMatchSessionDto>> GetAllAsync(PaginationParameters parameters)
     {
-        var matchSessions = await unitOfWork.MatchSessions.GetAllAsync();
-        return matchSessions.Select(ms => ms.ToDto()).ToList();
+        var matchSessions = await unitOfWork.MatchSessions.GetAllAsync(parameters);
+        return matchSessions.ToPagedResult();
     }
 
 
     public async Task<ResponseMatchSessionDto?> GetByIdAsync(int id)
     {
         var matchSession = await unitOfWork.MatchSessions.GetByIdAsync(id);
-        return matchSession?.ToDto();
+        return matchSession?.ToResponse();
     }
 
 
@@ -38,7 +38,7 @@ public class MatchSessionService(IUnitOfWork unitOfWork)
         {
             await unitOfWork.SaveChangesAsync();
             await transaction.CommitAsync();
-            return session.ToDto();
+            return session.ToResponse();
         }
         catch
         {

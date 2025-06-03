@@ -7,15 +7,22 @@ namespace skat_back.features.matches.matchSessions;
 
 public class MatchSessionRepository(AppDbContext context) : Repository<MatchSession>(context), IMatchSessionRepository
 {
-    private readonly AppDbContext _context = context;
+    private readonly DbSet<MatchSession> _matchSessions = context.MatchSessions;
 
-    public override async Task<ICollection<MatchSession>> GetAllAsync()
+    public override async Task<PagedResult<MatchSession>> GetAllAsync(PaginationParameters parameters)
     {
-        var matchSessions = await _context.MatchSessions
-            .Include(ms => ms.MatchRounds)
-            .ThenInclude(mr => mr.PlayerRoundStats).ToListAsync();
+        var query = _matchSessions.AsQueryable();
 
-        return matchSessions;
+        var totalCount = await query.CountAsync();
+        
+        var matchSessions = await query
+            .Include(ms => ms.MatchRounds)
+            .ThenInclude(mr => mr.PlayerRoundStats)
+            .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+            .Take(parameters.PageSize)
+            .ToListAsync();
+
+        return new PagedResult<MatchSession>(matchSessions, parameters.PageNumber, parameters.PageSize, totalCount);
     }
 
     public override async Task<MatchSession?> GetByIdAsync(int id)
@@ -26,7 +33,7 @@ public class MatchSessionRepository(AppDbContext context) : Repository<MatchSess
 
     private async Task LoadTables(int id)
     {
-        var matchSession = await _context.MatchSessions
+        var matchSession = await _matchSessions
             .Include(ms => ms.MatchRounds)
             .ThenInclude(mr => mr.PlayerRoundStats)
             .FirstOrDefaultAsync(ms => ms.Id == id);

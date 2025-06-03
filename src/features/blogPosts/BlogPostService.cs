@@ -9,16 +9,16 @@ namespace skat_back.Features.BlogPosts;
 /// </summary>
 public class BlogPostService(IUnitOfWork unitOfWork) : IBlogPostService
 {
-    public async Task<ICollection<ResponseBlogPostDto>> GetAllAsync()
+    public async Task<PagedResult<ResponseBlogPostDto>> GetAllAsync(PaginationParameters parameters)
     {
-        var blogPosts = await unitOfWork.BlogPosts.GetAllAsync();
-        return blogPosts.Select(b => b.ToDto()).ToList();
+        var blogPosts = await unitOfWork.BlogPosts.GetAllAsync(parameters);
+        return blogPosts.ToPagedResult();
     }
 
     public async Task<ResponseBlogPostDto?> GetByIdAsync(int id)
     {
         var blogPost = await unitOfWork.BlogPosts.GetByIdAsync(id);
-        return blogPost?.ToDto();
+        return blogPost?.ToResponse();
     }
 
     public async Task<ResponseBlogPostDto> CreateAsync(CreateBlogPostDto dto)
@@ -29,7 +29,7 @@ public class BlogPostService(IUnitOfWork unitOfWork) : IBlogPostService
 
         await unitOfWork.SaveChangesAsync();
 
-        return blogPost.ToDto();
+        return blogPost.ToResponse();
     }
 
     public async Task<bool> UpdateAsync(int id, UpdateBlogPostDto dto)

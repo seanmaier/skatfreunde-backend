@@ -1,4 +1,6 @@
-﻿using skat_back.features.players.models;
+﻿using skat_back.features.matches.matchSessions.models;
+using skat_back.features.players.models;
+using skat_back.Lib;
 
 namespace skat_back.utilities.mapping;
 
@@ -20,6 +22,16 @@ public static class PlayerMapping
             Name = entity.Name,
             UpdatedById = Guid.Parse(entity.UpdatedById)
         };
+    }
+    
+    public static PagedResult<ResponsePlayerDto> ToPagedResult(this PagedResult<Player> pagedResult)
+    {
+        return new PagedResult<ResponsePlayerDto>(
+            pagedResult.Data.Select(x => x.ToResponse()).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount
+        );
     }
 
     public static ResponsePlayerDto ToResponse(this Player entity)

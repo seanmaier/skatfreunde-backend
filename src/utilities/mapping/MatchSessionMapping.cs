@@ -1,4 +1,5 @@
 ﻿using skat_back.features.matches.matchSessions.models;
+using skat_back.Lib;
 
 namespace skat_back.utilities.mapping;
 
@@ -23,8 +24,18 @@ public static class MatchSessionMapping
             MatchRounds = dto.MatchRounds.Select(x => x.ToEntity()).ToList()
         };
     }
+    
+    public static PagedResult<ResponseMatchSessionDto> ToPagedResult(this PagedResult<MatchSession> pagedResult)
+    {
+        return new PagedResult<ResponseMatchSessionDto>(
+            pagedResult.Data.Select(x => x.ToResponse()).ToList(),
+            pagedResult.PageNumber,
+            pagedResult.PageSize,
+            pagedResult.TotalCount
+        );
+    }
 
-    public static ResponseMatchSessionDto ToDto(this MatchSession entity)
+    public static ResponseMatchSessionDto ToResponse(this MatchSession entity)
     {
         return new ResponseMatchSessionDto
         (

@@ -2,7 +2,7 @@ namespace skat_back.Lib;
 
 public interface IRepository<T> where T: class
 {
-    Task<ICollection<T>> GetAllAsync();
+    Task<PagedResult<T>> GetAllAsync(PaginationParameters parameters);
     Task<T?> GetByIdAsync(int id);
 
     Task<T> CreateAsync(T newEntity);

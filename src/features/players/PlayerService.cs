@@ -9,10 +9,10 @@ namespace skat_back.Features.Players;
 /// </summary>
 public class PlayerService(IUnitOfWork unitOfWork) : IPlayerService
 {
-    public async Task<ICollection<ResponsePlayerDto>> GetAllAsync()
+    public async Task<PagedResult<ResponsePlayerDto>> GetAllAsync(PaginationParameters parameters)
     {
-        var players = await unitOfWork.Players.GetAllAsync();
-        return players.Select(p => p.ToResponse()).ToList();
+        var players = await unitOfWork.Players.GetAllAsync(parameters);
+        return players.ToPagedResult();
     }
 
     public async Task<ResponsePlayerDto?> GetByIdAsync(int id)

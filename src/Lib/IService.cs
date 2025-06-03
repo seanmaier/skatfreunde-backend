@@ -13,7 +13,7 @@ public interface IService<TResponseDto, in TCreateDto, in TUpdateDto, in TId>
     where TUpdateDto : class
     where TId : struct
 {
-    Task<ICollection<TResponseDto>> GetAllAsync();
+    Task<PagedResult<TResponseDto>> GetAllAsync(PaginationParameters parameters);
     Task<TResponseDto?> GetByIdAsync(TId id);
     Task<TResponseDto> CreateAsync(TCreateDto dto);
     Task<bool> UpdateAsync(TId id, TUpdateDto dto);

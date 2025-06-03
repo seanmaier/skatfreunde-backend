@@ -4,27 +4,39 @@ using skat_back.Features;
 
 namespace skat_back.Lib;
 
-public class Repository<T>(AppDbContext context) : IRepository<T> where T: class, IEntity
+public class Repository<T>(AppDbContext context) : IRepository<T>
+    where T : class, IEntity
 {
-    public virtual async Task<ICollection<T>> GetAllAsync()
+    private readonly DbSet<T> _dbSet = context.Set<T>();
+
+    public virtual async Task<PagedResult<T>> GetAllAsync(PaginationParameters parameters)
     {
-        return await context.Set<T>().ToListAsync();
+        var query = _dbSet.AsQueryable();
+        
+        var totalCount = await query.CountAsync();
+        
+        var data = await query
+            .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+            .Take(parameters.PageSize)
+            .ToListAsync();
+
+        return new PagedResult<T>(data, 1, 1, totalCount);
     }
 
     public virtual async Task<T?> GetByIdAsync(int id)
     {
-        var entity = await context.Set<T>().FindAsync(id);
+        var entity = await _dbSet.FindAsync(id);
         return entity;
     }
 
     public virtual async Task<T> CreateAsync(T newEntity)
     {
-        await context.Set<T>().AddAsync(newEntity);
+        await _dbSet.AddAsync(newEntity);
         return newEntity;
     }
     
     public void Delete(T entity)
     {
-        context.Set<T>().Remove(entity);
+        _dbSet.Remove(entity);
     }
 }
