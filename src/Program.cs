@@ -24,8 +24,11 @@ builder.Services.AddCustomCors();
 builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-XSRF-TOKEN";
-    options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Set to Always in production
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Set to Always in production
 });
+
+// Add User Secrets
+builder.Configuration.AddUserSecrets<Program>();
 
 // Configure FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
@@ -50,17 +53,31 @@ builder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) =>
     loggerConfiguration.ReadFrom.Configuration(hostBuilderContext.Configuration));
 
 builder.Services.AddDbContextPool<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")
+                      ?? Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING")));
 
 // Configure EmailSettings
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
-// Add User Secrets
-builder.Configuration.AddUserSecrets<Program>();
 
 // dependency injection registrations
 builder.Services.ConfigureServices();
 
+if (builder.Environment.IsDevelopment())
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenLocalhost(5000); // HTTP
+        options.ListenLocalhost(5001, listenOptions => // HTTPS
+        {
+            listenOptions.UseHttps();
+        });
+    });
+else
+    builder.Services.AddHttpsRedirection(options =>
+    {
+        options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
+        options.HttpsPort = 443;
+    });
 
 var app = builder.Build();
 
@@ -78,6 +95,8 @@ app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+if (!app.Environment.IsDevelopment()) app.UseHsts();
 
 app.UseHttpsRedirection();
 app.MapControllers();

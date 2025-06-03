@@ -8,12 +8,19 @@
       dockerfile: src/Dockerfile
     ports:
       - "5000:8080"
+      - "5001:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ADMIN_PASSWORD=TestPassword123!
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - DATABASE_CONNECTION_STRING=${DATABASE_CONNECTION_STRING}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - ADMIN_USERNAME=admin
       - ADMIN_EMAIL=admin@skatfreunde.de
-      - ConnectionStrings__DefaultConnection=Host=skat-db;Port=5432;Database=skat.db;Username=postgres;Password=TestPassword123!
+    volumes:
+      - ./certificates:/https:ro
     depends_on:
       - skat-db
   
@@ -22,8 +29,8 @@
     container_name: skat-postgres
     restart: always
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "TestPassword123!"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: "skat.db"
     networks:
       - skat-net
@@ -35,6 +42,6 @@
 networks:
   skat-net:
     driver: bridge
-    
+
 volumes:
   skat-data:

@@ -28,7 +28,7 @@ public class StatisticsService(ILogger<StatisticsService> logger, IUnitOfWork un
                 {
                     var matchShare =
                         (float)g.Sum(rs => rs.Won + rs.Lost) /
-                        playerStats.Sum(rs => rs.Won + rs.Lost); // TODO matchShare
+                        playerStats.Sum(rs => rs.Won + rs.Lost);
                     var series = g.Select(prs => new SeriesDto(prs.Points, prs.Won, prs.Lost)).ToList();
 
                     return new PlayerMatchDayDataDto(
