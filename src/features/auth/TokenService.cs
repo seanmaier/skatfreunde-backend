@@ -79,7 +79,7 @@ public class TokenService(
 
     private SigningCredentials CreateCredentials()
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT_SECRET_KEY"]!));
         return new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
     }
 
