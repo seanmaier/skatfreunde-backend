@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -49,8 +50,12 @@ builder.Services.Configure<IdentityOptions>(builder.Configuration.GetSection("Id
 builder.Services.AddCustomLimiter();
 
 // Configure Serilog
-builder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) =>
-    loggerConfiguration.ReadFrom.Configuration(hostBuilderContext.Configuration));
+builder.Host.UseSerilog((context, config) =>
+{
+    config.ReadFrom.Configuration(context.Configuration)
+        .Enrich.FromLogContext()
+        .Enrich.WithProperty("TraceId", () => Activity.Current?.Id ?? "unknown");
+});
 
 builder.Services.AddDbContextPool<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")
