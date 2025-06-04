@@ -5,7 +5,8 @@ using skat_back.Lib;
 
 namespace skat_back.features.players;
 
-public class PlayerRepository(AppDbContext context) : Repository<Player>(context), IPlayerRepository
+public class PlayerRepository(AppDbContext context)
+    : Repository<Player>(context), IPlayerRepository
 {
     private readonly AppDbContext _context = context;
 
@@ -16,6 +17,6 @@ public class PlayerRepository(AppDbContext context) : Repository<Player>(context
     /// <returns>The player with the specified name, or null if not found.</returns>
     public async Task<Player?> GetByNameAsync(string name)
     {
-        return await _context.Players.FirstOrDefaultAsync(p => p.Name == name);
+            return await _context.Players.FirstOrDefaultAsync(p => p.Name == name);
     }
 }

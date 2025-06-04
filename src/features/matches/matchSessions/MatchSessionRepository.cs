@@ -5,7 +5,8 @@ using skat_back.Lib;
 
 namespace skat_back.features.matches.matchSessions;
 
-public class MatchSessionRepository(AppDbContext context) : Repository<MatchSession>(context), IMatchSessionRepository
+public class MatchSessionRepository(AppDbContext context)
+    : Repository<MatchSession>(context), IMatchSessionRepository
 {
     private readonly DbSet<MatchSession> _matchSessions = context.MatchSessions;
 
@@ -14,7 +15,7 @@ public class MatchSessionRepository(AppDbContext context) : Repository<MatchSess
         var query = _matchSessions.AsQueryable();
 
         var totalCount = await query.CountAsync();
-        
+
         var matchSessions = await query
             .Include(ms => ms.MatchRounds)
             .ThenInclude(mr => mr.PlayerRoundStats)

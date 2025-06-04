@@ -19,7 +19,10 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
     private IStatisticsRepository? _statisticsRepository;
 
     public IPlayerRepository Players => _players ??= new PlayerRepository(context);
-    public IMatchSessionRepository MatchSessions => _matchSessionRepository ??= new MatchSessionRepository(context);
+
+    public IMatchSessionRepository MatchSessions =>
+        _matchSessionRepository ??= new MatchSessionRepository(context);
+
     public IMatchRoundRepository MatchRounds => _matchRoundRepository ??= new MatchRoundRepository(context);
 
     public IPlayerRoundStatsRepository PlayerRoundStats =>

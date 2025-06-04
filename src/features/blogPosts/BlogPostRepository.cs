@@ -4,6 +4,7 @@ using skat_back.Lib;
 
 namespace skat_back.Features.BlogPosts;
 
-public class BlogPostRepository(AppDbContext context) : Repository<BlogPost>(context), IBlogPostRepository
+public class BlogPostRepository(AppDbContext context)
+    : Repository<BlogPost>(context), IBlogPostRepository
 {
 }

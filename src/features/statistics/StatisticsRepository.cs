@@ -4,7 +4,8 @@ using skat_back.features.matches.playerRoundStatistics.models;
 
 namespace skat_back.features.statistics;
 
-public class StatisticsRepository(AppDbContext context) : IStatisticsRepository
+public class StatisticsRepository(AppDbContext context)
+    : IStatisticsRepository
 {
     public async Task<ICollection<PlayerRoundStats>?> GetAnnualPlayerData(DateTime startOfTheYear)
     {

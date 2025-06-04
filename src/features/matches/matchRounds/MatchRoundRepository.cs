@@ -4,6 +4,7 @@ using skat_back.Lib;
 
 namespace skat_back.features.matches.matchRounds;
 
-public class MatchRoundRepository(AppDbContext context) : Repository<MatchRound>(context), IMatchRoundRepository
+public class MatchRoundRepository(AppDbContext context)
+    : Repository<MatchRound>(context), IMatchRoundRepository
 {
 }
