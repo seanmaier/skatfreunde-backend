@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using skat_back.features.alertEmail;
 using skat_back.features.auth;
 using skat_back.Features.BlogPosts;
 using skat_back.features.email;
@@ -33,6 +34,7 @@ public static class ServiceCollection
         services.AddScoped<IStatisticsRepository, StatisticsRepository>();
         services.AddScoped<IUrlService, UrlService>();
         services.AddScoped<IUsersService, UsersService>();
+        services.AddScoped<IAlertService, AlertService>();
         services.Configure<DataProtectionTokenProviderOptions>(options =>
         {
             options.TokenLifespan = TimeSpan.FromHours(24);
