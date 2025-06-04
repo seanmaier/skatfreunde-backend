@@ -9,4 +9,5 @@ public interface IUsersService
     Task<UserResponseDto> CreateUserAsync(CreateUserDto username);
     Task<bool> UpdateUserAsync(string userId, UpdateUserDto dto);
     Task<bool> DeleteUserAsync(string userId);
+    Task<bool> EmailExistsAsync(string email);
 }

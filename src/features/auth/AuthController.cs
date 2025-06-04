@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using skat_back.features.auth.models;
 using skat_back.features.email.models;
+using skat_back.Lib;
 using static skat_back.utilities.constants.GeneralConstants;
 
 namespace skat_back.features.auth;
@@ -83,8 +84,17 @@ public class AuthController(
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ResetPassword([FromBody] ForgotPasswordDto dto)
     {
-        await authService.SendForgotPasswordAsync(dto);
-        return Ok("Password reset link sent");
+        try
+        {
+            await authService.SendForgotPasswordAsync(dto);
+        }
+        catch (Exception ex)
+        {
+            logger.LogSecurityEvent("PASSWORD_RESET_ATTEMPT", $"Email: {dto.Email}");
+            logger.LogError(ex, "Failed to send password reset email: {Email}", dto.Email);
+        }
+
+        return Ok(new { message = "If the account exists, a password reset link has been sent" });
     }
 
     [HttpPost("reset-password")]

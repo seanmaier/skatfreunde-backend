@@ -12,6 +12,8 @@ public class PlayerService(IUnitOfWork unitOfWork) : IPlayerService
     public async Task<PagedResult<ResponsePlayerDto>> GetAllAsync(PaginationParameters parameters)
     {
         var players = await unitOfWork.Players.GetAllAsync(parameters);
+
+
         return players.ToPagedResult();
     }
 
@@ -19,12 +21,6 @@ public class PlayerService(IUnitOfWork unitOfWork) : IPlayerService
     {
         var user = await unitOfWork.Players.GetByIdAsync(id);
         return user?.ToResponse();
-    }
-    
-    public async Task<ResponsePlayerDto?> GetByNameAsync(string name)
-    {
-        var player = await unitOfWork.Players.GetByNameAsync(name);
-        return player?.ToResponse();
     }
 
     public async Task<ResponsePlayerDto> CreateAsync(CreatePlayerDto dto)
@@ -58,5 +54,11 @@ public class PlayerService(IUnitOfWork unitOfWork) : IPlayerService
         unitOfWork.Players.Delete(player);
         await unitOfWork.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<ResponsePlayerDto?> GetByNameAsync(string name)
+    {
+        var player = await unitOfWork.Players.GetByNameAsync(name);
+        return player?.ToResponse();
     }
 }
